@@ -1,0 +1,106 @@
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#EXTENSION (RYB_SQLHandleDisconnect, 'RA.2019.03.01: Handling SQL disconnect,'),DESCRIPTION('RYB | Handling SQL disconnect. Version: ' & %tplVersionSQLDISCONNECT & ', Release: ' & %tplReleaseSQLDISCONNECT),APPLICATION
+#!-----------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------------------------------
+#! RA.2019.05.07: Question from Mauricio. Was not working. Needed to add @ Global Objects | ABC Objects | File Managers | File Manager for <File Name> (File Manager) | FunctionDone
+#!#AT(%FileManagerCodeSection,%SQLTable,'FunctionDone','(SIGNED opCode,*Params Parameters,*CSTRING ErrCode,*CSTRING ErrMsg),BYTE'),PRIORITY( 5000 )
+#!    #FOR(%File),where(%FileDriver='MSSQL')
+#!      SET(%File, %SQLTable)
+#!      #INSERT(%ReconnectCode)
+#!    #ENDFOR
+#!#ENDAT
+#! Reply from DE: VIRTUAL function. Why not just derive.
+#! New ODBC drivers for MSSQL have options to retry if disconnected
+#PREPARE
+#ENDPREPARE
+#!-----------------------------------------------------------------------------------------------------
+#DISPLAY('')
+#SHEET,HSCROLL,AT(,,464)
+#INSERT(%MITLicenseSQLDISCONNECT)
+#INSERT(%ExplainSQLDISCONNECT)
+  #TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY(%ExplainTextSQLDISCONNECT),AT(,,436,34)
+  #ENDTAB
+#ENDSHEET
+#!-----------------------------------------------------------------------------------------------------
+#AT(%FileManagerCodeSection, ,'Throw','(USHORT ErrorNumber),BYTE'),PRIORITY(4500),DESCRIPTION('RYB | Disconnected SQL error trap code.')
+  #CASE(%FILEDRIVER)
+    #OF('ODBC')
+  #OROF('SQLAnywhere')
+  #OROF('Oracle')
+  #OROF('MSSQL')
+!RYB: BEFORE: Disconnected SQL error trap code.
+IF ERRORNUMBER = 9    #<! 9? Defined where?
+  SETCURSOR(CURSOR:WAIT)
+  CLOSE(%FILE)
+  SHARE(%FILE)    #<! File: %FileName
+  SETCURSOR()
+  RETURN Level:Benign
+ELSIF ERRORCODE() > NoError and ERRORCODE() <> BadRecErr     #<! 33 = 'Record Not Available'
+! use ODS to log errors here if you wish. ud.debug('detected error # ' & ERRORCODE() & ' FEC=' & FileErrorCode() & ' for file')
+#!EMBED(%RYB_ErrorDisconnectedSQL,'RYB: Disconnected SQL error reporting.')
+END
+!RYB: AFTER: Disconnected SQL error trap code.
+  #END
+#ENDAT
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#! 2019.12.01: Mark Riffey pulledoutplum@gmail.com] and Pratik Patel
+#GROUP(%CopyrightSQLDISCONNECT) 
+#BOXED('Version '& %tplVersionSQLDISCONNECT & ' [ ' & %tplReleaseSQLDISCONNECT  & ' ]' ),AT(,,454),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY('Handling disconnections from SQL back ends.'                               ),AT(10)
+  #DISPLAY('Copyright © ' & YEAR(TODAY()) & ' by Mark Riffey and Pratik Patel.'        ),AT(10)
+  #DISPLAY('All copyrights reserved world wide.'                                       ),AT(10)
+  #DISPLAY('Mark Riffey; E-MAIL: pulledoutplum@gmail.com.'                             ),AT(10)
+  #DISPLAY('Pratik Patel; E-MAIL: Not known at this time.'                             ),AT(10),PROP(PROP:FontStyle,700)
+  #DISPLAY('If you are the developer please contact us at the E-MAIL above for proper development credit of this template.'),AT(10)
+#ENDBOXED
+#!-----------------------------------------------------------------------------------------------------
+#GROUP(%MITLicenseSQLDISCONNECT)
+#TAB('SQLDISCONNECT'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightSQLDISCONNECT) 
+  #INSERT(%MITtextSQLDISCONNECT)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!-----------------------------------------------------------------------------------------------------
+#GROUP(%MITtextSQLDISCONNECT)
+#INSERT(%MITLicenseText)
+#BOXED('MIT License'),AT(,,454),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY('Copyright © ' & YEAR(TODAY()) & ' by Mark Riffey and Pratik Patel.'),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%MITLicenseText01),AT(,,436,36)
+  #DISPLAY(%MITLicenseText02),AT(,,436,14),PROP(PROP:FontStyle,700)
+  #DISPLAY(%MITLicenseText03),AT(,,436,44)
+#ENDBOXED
+#!-----------------------------------------------------------------------------------------------------
+#GROUP(%ExplainSQLDISCONNECT)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainTextSQLDISCONNECT))
+    #DECLARE(%ExplainTextSQLDISCONNECT)
+  #ENDIF
+  #SET(%ExplainTextSQLDISCONNECT, '')
+  #SET(%ExplainTextSQLDISCONNECT, %ExplainTextSQLDISCONNECT & 'This template traps the Throw(USHORT ErrorNumber),BYTE method and checks for the SQL being disconnected')
+  #SET(%ExplainTextSQLDISCONNECT, %ExplainTextSQLDISCONNECT & ' for a specific file. It is a global application template that generates the code')
+  #SET(%ExplainTextSQLDISCONNECT, %ExplainTextSQLDISCONNECT & ' for each of the files before the call to the parent.')
+  #SET(%ExplainTextSQLDISCONNECT, %ExplainTextSQLDISCONNECT & '<13,10><13,10>')
+  #SET(%ExplainTextSQLDISCONNECT, %ExplainTextSQLDISCONNECT & 'This template has been tested with the ABC template chain.')
+  #SET(%ExplainTextSQLDISCONNECT, %ExplainTextSQLDISCONNECT & '')
+#ENDPREPARE
+#!-----------------------------------------------------------------------------------------------------
+#!    TempSQL{Prop:SQL} = 'SELECT count(*) from EC_Data2')
+#!    IF FILEERRORCODE() = '08S01'  
+#! Communication link failure
+#!       CLOSE(EC_Data2)
+#!       EC_Data2{Prop:Disconnect}
+#!       SHARE(EC_Data2)
+#!    END
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
