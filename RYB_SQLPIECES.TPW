@@ -1,0 +1,86 @@
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#EXTENSION (RYB_SQLProjectALLFieldsBrowse, 'RYB | Project all fields in view tables for SQL Browse,'),DESCRIPTION('RYB | Project all fields in view tables for SQL Browse. Version: ' & %tplVersionSQLPIECES & ', Release: ' & %tplReleaseSQLPIECES),REQ(BrowseBox(ABC))
+#!-----------------------------------------------------------------------------------------------------
+#! RA.2019.09.11.WED:     Tested: All the additional fields get included
+#! RA.2018.02.22.???:     Added to the ABC templates
+#!-----------------------------------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!-----------------------------------------------------------------------------------------------------
+#DISPLAY('')
+#SHEET,HSCROLL,AT(,,464)
+#INSERT(%MITLicenseSQLPIECES)
+#ENDSHEET
+#!-----------------------------------------------------------------------------------------------------
+#ATSTART 
+  #FIX(%File,%Primary)
+  #INSERT(%SQLProjectALLFields)
+  #FOR(%Secondary)
+    #FIX(%File,%Secondary)
+    #INSERT(%SQLProjectALLFields)
+  #ENDFOR
+#ENDAT  
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#EXTENSION (RYB_SQLProjectALLFieldsProcess, 'RYB | Project all fields in view tables for SQL Process.'),DESCRIPTION('RYB | Project all fields in view tables for SQL Process. Version: ' & %tplVersionSQLPIECES & ', Release: ' & %tplReleaseSQLPIECES),REQ(Report(ABC))
+#! RA.2019.09.11.WED:     INVESTIGATE: Where do I hook these up?
+#! RA.2018.02.22.???:     Added to the ABC templates
+#!-----------------------------------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!-----------------------------------------------------------------------------------------------------
+#DISPLAY('')
+#SHEET,HSCROLL,AT(,,464)
+#INSERT(%MITLicenseSQLPIECES)
+#ENDSHEET
+#!-----------------------------------------------------------------------------------------------------
+#ATSTART 
+  #FIX(%File,%Primary)
+  #INSERT(%SQLProjectALLFields)
+  #FOR(%Secondary)
+    #FIX(%File,%Secondary)
+    #INSERT(%SQLProjectALLFields)
+  #ENDFOR
+#ENDAT
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#GROUP(%SQLProjectALLFields)
+  #FOR(%Field)
+    #SET(%ValueConstruct,%Field)
+    #INSERT(%CleanDimensions(ABC))
+    #IF(~INLIST(%ValueConstruct,%QueueField))
+      #ADD(%QueueField,%ValueConstruct)
+      #SET(%QueueFieldAssignment,%Field)
+      #SET(%QueueFieldComment,'Force all fields')
+    #ENDIF
+  #ENDFOR 
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#GROUP(%CopyrightSQLPIECES) 
+#BOXED('Version '& %tplVersionSQLPIECES & ' [ ' & %tplReleaseSQLPIECES  & ' ]' ),AT(,,454),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY('Project all fields in view tables for an SQL browse or report.'   ),AT(10)
+  #DISPLAY('Copyright © ' & YEAR(TODAY()) & ' by Unknown Developer.'          ),AT(10),PROP(PROP:FontStyle,700)
+  #DISPLAY('All copyrights reserved world wide.'                              ),AT(10),PROP(PROP:FontStyle,700)
+  #DISPLAY('E-MAIL: Not known at this time.'                                  ),AT(10),PROP(PROP:FontStyle,700)
+  #DISPLAY('If you are the developer please contact us at the E-MAIL above for proper development credit of this template.'),AT(10)
+#ENDBOXED
+#!-----------------------------------------------------------------------------------------------------
+#GROUP(%MITLicenseSQLPIECES)
+#TAB('SQLPIECES'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightSQLPIECES) 
+  #INSERT(%MITLicenseUnknown)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
