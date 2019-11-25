@@ -1,0 +1,372 @@
+#!#TEMPLATE(zzCompilePrototypes,'Templates Description'),FAMILY('ABC')
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%CopyrightPROTOEXP)
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightPROTOEXP01))
+    #DECLARE(%CopyrightPROTOEXP01)
+  #ENDIF
+  #SET(%CopyrightPROTOEXP01, 'Prototype Explorer for ABC.')
+  #SET(%CopyrightPROTOEXP01, %CopyrightPROTOEXP01 & '<13,10>Copyright © 2001-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightPROTOEXP01, %CopyrightPROTOEXP01 & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightPROTOEXP01, %CopyrightPROTOEXP01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#BOXED('Version '& %tplVersionPROTOEXP & ' [ ' & %tplReleasePROTOEXP & ' ]'),AT(,,454),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #!DISPLAY('Prototype Explorer for ABC.'),AT(10)
+  #!DISPLAY('Copyright © 2001-2099 by Roberto Artigas y Soler.'),AT(10)
+  #!DISPLAY('All copyrights reserved world wide.'              ),AT(10)
+  #!DISPLAY('E-MAIL: roberto.artigas.dev@gmail.com'            ),AT(10)
+  #!DISPLAY(''),AT(,,,1)
+  #!DISPLAY(%CopyrightPROTOEXP01),AT(,,260,34)
+  #DISPLAY(%CopyrightPROTOEXP01),AT(,,436,34)
+#ENDBOXED
+#!
+#GROUP(%MITLicensePROTOEXP)
+#TAB('PROTOEXP'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightPROTOEXP) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#GROUP(%ExplainPROTOEXP)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainPROTOEXP01))
+    #DECLARE(%ExplainPROTOEXP01)
+  #ENDIF
+  #SET(%ExplainPROTOEXP01, '')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & 'This template is used to make an include file for the EXPORTED procedures')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & ' in this specified DLL. This can be included in the DLL module that')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & ' uses the DLL so you do not have to define all the procedures.')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & '<13,10><13,10>')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & 'By convention I just include the EXTERNAL procedures that I need in the MODULE that')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & ' they come from. That way I can examine what is actually being imported and used')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & ' by the application.')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & '<13,10><13,10>')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & 'The resulting file generated gets prefixed with a "_DLL_". This means that')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & ' the final file generated will be a DLL. This name gets set by the template.')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & ' By convention this get set to a "_EXE_" when the resulting file generated will')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & ' be an EXE. When you are dealing with a mature system you will have many of both.')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & '<13,10><13,10>')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & 'IF you have an application that serves both as a DLL and EXE, THEN just set')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & ' the file prefix to the appropiate "_DLL_" or "_EXE_" as needed.')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & '<13,10><13,10>')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & 'The template will also document procedures that have been IMPORTED into')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & ' this application and are LOCAL to this application.')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & '<13,10><13,10>')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & 'IMPORTED procedures tell you what application they are located in.')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & ' This is useful for system discovery, process tracking, and maintenance purposes.')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & ' This also might help you discover posible recursive procedures in the wrong places.')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & '<13,10><13,10>')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & 'This template has been tested with the ABC template chains.')
+  #SET(%ExplainPROTOEXP01, %ExplainPROTOEXP01 & '')
+  #!
+  #IF(NOT VAREXISTS(%ExplainPROTOEXP02))
+    #DECLARE(%ExplainPROTOEXP02)
+  #ENDIF
+  #!
+  #SET(%ExplainPROTOEXP02, '')
+  #SET(%ExplainPROTOEXP02, %ExplainPROTOEXP02 & 'NOTE: Make sure the COMPLETE DIRECTORY PATH exists on your machine.')
+#ENDPREPARE
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#EXTENSION(RYB_PrototypeExplorer,'RA.2018.12.27: Prototype Explorer (DLL/EXE)'),DESCRIPTION('RYB | Prototype Explorer (DLL/EXE). Version: ' & %tplVersionPROTOEXP & ', Release: ' & %tplReleasePROTOEXP),APPLICATION
+#!-----------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------
+#! RA.2018.12.27.THU    Roberto Artigas Jr
+#!  * Adjusted template width for C11 wider templates 
+#! RA.2018.11.22.THU    Roberto Artigas Jr
+#!  *  Added and restructured the documentation to provide better support.
+#! RA.2018.09.23.SUN    Roberto Artigas Jr
+#!  * Improvement of display text for MIT license and Template explanation
+#!  * OPTIONS: Added a directory variable, name variable, and location variable.
+#! RA.2018.09.22.SAT    Roberto Artigas Jr
+#!  *   On the IMPORT section added the application (DLL) that it comes from.
+#!      Useful to break big things appart and to track down recursion.
+#! RA.2018.09.11        Roberto Artigas Jr
+#!  *   Make sure it handles DLL's and EXE's in the same manner
+#! RA.2018.02.27        Roberto Artigas Jr
+#!  *   Make sure you give me the description in the DLL
+#!      Please note that the prototypes get general at a specific location
+#! RA.2017.10.31        Roberto Artigas Jr
+#!  *   Clean-up to give away under the MIT License
+#! RA.2015.04.04        Roberto Artigas Jr
+#!  *   Added logic to make exported procedures show in ascending alphabetical order
+#! RA.2011.05.06        Roberto Artigas Jr
+#!  *   For some reason this is saying that procedures with parameters are functions.
+#!      I only create procedures in my libraries, so make them procedures.
+#!  *   From the clarion perspective they are ALL functions
+#! RA.2001.02.12        Roberto Artigas Jr
+#!  *   Something based on the ABC templates
+#! Created By:          Roberto Artigas Jr
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!
+#!SHEET,AT(,,288),HSCROLL
+#SHEET,AT(,,464),HSCROLL
+#INSERT(%MITLicensePROTOEXP)
+#INSERT(%ExplainPROTOEXP)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #!BOXED('Prototype Explorer'),AT(,,280)
+  #BOXED('Prototype Explorer'),AT(,,456),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%ExplainPROTOEXP02),AT(,,260,10),PROP(PROP:FontStyle,700) 
+    #DISPLAY(%ExplainPROTOEXP02),AT(,,436,10),PROP(PROP:FontStyle,700) 
+    #!BOXED(''),AT(,,270)
+    #BOXED(''),AT(,,446)
+      #!PROMPT('Directory: ',@S120),%IncludeDirectory, REQ, DEFAULT('.\classes\')                                                                                        ,AT(70,,200)
+      #!PROMPT('Include: '  ,@S120),%IncludeFilename , REQ, DEFAULT('_' & %ProgramExtension & '_' & UPPER(SLICE(%Program, 1, INSTRING('.', %Program, 1, 1)-1)) & '.INC') ,AT(70,,200)
+      #PROMPT('Directory: ',@S120),%IncludeDirectory, REQ, DEFAULT('.\classes\')                                                                                        ,AT(70,,376)
+      #PROMPT('Include: '  ,@S120),%IncludeFilename , REQ, DEFAULT('_' & %ProgramExtension & '_' & UPPER(SLICE(%Program, 1, INSTRING('.', %Program, 1, 1)-1)) & '.INC') ,AT(70,,376)
+      #PREPARE
+      #SET(%IncludeLocation,%IncludeDirectory & %IncludeFilename )
+      #ENDPREPARE
+      #!PROMPT('Location: ' ,@S120),%IncludeLocation , REQ, DEFAULT(%IncludeLocation),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,200)
+      #PROMPT('Location: ' ,@S120),%IncludeLocation , REQ, DEFAULT(%IncludeLocation),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,376)
+    #ENDBOXED
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%ExplainPROTOEXP01),AT(,,260,194)
+    #DISPLAY(%ExplainPROTOEXP01),AT(,,436,154)
+  #ENDBOXED
+#ENDTAB
+#!INSERT(%TabClarionVersion)
+#ENDSHEET
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#AT(%CustomGlobalDeclarations),WHERE(%ProgramExtension='DLL' OR %ProgramExtension='EXE')
+  #DECLARE(%TheDate)
+  #DECLARE(%TheTime)
+  #SET(%TheDate,FORMAT(TODAY(),@D010))
+  #SET(%TheTime,FORMAT(CLOCK(),@T06))
+  #DECLARE(%TheTextComments)
+  #DECLARE(%TheProcedureDate)
+  #DECLARE(%TheProcedureTime)
+  #DECLARE(%TheOOPConstruct)
+  #DECLARE(%TheBuildInclude)
+  #SET(%TheBuildInclude,UPPER(SLICE(%Program, 1, INSTRING('.', %Program, 1, 1)-1)) & '.$$$')
+  #DECLARE(%TheProcs),MULTI,UNIQUE
+  #DECLARE(%ProcsTemp),MULTI,UNIQUE               #! RA.2018.09.10: Added
+  #DECLARE(%ModsTemp),MULTI,UNIQUE                #! RA.2018.09.22: Added
+  #DECLARE(%TheModuleName)                        #! RA.2018.09.22: Added
+  #DECLARE(%ModsProcs),MULTI,UNIQUE               #! RA.2018.09.22: Added
+  #DECLARE(%ModProc   ,%ModsProcs)
+  #DECLARE(%ModDLL    ,%ModsProcs)
+  #CREATE(%TheBuildInclude)
+!BOF
+!
+! File:         %IncludeFileName
+! Purpose:      Include for EXPORTED Procedures
+!               Documentation for IMPORTED and LOCAL Procedures
+! Author:       Prototype Explorer
+! Date-Time:    %TheDate - %TheTime
+!
+  #FREE(%ModsTemp)                                #! RA.2018.09.22: Added
+  #FREE(%ModsProcs)                               #! RA.2018.09.22: Added
+  #FOR(%Module)
+    #IF(%ModuleExternal)
+#!MOD: 0 ||| %Module | %ModuleTemplate | %ModuleExternal | %ModuleLanguage | %ModuleBase
+      #FOR(%ModuleProcedure)
+        #FIX(%Procedure,%ModuleProcedure)
+#!MOD: 1 !!! %Procedure ||| %ProcedureTemplate | %ProcedureExported [%ModuleBase]
+        #ADD(%ModsTemp,%Module)
+        #ADD(%ModsProcs ,%ModuleProcedure)
+        #SET(%ModProc   ,%ModuleProcedure)
+        #SET(%ModDLL    ,UPPER(%ModuleBase))
+      #ENDFOR
+    #ENDIF
+  #ENDFOR
+#!
+  #FREE(%ProcsTemp)                                #! RA.2018.09.10: Added
+  #IF(%FirstProcedure)
+    #ADD(%ProcsTemp,%FirstProcedure)               #! RA.2018.09.10: Added
+    #FIX(%Procedure,%FirstProcedure)
+    #FOR(%ProcedureCalled)
+      #ADD(%ProcsTemp,%ProcedureCalled)
+    #ENDFOR 
+  #ENDIF
+  #FOR(%Procedure)
+    #ADD(%ProcsTemp,%Procedure)
+    #FOR(%ProcedureCalled)
+      #ADD(%ProcsTemp,%ProcedureCalled)
+    #ENDFOR 
+  #ENDFOR
+#!
+  #FREE(%TheProcs)
+  #CASE(%ProgramExtension)
+  #OF('DLL')
+    #FOR(%ProcsTemp)
+      #FIX(%Procedure,%ProcsTemp)
+#!DLL: 1 !!! %Procedure ||| %ProcedureTemplate | %ProcedureExported [%ModuleBase]
+      #IF(UPPER(%ProcedureTemplate) = 'EXTERNAL')
+#!DLL: 2 !!! %Procedure ||| %ProcedureTemplate | %ProcedureExported [%ModuleBase]
+        #ADD(%TheProcs,%ProcsTemp)
+      #ENDIF
+    #ENDFOR
+  #OF('EXE')
+    #FOR(%ProcsTemp)
+      #FIX(%Procedure,%ProcsTemp)
+      #IF(UPPER(%ProcedureTemplate) = 'EXTERNAL')
+        #ADD(%TheProcs,%ProcsTemp)
+      #ENDIF
+    #ENDFOR
+  #OF('LIB')
+  #ENDCASE
+! ========= IMPORTED INTO THIS APPLICATION =========
+#!INSERT(%GiveMeCommentsForExternals)
+#INSERT(%GiveMeCommentsForExternalProcedures)
+! ========= IMPORTED INTO THIS APPLICATION =========
+!
+  #FREE(%TheProcs)
+  #CASE(%ProgramExtension)
+  #OF('DLL')
+    #FOR(%ProcsTemp)
+      #FIX(%Procedure,%ProcsTemp)
+#!DLL: 3 !!! %Procedure ||| %ProcedureTemplate | %ProcedureExported
+      #IF((UPPER(%ProcedureTemplate) <> 'EXTERNAL') AND (NOT %ProcedureExported))
+#!DLL: 4 !!! %Procedure ||| %ProcedureTemplate | %ProcedureExported
+        #ADD(%TheProcs,%ProcsTemp)
+      #ENDIF
+    #ENDFOR
+  #OF('EXE')
+    #FOR(%ProcsTemp)
+      #FIX(%Procedure,%ProcsTemp)
+      #IF(UPPER(%ProcedureTemplate) <> 'EXTERNAL')
+        #ADD(%TheProcs,%ProcsTemp)
+      #ENDIF
+    #ENDFOR
+  #OF('LIB')
+  #ENDCASE
+! ========= LOCAL TO THIS APPLICATION =========
+#INSERT(%GiveMeComments)
+! ========= LOCAL TO THIS APPLICATION =========
+!
+  #FREE(%TheProcs)
+  #CASE(%ProgramExtension)
+  #OF('DLL')
+     #FOR(%ProcsTemp)
+      #FIX(%Procedure,%ProcsTemp)
+#!DLL: 5 !!! %Procedure ||| %ProcedureTemplate | %ProcedureExported
+      #IF((%ProcedureExported) AND (UPPER(%ProcedureTemplate) <> 'TODO'))
+#!DLL: 6 !!! %Procedure ||| %ProcedureTemplate | %ProcedureExported
+        #ADD(%TheProcs,%ProcsTemp)
+      #ENDIF
+    #ENDFOR
+!
+! ========= EXPORTED FROM THIS APPLICATION =========
+#INSERT(%GiveMeComments)
+! ========= EXPORTED FROM THIS APPLICATION =========
+!
+    #FOR(%TheProcs)
+      #FIX(%Procedure,%TheProcs)
+#!   %Procedure - %ProcedureType - %Prototype
+#!    #INSERT(%MakeDeclr(ABC), 28, %TheOOPConstruct, %Procedure, %ProcedureType & %Prototype & ',DLL')
+      #INSERT(%MakeDeclr(ABC), 48, %TheOOPConstruct, %Procedure, 'PROCEDURE' & %Prototype & ',DLL')
+#!    #INSERT(%MakeDeclr(ABC), 48, %TheOOPConstruct, %Procedure, 'PROCEDURE' & %Prototype & ',DLL(dll_mode)')
+#!    #IF(%ProcedureDescription)
+#!      #INSERT(%MakeDeclr(ABC), 55, %TheOOPConstruct, %OOPConstruct, '! ' & %ProcedureDescription)
+#!    #ENDIF
+%TheOOPConstruct
+    #ENDFOR
+  #OF('EXE')
+  #OF('LIB')
+  #ENDCASE
+!
+!EOF
+  #CLOSE(%TheBuildInclude)
+  #!REPLACE(%IncludeFilename,%TheBuildInclude)
+  #REPLACE(%IncludeLocation, %TheBuildInclude)              #! RA.2018.09.22.SAT: Changed
+  #REMOVE(%TheBuildInclude)
+#ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! RA.2019.10.17: generating a date and a time
+#AT(%DllExportList),Where(%ProgramExtension = 'DLL') 
+#IF(NOT VAREXISTS(%TheDate))
+  #DECLARE(%TheDate)
+#ENDIF
+#IF(NOT VAREXISTS(%TheTime))
+  #DECLARE(%TheTime)
+#ENDIF
+#SET(%TheDate ,FORMAT(TODAY(),@D010))                       #! Set current date
+#SET(%TheTime ,FORMAT(CLOCK(),@T06))                        #! Set current time
+
+;BEGIN: Exporting from RYB_DLLS: %TheDate - %TheTime
+;ENDED: Exporting from RYB_DLLS: %TheDate - %TheTime
+
+#ENDAT  
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%GiveMeComments)
+  #FOR(%TheProcs)
+    #FIX(%Procedure,%TheProcs)
+#!COMMENTS: 0 !!! %Procedure ||| %ProcedureTemplate | %ProcedureExported
+    #SET(%TheProcedureDate,FORMAT(%ProcedureDateChanged,@D010))
+    #SET(%TheProcedureTime,FORMAT(%ProcedureTimeChanged,@T06))
+    #SET(%TheTextComments,%ProcedureDescription)
+    #CASE(UPPER(%ProcedureTemplate))
+    #OF  ('TODO')
+      #SET(%TheTextComments,'[[[ ' & UPPER(%ProcedureTemplate) & ' ]]]')
+    #ENDCASE 
+    #IF(%TheTextComments = '')
+       #SET(%TheTextComments,'[No procedure description]')
+    #ENDIF
+! %[48]Procedure [ %[9]ProcedureType ] %TheProcedureDate %TheProcedureTime | %TheTextComments
+  #ENDFOR
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%GiveMeCommentsForExternals)
+  #FOR(%ModsTemp)
+    #FIX(%Module,%ModsTemp)
+    #SET(%TheModuleName,UPPER(%ModuleBase))
+    #FREE(%TheProcs)
+    #FOR(%ModuleProcedure)
+      #ADD(%TheProcs,%ModuleProcedure)
+    #ENDFOR
+#!  
+    #FOR(%TheProcs)
+      #FIX(%Procedure,%TheProcs)
+#!COMMENTS: 0 !!! %Procedure ||| %ProcedureTemplate | %ProcedureExported
+      #SET(%TheProcedureDate,FORMAT(%ProcedureDateChanged,@D010))
+      #SET(%TheProcedureTime,FORMAT(%ProcedureTimeChanged,@T06))
+      #SET(%TheTextComments,%ProcedureDescription)
+      #CASE(UPPER(%ProcedureTemplate))
+      #OF  ('TODO')
+        #SET(%TheTextComments,'[[[ ' & UPPER(%ProcedureTemplate) & ' ]]]')
+      #ENDCASE 
+      #IF(%TheTextComments = '')
+        #SET(%TheTextComments,'[No procedure description]')
+      #ENDIF
+! %[48]Procedure [ %[9]ProcedureType ] %TheProcedureDate %TheProcedureTime | %[14]TheModuleName | %TheTextComments
+    #ENDFOR
+#!
+  #ENDFOR
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%GiveMeCommentsForExternalProcedures)
+    #FOR(%ModsProcs)
+      #FIX(%Procedure,%ModsProcs)
+#!COMMENTS: 0 !!! %Procedure ||| %ProcedureTemplate | %ProcedureExported
+      #SET(%TheProcedureDate,FORMAT(%ProcedureDateChanged,@D010))
+      #SET(%TheProcedureTime,FORMAT(%ProcedureTimeChanged,@T06))
+      #SET(%TheTextComments,%ProcedureDescription)
+      #CASE(UPPER(%ProcedureTemplate))
+      #OF  ('TODO')
+        #SET(%TheTextComments,'[[[ ' & UPPER(%ProcedureTemplate) & ' ]]]')
+      #ENDCASE 
+      #IF(%TheTextComments = '')
+        #SET(%TheTextComments,'[No procedure description]')
+      #ENDIF
+! %[48]Procedure [ %[9]ProcedureType ] %TheProcedureDate %TheProcedureTime | %[14]ModDLL | %TheTextComments
+    #ENDFOR
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
