@@ -1,0 +1,1445 @@
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!#TEMPLATE(zRobArt1,'2010.11.09: ICONS Roberto Artigas Templates'),FAMILY('ABC')
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%DefineICONS)
+#PREPARE
+  #IF(NOT VAREXISTS(%rybVersionICONS))
+    #DECLARE(%rybVersionICONS)
+  #ENDIF
+  #IF(NOT VAREXISTS(%rybVerNameICONS))
+    #DECLARE(%rybVerNameICONS)
+  #ENDIF
+  #IF(NOT VAREXISTS(%rybVerCpyRghtsICONS))
+    #DECLARE(%rybVerCpyRghtsICONS)
+  #ENDIF
+  #IF(NOT VAREXISTS(%rybVerRsrvAllICONS))
+    #DECLARE(%rybVerRsrvAllICONS)
+  #ENDIF
+  #IF(NOT VAREXISTS(%rybVerReleaseICONS))
+    #DECLARE(%rybVerReleaseICONS)
+  #ENDIF
+  #IF(NOT VAREXISTS(%rybVerEmailICONS))
+    #DECLARE(%rybVerEmailICONS)
+  #ENDIF
+  #SET(%rybVersionICONS     ,'Version ' & %tplVersionICONS & ' [ ' & %tplReleaseICONS & ' ]')
+  #SET(%rybVerNameICONS     ,'Add ICONS to application buttons.')
+  #SET(%rybVerCpyRghtsICONS ,'Copyright © 2010-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%rybVerRsrvAllICONS  ,'All copyrights reserved world wide.')
+  #SET(%rybVerReleaseICONS  ,'Released under the MIT license.')
+  #SET(%rybVerEmailICONS    ,'E-MAIL: roberto.artigas.dev@gmail.com')
+  #!
+  #IF(NOT VAREXISTS(%rybCopyrightICONS))
+    #DECLARE(%rybCopyrightICONS)
+  #ENDIF
+  #SET(%rybCopyrightICONS, '')
+  #SET(%rybCopyrightICONS, %rybCopyrightICONS & %rybVerNameICONS)
+  #SET(%rybCopyrightICONS, %rybCopyrightICONS & '<13><10>')
+  #SET(%rybCopyrightICONS, %rybCopyrightICONS & %rybVerCpyRghtsICONS)
+  #SET(%rybCopyrightICONS, %rybCopyrightICONS & '<13><10>')
+  #SET(%rybCopyrightICONS, %rybCopyrightICONS & %rybVerRsrvAllICONS)
+  #SET(%rybCopyrightICONS, %rybCopyrightICONS & '<13><10>')
+  #SET(%rybCopyrightICONS, %rybCopyrightICONS & %rybVerReleaseICONS)
+  #SET(%rybCopyrightICONS, %rybCopyrightICONS & '<13><10>')
+  #SET(%rybCopyrightICONS, %rybCopyrightICONS & %rybVerEmailICONS)
+  #SET(%rybCopyrightICONS, %rybCopyrightICONS & '')
+#ENDPREPARE
+#!
+#GROUP(%PreambleICONS)
+#INSERT(%DefineICONS)
+#!#BOXED('Version 1.0 [ 2010.11.09 ]'),AT(,,,55),PROP(PROP:FontStyle,700)
+#!  #DISPLAY(''),AT(,,,1)
+#!  #DISPLAY('Add ICONS to application buttons.'                ),AT(10)
+#!  #DISPLAY('Copyright © 2010-2099 by Roberto Artigas y Soler.'),AT(10)
+#!  #DISPLAY('All copyrights reserved world wide.'              ),AT(10)
+#!  #DISPLAY('E-MAIL: roberto.artigas.dev@gmail.com'            ),AT(10)
+#!#ENDBOXED
+#BOXED(%rybVersionICONS),AT(,,,55),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%rybVerNameICONS    ),AT(10)
+  #DISPLAY(%rybVerCpyRghtsICONS),AT(10)
+  #DISPLAY(%rybVerRsrvAllICONS ),AT(10)
+  #DISPLAY(%rybVerEmailICONS   ),AT(10)
+#ENDBOXED
+#!#BOXED(%rybVersionICONS),AT(,,,55),PROP(PROP:FontStyle,700)
+#!  #DISPLAY(''),AT(,,,1)
+#!  #DISPLAY(%rybCopyrightICONS),AT(,,260,40)
+#!#ENDBOXED
+#!
+#GROUP(%PreambleTextICONS)
+#INSERT(%DefineICONS)
+#BOXED(%rybVersionICONS),AT(,,,55),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%rybCopyrightICONS),AT(,,260,40)
+#ENDBOXED
+#!
+#GROUP(%CopyrightTextICONS)
+#INSERT(%DefineICONS)
+#!BOXED(%rybVersionICONS),AT(,,278),PROP(PROP:FontStyle,700)
+#BOXED(%rybVersionICONS),AT(,,454),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #!DISPLAY(%rybCopyrightICONS),AT(,,260,40)
+  #DISPLAY(%rybCopyrightICONS),AT(,,436,40)
+#ENDBOXED
+#!
+#GROUP(%CopyrightICONS)
+#!BOXED('Version 1.0 [ 2010.11.09 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#BOXED('Version '& %tplVersionICONS & ' [ ' & %tplReleaseICONS & ' ]'),AT(,,454),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY('Add ICONS to application buttons.'                ),AT(10)
+  #DISPLAY('Copyright © 2010-2099 by Roberto Artigas y Soler.'),AT(10)
+  #DISPLAY('All copyrights reserved world wide.'              ),AT(10)
+  #DISPLAY('E-MAIL: roberto.artigas.dev@gmail.com'            ),AT(10)
+#ENDBOXED
+#!
+#!#GROUP(%MITLicense)
+#!#INSERT(%MITLicenseText)
+#!#BOXED('MIT License'),AT(,,278),PROP(PROP:FontStyle,700)
+#!  #DISPLAY(''),AT(,,,1)
+#!  #DISPLAY('Copyright © ' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.'),PROP(PROP:FontStyle,700)
+#!  #DISPLAY(''),AT(,,,1)
+#!  #DISPLAY(%MITLicenseText01),AT(,,260,54)
+#!  #DISPLAY(%MITLicenseText02),AT(,,260,24),PROP(PROP:FontStyle,700)
+#!  #DISPLAY(%MITLicenseText03),AT(,,260,64)
+#!#ENDBOXED
+#!
+#GROUP(%MITLicenseICONS)
+#TAB('ICONS'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightTextICONS) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#GROUP(%PurposeICONS)
+#PREPARE
+  #IF(NOT VAREXISTS(%rybPurposeICONS01))
+    #DECLARE(%rybPurposeICONS01)
+  #ENDIF
+  #!
+  #SET(%rybPurposeICONS01, '')
+  #!SET(%rybPurposeICONS01, %rybPurposeICONS01 & 'This a beat an application with a BLUNT instrument template.')
+  #SET(%rybPurposeICONS01, %rybPurposeICONS01 & 'This template uses the button<39>s identifier (?Ok, ?Cancel, etc.)')
+  #SET(%rybPurposeICONS01, %rybPurposeICONS01 & ' to change the icon of all buttons in every window that matches')
+  #SET(%rybPurposeICONS01, %rybPurposeICONS01 & ' the identifier. IF you have inconsistent icon sets or no icons, THEN this can')
+  #SET(%rybPurposeICONS01, %rybPurposeICONS01 & ' be considered a quick way to make most of your application conform to a standard')
+  #SET(%rybPurposeICONS01, %rybPurposeICONS01 & ' set of BUTTONS (and look better) while you get to fixing your application.')
+  #SET(%rybPurposeICONS01, %rybPurposeICONS01 & '<13><10><13><10>')
+  #SET(%rybPurposeICONS01, %rybPurposeICONS01 & 'IF you have additional types of button identifiers or a different naming convertion,')
+  #SET(%rybPurposeICONS01, %rybPurposeICONS01 & ' THEN your better choice is to create your own version of this template and add the')
+  #SET(%rybPurposeICONS01, %rybPurposeICONS01 & ' additional identifiers, icon prompts and template code.')
+#ENDPREPARE
+#!
+#GROUP(%WarningICONS)
+#PREPARE
+  #IF(NOT VAREXISTS(%rybWarningICONS01))
+    #DECLARE(%rybWarningICONS01)
+  #ENDIF
+  #SET(%rybWarningICONS01, '')
+  #SET(%rybWarningICONS01, %rybWarningICONS01 & 'IF you are seeing full directory paths when you select an icon, THEN')
+  #SET(%rybWarningICONS01, %rybWarningICONS01 & ' change the re-direction (RED) file so it defines the path of the icon.')
+  #SET(%rybWarningICONS01, %rybWarningICONS01 & '<13><10><13><10>')
+  #SET(%rybWarningICONS01, %rybWarningICONS01 & 'IF you are still seeing full directory paths when you select an icon,')
+  #SET(%rybWarningICONS01, %rybWarningICONS01 & ' THEN check to see if you have the same name icon in two different places.')
+  #!
+  #IF(NOT VAREXISTS(%rybWarningICONS02))
+    #DECLARE(%rybWarningICONS02)
+  #ENDIF
+  #SET(%rybWarningICONS02, '')
+  #SET(%rybWarningICONS02, %rybWarningICONS02 & 'Check your: Solutions | Libraries, Objects, and Resource Files')
+  #!
+  #IF(NOT VAREXISTS(%rybWarningICONS03))
+    #DECLARE(%rybWarningICONS03)
+  #ENDIF
+  #SET(%rybWarningICONS03, '')
+  #SET(%rybWarningICONS03, %rybWarningICONS03 & 'IF you have full icon paths anywhere (and it is not a deliverate choice),')
+  #SET(%rybWarningICONS03, %rybWarningICONS03 & ' THEN you might want to check their validity and remove them.')
+#ENDPREPARE
+#!
+#GROUP(%OtherVendorICONS)
+#PREPARE
+  #IF(NOT VAREXISTS(%rybVendorICONS01))
+    #DECLARE(%rybVendorICONS01)
+  #ENDIF
+  #SET(%rybVendorICONS01, '')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & 'Other vendor''s ICONS will have to be added to the template by whomever wants')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & ' the funtionality. This template contains very easy code to follow. So copy, paste,')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & ' and modify what you need.')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & '<13><10><13><10>')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & 'There has been an additional vendor added since this template was created.')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & ' The reason is that the icons were changed in one of the version releases')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & ' and the new icons did not match the current application''s color scheme.')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & ' So we created our own icons and added code to the template to apply the changes')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & ' to the correct identifiers. Just took a litte work to make the changes and test.')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & '<13><10><13><10>')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & 'TAB:<9>Handy<9><9>The Handy Tools')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & '<13><10>')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & '<9>If you have these tools you know what they are. The locator and filter icon')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & ' identifiers were added. The messages and tooltips were also added. The icons are:')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & '<13><10><9>Locator clear:<9><9>cht_ggl_stop_[color].ico<9><9>( cht_ggl_stop_blue.ico )')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & '<13><10><9>Filter clear:<9><9>cht_ggl_stop_[color].ico<9><9>( cht_ggl_stop_blue.ico )')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & '<13><10><9>Filter help:<9><9>cht_ggl_query_[color].ico<9><9>( cht_ggl_query_blue.ico )')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & '<13><10><9>Filter remove:<9><9>cht_ggl_delete_[color].ico<9><9>( cht_ggl_delete_blue.ico )')
+  #SET(%rybVendorICONS01, %rybVendorICONS01 & '')
+#ENDPREPARE
+#!
+#!-----------------------------------------------------------------------------
+#EXTENSION(RYB_Icons,'RA.2010.11.09: Add Icons To Application'),DESCRIPTION('RYB | Add Icons To Application. Version: ' & %tplVersionICONS & ', Release: ' & %tplReleaseICONS),APPLICATION,LAST
+#!-----------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#! Changes:
+#! RA.2019.08.23.FRI    Roberto Artigas Jr
+#!  *   ParentSelect/ChildSelect added to comparison labels
+#!  *   Check for Messages and Tips existing before replacing.
+#! RA.2019.01.06.SUN    Roberto Artigas Jr
+#!  *   Continue adding the handy tool icons into this template.
+#! RA.2018.12.28.FRI    Roberto Artigas Jr
+#!  *   Compare on the %ControlIdentifier template variable. Move that to the front
+#!      of the comparisons and leave the shortened compares for doing afterwards.
+#!      That might be somewhat necessary to catch all those things with other names.
+#!  *   Begin adding the handy tool icons into this template. Identifiers first.
+#! RA.2018.12.27.THU    Roberto Artigas Jr
+#!  *   Adjusted width to the C11 wider templates.
+#! RA.2018.11.22.THU    Roberto Artigas Jr
+#!  *   Added and restructured the documentation to provide better support.
+#! RA.2018.07.17.MON    Roberto Artigas
+#!  *   TODO: Change processing of control identifiers to %ControlIdentifier
+#! RA.2018.03.11        Roberto Artigas
+#!  *   Show the identifier for the button control
+#!  *   Add transparency property to the choices
+#! RA.2018.03.08        Roberto Artigas
+#!  *   Added Parent/Child icons to the Form section
+#! RA.2010.11.09        Roberto Artigas
+#!  *   Added TREE tab functionality - Soft Velocity | Ultra Tree
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!-----------------------------------------------------------------------------
+#!#BOXED(''),AT(,,288)
+#!  #PROMPT('Enable this template?',CHECK),%raEnable,AT(10),DEFAULT(1),PROP(PROP:FontStyle,700)
+#!#ENDBOXED
+#!SHEET,HSCROLL,AT(,,288)
+#SHEET,HSCROLL,AT(,,464)
+#INSERT(%MITLicenseICONS)
+#!TAB('Global')
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #!BOXED(''),AT(,,278)
+  #BOXED(''),AT(,,454)
+    #PROMPT('Enable this template?',CHECK),%raEnable,AT(10),DEFAULT(1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+  #ENDBOXED
+  #!BOXED(''),AT(,,278)
+  #BOXED(''),AT(,,454)
+    #DISPLAY('Default Entire Application Icon')
+    #!PROMPT('',OPENDIALOG('Select Icon for App','Icons|*.ICO')),%raDefaultIcon,DEFAULT('0.Ico'),AT(10,,268)
+    #PROMPT('',OPENDIALOG('Select Icon for App','Icons|*.ICO')),%raDefaultIcon,DEFAULT('0.Ico'),AT(10,,444)
+  #ENDBOXED
+  #!BOXED(''),AT(,,278)
+  #BOXED(''),AT(,,454)
+    #PROMPT('Add standard icons to buttons?',CHECK),%raIcons,AT(10),DEFAULT(1)
+    #ENABLE(%raIcons),CLEAR
+      #PROMPT('Make buttons flat?',CHECK),%raFlat,AT(10),DEFAULT(0)
+      #PROMPT('Make buttons transparent?',CHECK),%raTran,AT(10),DEFAULT(0)
+    #ENDENABLE
+  #ENDBOXED
+  #!
+  #DISPLAY(''),AT(,,,1)
+  #INSERT(%PurposeICONS)
+  #!BOXED('PURPOSE'),AT(,,278),PROP(PROP:FontStyle,700)
+  #BOXED('Purpose'),AT(,,454),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%rybPurposeICONS01),AT(,,260,74)
+    #DISPLAY(%rybPurposeICONS01),AT(,,436,48)
+  #ENDBOXED
+  #!
+  #DISPLAY(''),AT(,,,1)
+  #INSERT(%WarningICONS)
+  #!BOXED('WARNINGS'),AT(,,278),PROP(PROP:FontStyle,700)
+  #BOXED('Warnings'),AT(,,454),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%rybWarningICONS01),AT(,,260,50)
+    #!DISPLAY(%rybWarningICONS02),AT(,,260,08),PROP(PROP:FontStyle,700)
+    #!DISPLAY(%rybWarningICONS03),AT(,,260,18)
+    #DISPLAY(%rybWarningICONS01),AT(,,436,50)
+    #DISPLAY(%rybWarningICONS02),AT(,,436,08),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(%rybWarningICONS03),AT(,,436,18)
+  #ENDBOXED
+#ENDTAB
+#!-----------------------------------------------------------------------------
+#TAB('Browse')
+  #!BOXED(''),AT(,,278)
+  #!BOXED(''),AT(,,454)
+    #!DISPLAY('SELECT'),PROP(PROP:FontStyle,700)
+    #!PROMPT('',OPENDIALOG('Select SELECT Icon','Icons|*.ICO')),%raSelIcon,DEFAULT(''),AT(10,,268)
+    #!PROMPT('MSG: ',@S120),%raSelMsg,DEFAULT('Select highlighted record.'),REQ,AT(36,,242)
+    #!PROMPT('TIP: ',@S120),%raSelTip,DEFAULT('Select highlighted record.'),REQ,AT(36,,242)
+    #!DISPLAY('VIEW'),PROP(PROP:FontStyle,700)
+    #!PROMPT('',OPENDIALOG('Select VIEW Icon','Icons|*.ICO')),%raViewIcon,DEFAULT(''),AT(10,,268)
+    #!PROMPT('MSG: ',@S120),%raViewMsg,DEFAULT('View highlighted record.'),REQ,AT(36,,242)
+    #!PROMPT('TIP: ',@S120),%raViewTip,DEFAULT('View highlighted record.'),REQ,AT(36,,242)
+    #!DISPLAY('INSERT | ADD'),PROP(PROP:FontStyle,700)
+    #!PROMPT('',OPENDIALOG('Select INSERT Icon','Icons|*.ICO')),%raAddIcon,DEFAULT(''),AT(10,,268)
+    #!PROMPT('MSG: ',@S120),%raAddMsg,DEFAULT('Insert new record.'),REQ,AT(36,,242)
+    #!PROMPT('TIP: ',@S120),%raAddTip,DEFAULT('Insert new record.'),REQ,AT(36,,242)
+    #!DISPLAY('CHANGE | UPDATE'),PROP(PROP:FontStyle,700)
+    #!PROMPT('',OPENDIALOG('Select CHANGE Icon','Icons|*.ICO')),%raEditIcon,DEFAULT(''),AT(10,,268)
+    #!PROMPT('MSG: ',@S120),%raEditMsg,DEFAULT('Change highlighted record.'),REQ,AT(36,,242)
+    #!PROMPT('TIP: ',@S120),%raEditTip,DEFAULT('Change highlighted record.'),REQ,AT(36,,242)
+    #!DISPLAY('DELETE | REMOVE'),PROP(PROP:FontStyle,700)
+    #!PROMPT('',OPENDIALOG('Select DELETE Icon','Icons|*.ICO')),%raDelIcon,DEFAULT(''),AT(10,,268)
+    #!PROMPT('MSG: ',@S120),%raDelMsg,DEFAULT('Delete highlighted record.'),REQ,AT(36,,242)
+    #!PROMPT('TIP: ',@S120),%raDelTip,DEFAULT('Delete highlighted record.'),REQ,AT(36,,242)
+    #!DISPLAY('CLOSE'),PROP(PROP:FontStyle,700)
+    #!PROMPT('',OPENDIALOG('Select CLOSE Icon','Icons|*.ICO')),%raCloseIcon,DEFAULT(''),AT(10,,268)
+    #!PROMPT('MSG: ',@S120),%raCloseMsg,DEFAULT('Close this window.'),REQ,AT(36,,242)
+    #!PROMPT('TIP: ',@S120),%raCloseTip,DEFAULT('Close this window.'),REQ,AT(36,,242)
+    #DISPLAY('SELECT'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select SELECT Icon','Icons|*.ICO')),%raSelIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raSelMsg,DEFAULT('Select highlighted record.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raSelTip,DEFAULT('Select highlighted record.'),REQ,AT(36,,418)
+    #DISPLAY('VIEW'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select VIEW Icon','Icons|*.ICO')),%raViewIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raViewMsg,DEFAULT('View highlighted record.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raViewTip,DEFAULT('View highlighted record.'),REQ,AT(36,,418)
+    #DISPLAY('INSERT | ADD'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select INSERT Icon','Icons|*.ICO')),%raAddIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raAddMsg,DEFAULT('Insert new record.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raAddTip,DEFAULT('Insert new record.'),REQ,AT(36,,418)
+    #DISPLAY('CHANGE | UPDATE'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select CHANGE Icon','Icons|*.ICO')),%raEditIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raEditMsg,DEFAULT('Change highlighted record.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raEditTip,DEFAULT('Change highlighted record.'),REQ,AT(36,,418)
+    #DISPLAY('DELETE | REMOVE'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select DELETE Icon','Icons|*.ICO')),%raDelIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raDelMsg,DEFAULT('Delete highlighted record.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raDelTip,DEFAULT('Delete highlighted record.'),REQ,AT(36,,418)
+    #DISPLAY('CLOSE'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select CLOSE Icon','Icons|*.ICO')),%raCloseIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raCloseMsg,DEFAULT('Close this window.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raCloseTip,DEFAULT('Close this window.'),REQ,AT(36,,418)
+  #!ENDBOXED
+#ENDTAB
+#!--------------------------------------------------------------------
+#TAB('Form')
+  #!BOXED(''),AT(,,278)
+  #!BOXED(''),AT(,,454)
+    #DISPLAY('OKAY'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select OKAY Icon','Icons|*.ICO')),%raOkayIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raOkayMsg,DEFAULT('Complete all actions.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raOkayTip,DEFAULT('Complete all actions.'),REQ,AT(36,,418)
+    #DISPLAY('CANCEL'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select CANCEL Icon','Icons|*.ICO')),%raCancelIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raCancelMsg,DEFAULT('Cancel all actions.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raCancelTip,DEFAULT('Cancel all actions.'),REQ,AT(36,,418)
+  #!ENDBOXED
+  #DISPLAY('')
+  #!BOXED(''),AT(,,278)
+    #DISPLAY('PARENT'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select PARENT Icon','Icons|*.ICO')),%raParentIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raParentMsg,DEFAULT('Parent for this record.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raParentTip,DEFAULT('Parent for this record.'),REQ,AT(36,,418)
+    #DISPLAY('CHILD'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select CHILD Icon','Icons|*.ICO')),%raChildIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raChildMsg,DEFAULT('Child for this record.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raChildTip,DEFAULT('Child for this record.'),REQ,AT(36,,418)
+  #!ENDBOXED
+#ENDTAB
+#!--------------------------------------------------------------------
+#TAB('Misc')
+  #!BOXED(''),AT(,,278)
+  #!BOXED(''),AT(,,454)
+    #DISPLAY('HELP'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select HELP Icon','Icons|*.ICO')),%raHelpIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raHelpMsg,DEFAULT('Help on this window.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raHelpTip,DEFAULT('Help on this window.'),REQ,AT(36,,418)
+    #DISPLAY('EXIT | DOOR'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select EXIT Icon','Icons|*.ICO')),%raExitIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raExitMsg,DEFAULT('Exit the application.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raExitTip,DEFAULT('Exit the application.'),REQ,AT(36,,418)
+  #!ENDBOXED
+  #DISPLAY('')
+  #!BOXED(''),AT(,,278)
+  #!BOXED(''),AT(,,454)
+    #DISPLAY('PRINT'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select PRINT Icon','Icons|*.ICO')),%raPrintIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raPrintMsg,DEFAULT('Print.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raPrintTip,DEFAULT('Print.'),REQ,AT(36,,418)
+  #!ENDBOXED
+#ENDTAB
+#TAB('Tree')
+  #!BOXED(''),AT(,,278)
+  #!BOXED(''),AT(,,454)
+    #DISPLAY('EXPLODE ALL'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select EXPLODE ALL Icon','Icons|*.ICO')),%raExpAllIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raExpAllMsg,DEFAULT('Explode tree.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raExpAllTip,DEFAULT('Explode tree.'),REQ,AT(36,,418)
+    #DISPLAY('CONTRACT ALL'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select CONTRACT ALL Icon','Icons|*.ICO')),%raCttAllIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raCttAllMsg,DEFAULT('Contract tree.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raCttAllTip,DEFAULT('Contract tree.'),REQ,AT(36,,418)
+    #DISPLAY('REFRESH ALL'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select REFRESH ALL Icon','Icons|*.ICO')),%raRefAllIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raRefAllMsg,DEFAULT('Refresh tree.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raRefAllTip,DEFAULT('Refresh tree.'),REQ,AT(36,,418)
+    #DISPLAY('EXPLODE NODE'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select EXPLODE NODE Icon','Icons|*.ICO')),%raExpNodeIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raExpNodeMsg,DEFAULT('Explode node.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raExpNodeTip,DEFAULT('Explode node.'),REQ,AT(36,,418)
+    #DISPLAY('CONTRACT NODE'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select CONTRACT NODE Icon','Icons|*.ICO')),%raCttNodeIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raCttNodeMsg,DEFAULT('Contract node.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raCttNodeTip,DEFAULT('Contract node.'),REQ,AT(36,,418)
+  #!ENDBOXED
+#ENDTAB
+#TAB('VCR')
+  #!BOXED(''),AT(,,278)
+  #!BOXED(''),AT(,,454)
+    #DISPLAY('FIRST'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select VCR FIRST Icon','Icons|*.ICO')),%raVCRfirstIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raVCRfirstMsg,DEFAULT('First item.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raVCRfirstTip,DEFAULT('First item.'),REQ,AT(36,,418)
+    #DISPLAY('REWIND'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select VCR FIRST Icon','Icons|*.ICO')),%raVCRrewindIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raVCRrewindMsg,DEFAULT('Rewind items.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raVCRrewindTip,DEFAULT('Rewind items.'),REQ,AT(36,,418)
+    #DISPLAY('PRIOR'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select VCR PRIOR Icon','Icons|*.ICO')),%raVCRpriorIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raVRCpriorMsg,DEFAULT('Previous item.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raVCRpriorTip,DEFAULT('Previous item.'),REQ,AT(36,,418)
+    #DISPLAY('LOCATE'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select VCR LOCATE Icon','Icons|*.ICO')),%raVCRlocateIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raVCRlocateMsg,DEFAULT('Locate item.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raVCRlocateTip,DEFAULT('Locate item.'),REQ,AT(36,,418)
+    #DISPLAY('NEXT'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select VCR NEXT Icon','Icons|*.ICO')),%raVCRnextIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raVCRnextMsg,DEFAULT('Next item.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raVCRnextTip,DEFAULT('Next item.'),REQ,AT(36,,418)
+    #DISPLAY('FORWARD'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select VCR NEXT Icon','Icons|*.ICO')),%raVCRforwardIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raVCRforwardMsg,DEFAULT('Forward items.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raVCRforwardTip,DEFAULT('Forward items.'),REQ,AT(36,,418)
+    #DISPLAY('LAST'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select VCR LAST Icon','Icons|*.ICO')),%raVCRlastIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raVCRlastMsg,DEFAULT('Last item.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raVCRlastTip,DEFAULT('Last item.'),REQ,AT(36,,418)
+  #!ENDBOXED
+#ENDTAB
+#!
+#! RA.2018.07.17: Additional utility icons that are used frequently enough to warrant their own entries
+#! RA.2018.07.17: Additional utility icons that are used frequently enough to warrant their own entries
+#!
+#!--------------------------------------------------------------------
+#TAB ('Resources')
+  #!BOXED(''),AT(,,278)
+  #BOXED(UPPER(%Application) & '.' & UPPER(%ProgramExtension)),AT(,,454),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY('The resources ...')
+    #!BUTTON('Icons and Descriptions'),AT(,,268,250,),MULTI(%IconPair,%IconFile & '   ' & %IconDesc),INLINE
+    #BUTTON('Icons and Descriptions'),AT(,,444,250),MULTI(%IconPair,%IconFile & '   ' & %IconDesc),INLINE
+      #!INSERT(%PreambleICONS)
+      #INSERT(%PreambleTextICONS)
+      #!BOXED(''),AT(,,288)
+      #BOXED(UPPER(%Application) & '.' & UPPER(%ProgramExtension)),AT(,,454),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+        #!PROMPT('Select Icon File: ',OPENDIALOG('Select Resource Icon','Icons|*.ICO')),%IconFile,REQ,AT(78,,210),UNIQUE
+        #!PROMPT('Icon Description: ',@S120)                                           ,%IconDesc,REQ,AT(78,,210)                                   
+        #PROMPT('Select Icon File: ',OPENDIALOG('Select Resource Icon','Icons|*.ICO')),%IconFile,REQ,AT(78,,386),UNIQUE
+        #PROMPT('Icon Description: ',@S120)                                           ,%IconDesc,REQ,AT(78,,386)                                   
+      #ENDBOXED
+    #ENDBUTTON
+  #ENDBOXED
+#ENDTAB
+#! RA.2019.01.06.SUN: Added the Handy Tools Icons.
+#TAB('Handy')
+  #!BOXED(''),AT(,,454)
+    #DISPLAY('LOCATOR CLEAR'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select LOCATOR CLEAR Icon','Icons|*.ICO')),%raHandyLocatorClearIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raHandyLocatorClearMsg,DEFAULT('Clear locator.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raHandyLocatorClearTip,DEFAULT('Clear locator.'),REQ,AT(36,,418)
+    #DISPLAY('FILTER CLEAR'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select FILTER CLEAR Icon','Icons|*.ICO')),%raHandyFilterClearIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raHandyFilterClearMsg,DEFAULT('Clear filter.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raHandyFilterClearTip,DEFAULT('Clear filter.'),REQ,AT(36,,418)
+    #DISPLAY('FILTER HELP'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select FILTER HELP Icon','Icons|*.ICO')),%raHandyFilterHelpIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raHandyFilterHelpMsg,DEFAULT('Filter help.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raHandyFilterHelpTip,DEFAULT('Filter help.'),REQ,AT(36,,418)
+    #DISPLAY('FILTER REMOVE'),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #PROMPT('',OPENDIALOG('Select FILTER REMOVE Icon','Icons|*.ICO')),%raHandyFilterRemoveIcon,DEFAULT(''),AT(10,,444)
+    #PROMPT('MSG: ',@S120),%raHandyFilterRemoveMsg,DEFAULT('Filter remove.'),REQ,AT(36,,418)
+    #PROMPT('TIP: ',@S120),%raHandyFilterRemoveTip,DEFAULT('Filter remove.'),REQ,AT(36,,418)
+  #!ENDBOXED
+#ENDTAB
+#! RA.2019.01.06.SUN: Added the explanation of the 'TAB' for other Vendor's icons.
+#TAB ('Other')
+  #INSERT(%OtherVendorICONS)
+  #BOXED('Vendor'),AT(,,454),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY(%rybVendorICONS01),AT(,,436,300)
+  #ENDBOXED
+#ENDTAB
+#ENDSHEET
+#!--------------------------------------------------------------------
+#BOXED(''),AT(,,288),HIDE
+  #!PROMPT('',@S120),%ControlIdentifier,DEFAULT(''),AT(10,,268)
+  #PROMPT('',@S120),%ControlIdentifier,DEFAULT(''),AT(10,,444)
+#ENDBOXED
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#! Setup Global Variables For The Templates
+#!--------------------------------------------------------------------
+#ATSTART
+#ENDAT
+#!--------------------------------------------------------------------
+#ATEND
+#ENDAT
+#!--------------------------------------------------------------------
+#! Setup Global Equates for the Programs
+#!--------------------------------------------------------------------
+#AT(%AfterGlobalIncludes)
+#INDENT(3)
+#INDENT(-3)
+#ENDAT
+#!--------------------------------------------------------------------
+#! Setup Project File
+#!--------------------------------------------------------------------
+#AT(%CustomGlobalDeclarations)
+#IF(%raEnable)
+#!
+  #IF(%raDefaultIcon)
+    #PROJECT(%raDefaultIcon)
+  #ENDIF
+  #!
+  #IF(%raIcons)
+    #!--------!
+    #! Browse !
+    #!--------!
+    #IF(%raSelIcon)
+      #PROJECT(%raSelIcon)                                  #! SELECT | CALLLOOKUP | LOOKUPFILE
+    #ENDIF
+    #IF(%raVIewIcon)
+      #PROJECT(%raViewIcon)                                 #! VIEW
+    #ENDIF
+    #IF(%raAddIcon)
+      #PROJECT(%raAddIcon)                                  #! INSERT
+    #ENDIF
+    #IF(%raEditIcon)
+      #PROJECT(%raEditIcon)                                 #! CHANGE
+    #ENDIF
+    #IF(%raDelIcon)
+      #PROJECT(%raDelIcon)                                  #! DELETE
+    #ENDIF
+    #IF(%raCloseIcon)
+      #PROJECT(%raCloseIcon)                                #! CLOSE
+    #ENDIF
+    #!------!
+    #! Form !
+    #!------!
+    #IF(%raOkayIcon)
+      #PROJECT(%raOkayIcon)                                 #! OKAY
+    #ENDIF
+    #IF(%raCancelIcon)
+      #PROJECT(%raCancelIcon)                               #! CANCEL
+    #ENDIF
+    #IF(%raParentIcon)
+      #PROJECT(%raParentIcon)                               #! PARENT SELECT
+    #ENDIF
+    #IF(%raChildIcon)
+      #PROJECT(%raChildIcon)                                #! CHILD SELECT
+    #ENDIF
+    #!------!
+    #! Misc !
+    #!------!
+    #IF(%raHelpIcon)
+      #PROJECT(%raHelpIcon)                                 #! HELP
+    #ENDIF
+    #IF(%raExitIcon)
+      #PROJECT(%raExitIcon)                                 #! EXIT
+    #ENDIF
+    #IF(%raPrintIcon)
+      #PROJECT(%raPrintIcon)                                #! PRINT
+    #ENDIF
+    #!------!
+    #! Tree !
+    #!------!
+    #IF(%raExpAllIcon)
+      #PROJECT(%raExpAllIcon)                               #! EXPLODE ALL (TREE)
+    #ENDIF
+    #IF(%raCttAllIcon)
+      #PROJECT(%raCttAllIcon)                               #! CONTRACT ALL (TREE)
+    #ENDIF
+    #IF(%raRefAllIcon)
+      #PROJECT(%raRefAllIcon)                               #! REFRESH ALL (TREE)
+    #ENDIF
+    #IF(%raExpNodeIcon)
+      #PROJECT(%raExpNodeIcon)                              #! EXPLODE NODE
+    #ENDIF
+    #IF(%raCttNodeIcon)
+      #PROJECT(%raCttNodeIcon)                              #! CONTRACT NODE
+    #ENDIF
+    #!-----!
+    #! VCR !
+    #!-----!
+    #IF(%raVCRfirstIcon)
+      #PROJECT(%raVCRfirstIcon)                             #! VCR FIRST
+    #ENDIF
+    #IF(%raVCRrewindIcon)
+      #PROJECT(%raVCRrewindIcon)                            #! VCR REWIND
+    #ENDIF
+    #IF(%raVCRpriorIcon)
+      #PROJECT(%raVCRpriorIcon)                             #! VCR PRIOR
+    #ENDIF
+    #IF(%raVCRlocateIcon)
+      #PROJECT(%raVCRlocateIcon)                            #! VCR LOCATE
+    #ENDIF
+    #IF(%raVCRnextIcon)
+      #PROJECT(%raVCRnextIcon)                              #! VCR NEXT
+    #ENDIF
+    #IF(%raVCRforwardIcon)
+      #PROJECT(%raVCRforwardIcon)                           #! VCR FORWARD
+    #ENDIF
+    #IF(%raVCRlastIcon)
+      #PROJECT(%raVCRlastIcon)                              #! VCR LAST
+    #ENDIF
+    #!-------------!
+    #! Handy Tools !
+    #!-------------!                                        #! RA.2019.01.06.SUN: Added
+    #IF(%raHandyLocatorClearIcon)
+      #PROJECT(%raHandyLocatorClearIcon)                    #! LOCATOR CLEAR
+    #ENDIF
+    #IF(%raHandyFilterClearIcon)
+      #PROJECT(%raHandyFilterClearIcon)                     #! FILTER CLEAR
+    #ENDIF
+    #IF(%raHandyFilterHelpIcon)
+      #PROJECT(%raHandyFilterHelpIcon)                      #! FILTER HELP
+    #ENDIF
+    #IF(%raHandyFilterRemoveIcon)
+      #PROJECT(%raHandyFilterRemoveIcon)                    #! FILTER REMOVE
+    #ENDIF
+    #!
+    #! RA.2018.07.17: Additional utility icons that are used frequently enough to warrant their own entries
+    #!---------!
+    #! Utility !
+    #!---------!
+    #! RA.2018.07.17: Additional utility icons that are used frequently enough to warrant their own entries
+    #!
+  #ENDIF
+  #!
+  #FOR(%IconPair)
+    #PROJECT(%IconFile)
+  #ENDFOR
+#!
+#ENDIF
+#ENDAT
+#!--------------------------------------------------------------------
+#! Setup Map
+#!--------------------------------------------------------------------
+#AT(%GlobalMap)
+#ENDAT
+#!--------------------------------------------------------------------
+#AT(%GlobalData)
+#ENDAT
+#!--------------------------------------------------------------------
+#! Setup Global Options
+#!--------------------------------------------------------------------
+#AT(%AfterWindowOpening)
+#IF(%raEnable)
+#!
+  #IF(%raDefaultIcon)
+#!    #IF(UPPER(%ProcedureTemplate)='FRAME')
+#!SYSTEM{PROP:Icon} = '~%raDefaultIcon' #<! ICONS: Set GLOBAL application icon
+#!    #ENDIF
+!BOG-RYB: Set the Window application icon
+IF (CLIP(0{PROP:Icon}) = '') THEN
+  0{PROP:Icon} = '~%raDefaultIcon'    #<! ICONS: Set the window application icon
+END
+!EOG-RYB: Set the Window application icon
+  #ENDIF
+#!
+#ENDIF
+#ENDAT
+#!--------------------------------------------------------------------
+#! Setup Routines
+#!--------------------------------------------------------------------
+#AT(%RefreshWindowBeforeDisplay)
+#ENDAT
+#!--------------------------------------------------------------------
+#AT(%ProcedureRoutines)
+#ENDAT
+#!--------------------------------------------------------------------
+#! Focus color options and logic begin here
+#!--------------------------------------------------------------------
+#AT(%DataSection)
+#ENDAT
+#!--------------------------------------------------------------------
+#AT(%ProgramSetup)
+#ENDAT
+#!--------------------------------------------------------------------
+#AT(%ProgramEnd)
+#ENDAT
+#!--------------------------------------------------------------------
+#AT(%WindowManagerMethodCodeSection,'TakeSelected','(),BYTE'),PRIORITY(4000)
+#ENDAT
+#!--------------------------------------------------------------------
+#! For standard buttons add the icons, tips, and messages. NO CHOICE
+#!--------------------------------------------------------------------
+#AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),WHERE(%raIcons),PRIORITY(9000),AUTO
+#IF(%raEnable)
+#!
+  #FOR(%Control),WHERE(%ControlType='BUTTON')
+#!
+#! RA.2019.01.06.SUN:   Continue adding code for the Handy toolkit.
+#! RA.2018.12.27.THU:   Started adding the %ControlIdentifier and move them to the front of the 
+#!                      case compares. Kept the old compares and moved them to the back since
+#!                      there will be circumstances when you will have to compare for a shorter 
+#!                      identifier when it is a better way to go.
+#! RA.2018.07.18:       By using the full identifier, that will allow other naming conventions
+#!                      besides SV and established vendors. That is, as long as you add the 
+#!                      identifier full name as an #OROF('?ControlIdentifierStandard') to the
+#!                      template code so it can be compared and an action can be performed.
+#! RA.2018.03.11:       Improve the logic to get the full identifier of the control without
+#!                      the duplicate colon (:?) part. This will allow to have a complete
+#!                      indentifier comparison and to know the complete indentifier name.
+#!
+#IF(INSTRING(':',%Control) <> -1)
+  #SET(%ControlIdentifier,UPPER(SUB(%Control,1,INSTRING(':',%Control)-1)))
+#ELSE
+  #SET(%ControlIdentifier,UPPER(%Control))
+#ENDIF
+!---> '%ControlIdentifier'
+#!
+    #IF(%raFlat)
+%Control{PROP:Flat} = TRUE #<! ICONS: Flat Attribute
+    #ENDIF
+    #IF(%raTran)
+%Control{PROP:Trn} = TRUE #<! ICONS: Transparent Attribute
+    #ENDIF
+#!
+    #!
+    #!-----------------------------------------------------!
+    #! Compare on the %ControlIdentifier template variable !
+    #!-----------------------------------------------------!
+    #!
+    #CASE(UPPER(%ControlIdentifier))
+    #!--------!
+    #! Browse !
+    #!--------!
+    #! RA.2019.08.17: The Selection ICON is the only thing changed. The control templates have the TIP and MSG text.
+    #OF   ('?INTLSELECTLANGUAGE')                           #! RA.2019.08.17: Added
+    #OROF ('?INTLSELECTCALENDAR')
+    #OROF ('?INTLSELECTCURRENCY')
+    #OROF ('?INTLSELECTCOUNTRY')
+    #OROF ('?INTLSELECTMEASURE')
+    #OROF ('?INTLSELECTTIMEZONE')
+      #IF(%raSelIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raSelIcon'                         #<! ICONS: Button: INTLSELECT*
+        #CYCLE
+      #ENDIF
+    #OF   ('?SELECT')
+    #OROF ('?CALLLOOKUP')                                   #! RA.2018.07.23: Added
+    #OROF ('?LOOKUPFILE')                                   #! RA.2018.07.25: Added
+      #IF(%raSelIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raSelIcon'                         #<! ICONS: Button: SELECT | CALLLOOKUP | LOOKUPFILE
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raSelMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raSelTip'
+END
+        #CYCLE
+      #ENDIF
+    #OF   ('?VIEW')
+      #IF(%raViewIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raViewIcon'                        #<! ICONS: Button: View
+IF (%Control{Prop:Icon} = '')
+  %Control{PROP:Msg} = '%raViewMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raViewTip'
+END
+        #CYCLE
+      #ENDIF
+    #OF   ('?INSERT')
+    #OROF ('?ADD')
+      #IF(%raAddIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raAddIcon'                         #<! ICONS: Button: Insert
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raAddMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raAddTip'
+END
+        #CYCLE
+      #ENDIF
+    #OF   ('?CHANGE')
+    #OROF ('?EDIT')
+      #IF(%raEditIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raEditIcon'                        #<! ICONS: Button: Change
+IF (%Control{Prop:Icon} = '')
+  %Control{PROP:Msg} = '%raEditMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raEditTip'
+END
+        #CYCLE
+      #ENDIF
+    #OF   ('?DELETE')
+      #IF(%raDelIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raDelIcon'                         #<! ICONS: Button: Delete
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raDelMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raDelTip'
+END
+        #CYCLE
+      #ENDIF
+    #OF   ('?CLOSE')
+      #IF(%raCloseIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raCloseIcon'                       #<! ICONS: Button: Close Window
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raCloseMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raCloseTip'
+END
+        #CYCLE
+      #ENDIF
+    #!------!
+    #! Form !
+    #!------!
+    #OF   ('?OK')
+    #OROF ('?OKBUTTON')                                     #! RA.2018.02.26 - DEFAULTS.CLW template
+      #IF(%raOkayIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raOkayIcon'                        #<! ICONS: Button: OK | OKBUTTON
+IF ( %Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raOkayMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raOkayTip'
+END
+        #CYCLE
+      #ENDIF
+    #OF   ('?CANCEL')
+    #OROF ('?CANCELBUTTON')
+    #OROF ('?PROGRESS:CANCEL')
+      #IF(%raCancelIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raCancelIcon'                      #<! ICONS: Button: CANCEL | CANCELBUTTON
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raCancelMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raCancelTip'
+END
+        #CYCLE
+      #ENDIF
+    #OF   ('?PARENT')                                       #! RA.2018.03.08 - Not known yet ???
+    #OROF ('?PARENTSELECT')                                 #! RA.2019.08.23: Added
+      #IF(%raParentIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raParentIcon'                      #<! ICONS: Button: Parent
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raParentMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raParentTip'
+END
+        #CYCLE
+      #ENDIF
+    #OF   ('?CHILD')                                        #! RA.2018.03.08 - Not known yet ???
+    #OROF ('?CHILDSELECT')                                  #! RA.2019.08.23: Added
+      #IF(%raChildIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raChildIcon'                       #<! ICONS: Button: Child
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raChildMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raChildTip'
+END
+        #CYCLE
+      #ENDIF
+    #!------!
+    #! Misc !
+    #!------!
+    #OF   ('?HELP')
+    #OROF ('?HELPBUTTON')
+      #IF(%raHelpIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raHelpIcon'                        #<! ICONS: Button: HELP | HELPBUTTON
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raHelpMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raHelpTip'
+END
+        #CYCLE
+      #ENDIF
+    #OF   ('?EXIT')
+    #OROF ('?DOOR')
+      #IF(%raExitIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raExitIcon'                        #<! ICONS: Button: Exit Application
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raExitMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raExitTip'
+END
+        #CYCLE
+      #ENDIF
+    #OF   ('?PRINT')
+    #OROF ('?PAUSE')
+      #IF(%raPrintIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raPrintIcon'                       #<! ICONS: Button: Print
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raPrintMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raPrintTip'
+END
+        #CYCLE
+      #ENDIF
+    #!------!
+    #! Tree !
+    #!------!
+    #! Soft Velocity
+    #! Ultra Tree
+    #OF   ('?EXPAND')
+      #IF(%raExpAllIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raExpAllIcon'                      #<! ICONS: Button: Expand Tree
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raExpAllMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raExpAllTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Soft Velocity
+    #! Ultra Tree
+    #OF   ('?CONTRACT')
+      #IF(%raCttAllIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raCttAllIcon'                      #<! ICONS: Button: Contract Tree
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raCttAllMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raCttAllTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?REFRESH')
+      #IF(%raRefAllIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raRefAllIcon'                      #<! ICONS: Button: Refresh Tree
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raRefAllMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raRefAllTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?EXPANDNODE')
+      #IF(%raExpNodeIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raExpNodeIcon'                     #<! ICONS: Button: Expand Node
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raExpNodeMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raExpNodeTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?CONTRACTNODE')
+      #IF(%raCttNodeIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raCttNodeIcon'                     #<! ICONS: Button: Contract Node
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raCttNodeMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raCttNodeTip'
+END
+        #CYCLE
+      #ENDIF
+    #!-----!
+    #! VCR !
+    #!-----!
+    #! Ultra Tree
+    #OF   ('?FIRSTPAGE')
+      #IF(%raVCRfirstIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRfirstIcon'                    #<! ICONS: Button: VCR First
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raVCRfirstMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raVCRfirstTip'
+END
+        #CYCLE
+      #ENDIF
+    #! NO ONE YET
+    #OF   ('?FWDPAGE')
+      #IF(%raVCRrewindIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRrewindIcon'                   #<! ICONS: Button: VCR Rewind
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raVCRrewindMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raVCRrewindTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?PRIORPAGE')
+      #IF(%raVCRpriorIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRpriorIcon'                    #<! ICONS: Button: VCR Previous
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg}  = '%raVCRpriorMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip}  = '%raVCRpriorTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?LOCATEPAGE')
+      #IF(%raVCRlocateIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRlocateIcon'                   #<! ICONS: Button: VCR Locat
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raVCRlocateMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raVCRlocateTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?NEXTPAGE')
+      #IF(%raVCRnextIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRnextIcon'                     #<! ICONS: Button: VCR Next
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raVCRnextMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raVCRnextTip'
+END
+        #CYCLE
+      #ENDIF
+    #! NO ONE YET
+    #OF   ('?RWDPAGE')
+      #IF(%raVCRforwardIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRforwardIcon'                  #<! ICONS: Button: VCR Forward
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raVCRforwardMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raVCRforwardTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?LASTPAGE')
+      #IF(%raVCRlastIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRlastIcon'                     #<! ICONS: Button: VCR Last
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raVCRlastMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raVCRlastTip'
+END
+        #CYCLE
+      #ENDIF
+    #!-------------!
+    #! Handy Tools !
+    #!-------------!
+    #! RA.2019.01.06.SUN: Continue adding code for the Handy toolkit.
+    #! RA.2018.12.28.FRI: Begin adding the handy tool icons into this template. Identifiers first.
+    #OF   ('?BUTTONLOCATORCLEAR')
+      #IF(%raHandyLocatorClearIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raHandyLocatorClearIcon'           #<! ICONS: Button: Locator Clear
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raHandyLocatorClearMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raHandyLocatorClearTip'
+END
+        #CYCLE
+      #ENDIF
+    #OF   ('?BUTTONFILTERCLEAR')
+      #IF(%raHandyFilterClearIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raHandyFilterClearIcon'            #<! ICONS: Button: Filter Clear
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raHandyFilterClearMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raHandyFilterClearTip'
+END
+        #CYCLE
+      #ENDIF
+    #OF   ('?BUTTONFILTERHELP')
+      #IF(%raHandyFilterHelpIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raHandyFilterHelpIcon'             #<! ICONS: Button: Filter Clear
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raHandyFilterHelpMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raHandyFilterHelpTip'
+END
+        #CYCLE
+      #ENDIF
+    #OF   ('?BUTTONFILTERREMOVE')
+      #IF(%raHandyFilterRemoveIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raHandyFilterRemoveIcon'           #<! ICONS: Button: Filter Clear
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raHandyFilterRemoveMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raHandyFilterRemoveTip'
+END
+        #CYCLE
+      #ENDIF
+    #ENDCASE
+    #!
+    #!--------------------------------------------------!
+    #! RA.2010.11.09 - This is the smallest comparison. !
+    #!--------------------------------------------------!
+    #!
+    #CASE(SUB(UPPER(%Control),1,5))
+    #!--------!
+    #! Browse !
+    #!--------!
+    #OF   ('?SELE')
+    #OROF ('?CALL')                                         #! RA.2018.07.23: Added
+    #OROF ('?LOOK')                                         #! RA.2018.07.25: Added
+      #IF(%raSelIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raSelIcon'                         #<! ICONS: Button: Select
+  %Control{PROP:Msg} = '%raSelMsg'
+  %Control{PROP:Tip} = '%raSelTip'
+        #CYCLE
+      #ENDIF
+    #OF   ('?VIEW')
+      #IF(%raViewIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raViewIcon'                        #<! ICONS: Button: View
+  %Control{PROP:Msg} = '%raViewMsg'
+  %Control{PROP:Tip} = '%raViewTip'
+        #CYCLE
+      #ENDIF
+    #OF   ('?INSE')
+    #OROF ('?ADD')
+      #IF(%raAddIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raAddIcon'                         #<! ICONS: Button: Insert
+  %Control{PROP:Msg} = '%raAddMsg'
+  %Control{PROP:Tip} = '%raAddTip'
+        #CYCLE
+      #ENDIF
+    #OF   ('?CHAN')
+    #OROF ('?EDIT')
+      #IF(%raEditIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raEditIcon'                        #<! ICONS: Button: Change
+  %Control{PROP:Msg} = '%raEditMsg'
+  %Control{PROP:Tip} = '%raEditTip'
+        #CYCLE
+      #ENDIF
+    #OF   ('?DELE')
+      #IF(%raDelIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raDelIcon'                         #<! ICONS: Button: Delete
+  %Control{PROP:Msg} = '%raDelMsg'
+  %Control{PROP:Tip} = '%raDelTip'
+        #CYCLE
+      #ENDIF
+    #OF   ('?CLOS')
+      #IF(%raCloseIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raCloseIcon'                       #<! ICONS: Button: Close Window
+  %Control{PROP:Msg} = '%raCloseMsg'
+  %Control{PROP:Tip} = '%raCloseTip'
+        #CYCLE
+      #ENDIF
+    #!------!
+    #! Form !
+    #!------!
+    #OF   ('?OK')
+    #OROF ('?OKBU')                                         #! RA.2018.02.26 - DEFAULTS.CLW template
+      #IF(%raOkayIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raOkayIcon'                        #<! ICONS: Button: OK | OKBUTTON
+  %Control{PROP:Msg} = '%raOkayMsg'
+  %Control{PROP:Tip} = '%raOkayTip'
+        #CYCLE
+      #ENDIF
+    #OF   ('?CANC')
+    #OROF ('?PROG')
+      #IF(%raCancelIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raCancelIcon'                      #<! ICONS: Button: Cancel
+  %Control{PROP:Msg} = '%raCancelMsg'
+  %Control{PROP:Tip} = '%raCancelTip'
+        #CYCLE
+      #ENDIF
+    #OF   ('?PARE')                                         #! RA.2018.03.08 - Not known yet ???
+      #IF(%raParentIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raParentIcon'                      #<! ICONS: Button: Parent
+  %Control{PROP:Msg} = '%raParentMsg'
+  %Control{PROP:Tip} = '%raParentTip'
+        #CYCLE
+      #ENDIF
+    #OF   ('?CHIL')                                         #! RA.2018.03.08 - Not known yet ???
+      #IF(%raChildIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raChildIcon'                       #<! ICONS: Button: Child
+  %Control{PROP:Msg} = '%raChildMsg'
+  %Control{PROP:Tip} = '%raChildTip'
+        #CYCLE
+      #ENDIF
+    #!------!
+    #! Misc !
+    #!------!
+    #OF   ('?HELP')
+      #IF(%raHelpIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raHelpIcon'                        #<! ICONS: Button: Help
+  %Control{PROP:Msg} = '%raHelpMsg'
+  %Control{PROP:Tip} = '%raHelpTip'
+        #CYCLE
+      #ENDIF
+    #OF   ('?EXIT')
+    #OROF ('?DOOR')
+      #IF(%raExitIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raExitIcon'                        #<! ICONS: Button: Exit Application
+  %Control{PROP:Msg} = '%raExitMsg'
+  %Control{PROP:Tip} = '%raExitTip'
+        #CYCLE
+      #ENDIF
+    #OF   ('?PRIN')
+    #OROF ('?PAUS')
+      #IF(%raPrintIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raPrintIcon'                       #<! ICONS: Button: Print
+  %Control{PROP:Msg} = '%raPrintMsg'
+  %Control{PROP:Tip} = '%raPrintTip'
+        #CYCLE
+      #ENDIF
+    #ENDCASE
+    #!
+    #!------------------------------------!
+    #! RA.2010.11.09 - Different vendors. !
+    #!------------------------------------!
+    #!
+    #CASE(SUB(UPPER(%Control),1,12))
+    #!------!
+    #! Tree !
+    #!------!
+    #! Soft Velocity
+    #! Ultra Tree
+    #OF   ('?EXPAND')
+      #IF(%raExpAllIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raExpAllIcon'                      #<! ICONS: Button: Expand Tree
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raExpAllMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raExpAllTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Soft Velocity
+    #! Ultra Tree
+    #OF   ('?CONTRACT')
+      #IF(%raCttAllIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raCttAllIcon'                      #<! ICONS: Button: Contract Tree
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raCttAllMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raCttAllTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?REFRESH')
+      #IF(%raRefAllIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raRefAllIcon'                      #<! ICONS: Button: Refresh Tree
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raRefAllMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raRefAllTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?EXPANDNODE')
+      #IF(%raExpNodeIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raExpNodeIcon'                     #<! ICONS: Button: Expand Node
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raExpNodeMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raExpNodeTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?CONTRACTNODE')
+      #IF(%raCttNodeIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raCttNodeIcon'                     #<! ICONS: Button: Contract Node
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raCttNodeMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raCttNodeTip'
+END  
+        #CYCLE
+      #ENDIF
+    #!-----!
+    #! VCR !
+    #!-----!
+    #! Ultra Tree
+    #OF   ('?FIRSTPAGE')
+      #IF(%raVCRfirstIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRfirstIcon'                    #<! ICONS: Button: VCR First
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raVCRfirstMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raVCRfirstTip'
+END
+        #CYCLE
+      #ENDIF
+    #! NO ONE YET
+    #OF   ('?FWDPAGE')
+      #IF(%raVCRrewindIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRrewindIcon'                   #<! ICONS: Button: VCR Rewind
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raVCRrewindMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raVCRrewindTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?PRIORPAGE')
+      #IF(%raVCRpriorIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRpriorIcon'                    #<! ICONS: Button: VCR Previous
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raVCRpriorMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raVCRpriorTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?LOCATEPAGE')
+      #IF(%raVCRlocateIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRlocateIcon'                   #<! ICONS: Button: VCR Locat
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raVCRlocateMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raVCRlocateTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?NEXTPAGE')
+      #IF(%raVCRnextIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRnextIcon'                     #<! ICONS: Button: VCR Next
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raVCRnextMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raVCRnextTip'
+END
+        #CYCLE
+      #ENDIF
+    #! NO ONE YET
+    #OF   ('?RWDPAGE')
+      #IF(%raVCRforwardIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRforwardIcon'                  #<! ICONS: Button: VCR Forward
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raVCRforwardMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raVCRforwardTip'
+END
+        #CYCLE
+      #ENDIF
+    #! Ultra Tree
+    #OF   ('?LASTPAGE')
+      #IF(%raVCRlastIcon)
+%Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
+%Control{Prop:Icon} = '~%raVCRlastIcon'                     #<! ICONS: Button: VCR Last
+IF (%Control{PROP:Msg} = '')
+  %Control{PROP:Msg} = '%raVCRlastMsg'
+END
+IF (%Control{PROP:Tip} = '')
+  %Control{PROP:Tip} = '%raVCRlastTip'
+END
+        #CYCLE
+      #ENDIF
+    #ENDCASE
+    #!
+    #! RA.2018.07.17: Additional utility icons that are used frequently enough to warrant their own entries
+    #!---------!
+    #! Utility !
+    #!---------!    
+    #! RA.2018.07.17: Additional utility icons that are used frequently enough to warrant their own entries
+    #!
+#!
+  #ENDFOR
+#!
+#ENDIF
+#ENDAT
+#!
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
