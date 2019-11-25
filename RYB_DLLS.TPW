@@ -13,7 +13,7 @@
   #SET(%CopyrightPROTOEXP01, %CopyrightPROTOEXP01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
 #ENDPREPARE
 #!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
-#BOXED('Version '& %tplVersionPROTOEXP & ' [ ' & %tplReleasePROTOEXP & ' ]'),AT(,,454),PROP(PROP:FontStyle,700)
+#BOXED('Version '& %tplVersionPROTOEXP & ' [ ' & %tplReleasePROTOEXP & ' ]'),AT(,,454),PROP(PROP:FontStyle,700) 
   #DISPLAY(''),AT(,,,1)
   #!DISPLAY('Prototype Explorer for ABC.'),AT(10)
   #!DISPLAY('Copyright © 2001-2099 by Roberto Artigas y Soler.'),AT(10)
