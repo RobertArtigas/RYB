@@ -1,0 +1,114 @@
+#!#TEMPLATE(zzPathSaveRestore,'Templates Description'),FAMILY('ABC')
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%CopyrightPATHSR) 
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightTextPATHSR))
+    #DECLARE(%CopyrightTextPATHSR)
+  #ENDIF
+  #SET(%CopyrightTextPATHSR, 'LONGPATH save and restore for ABC.')
+  #SET(%CopyrightTextPATHSR, %CopyrightTextPATHSR & '<13,10>Copyright © 2001-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightTextPATHSR, %CopyrightTextPATHSR & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightTextPATHSR, %CopyrightTextPATHSR & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.06.01 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#!EQUATE(%tplVersionPATHSR                   , '1.00' )
+#!EQUATE(%tplReleasePATHSR                   , '2018.06.01' )
+#BOXED('Version ' & %tplVersionPATHSR & ' [ ' & %tplReleasePATHSR  & ' ]'),AT(,,454),PROP(PROP:FontStyle,700)
+  #!DISPLAY(''),AT(,,,1)
+  #!DISPLAY('LONGPATH save and restore for ABC.'               ),AT(10)
+  #!DISPLAY('Copyright © 2001-2099 by Roberto Artigas y Soler.'),AT(10)
+  #!DISPLAY('All copyrights reserved world wide.'              ),AT(10)
+  #!DISPLAY('E-MAIL: roberto.artigas.dev@gmail.com'            ),AT(10)
+  #!DISPLAY(%CopyrightTextPATHSR),AT(,,260,34)
+  #DISPLAY(%CopyrightTextPATHSR),AT(,,454,34)
+#ENDBOXED
+#!
+#GROUP(%ExplainPATHSR)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainTextPATHSR))
+    #DECLARE(%ExplainTextPATHSR)
+  #ENDIF
+  #SET(%ExplainTextPATHSR, '')
+  #SET(%ExplainTextPATHSR, %ExplainTextPATHSR & 'This will save and restore the LONGPATH in the current window procedure.')
+  #SET(%ExplainTextPATHSR, %ExplainTextPATHSR & ' If you save an external file (XLSX, DOCX, CSV) in an different location,')
+  #SET(%ExplainTextPATHSR, %ExplainTextPATHSR & ' you might have left the path at that location and this might place your.')
+  #SET(%ExplainTextPATHSR, %ExplainTextPATHSR & ' *.INI file for your saved window location in the wrong place.')
+  #SET(%ExplainTextPATHSR, %ExplainTextPATHSR & '<13,10><13,10>')
+  #SET(%ExplainTextPATHSR, %ExplainTextPATHSR & 'This template has been tested with the ABC template chains.')
+  #SET(%ExplainTextPATHSR, %ExplainTextPATHSR & '')
+#ENDPREPARE
+#!
+#GROUP(%MITLicensePATHSR)
+#TAB('PATH'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightPATHSR) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#EXTENSION(RYB_PathSaveAndRestore,'RA.2018.09.24: Procedure LONGPATH save and restore'),DESCRIPTION('RYB | Procedure LONGPATH save and restore. Version: ' & %tplVersionPATHSR & ', Release: ' & %tplReleasePATHSR),PROCEDURE
+#!-----------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#DISPLAY('')
+#!-----------------------------------------------------------------------------
+#! RA.2018.09.24.MON    Roberto Artigas Jr
+#!  *   RESTRICT this template to those things that have windows.
+#! RA.2018.06.01        Roberto Artigas Jr
+#!  *   LONGPATH save and restore for ABC procedures
+#! Created By:          Roberto Artigas Jr
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!
+#! RA.2018.09.24.MON: The following restrict will only show the template if it has a window
+#!                    A source procedure will not allow the template to show.
+#RESTRICT,WHERE(UPPER(%ProcedureTemplate)='REPORT'  OR  UPPER(%ProcedureTemplate)='PROCESS' OR UPPER(%ProcedureTemplate)='FRAME'   OR  UPPER(%ProcedureTemplate)='FORM' OR UPPER(%ProcedureTemplate)='WINDOW'  OR  UPPER(%ProcedureTemplate)='BROWSE'  OR UPPER(%ProcedureTemplate)='SPLASH' OR UPPER(%ProcedureTemplate) = 'HANDYWEBCLIENTUPDATEFORMPROCEDURE' OR UPPER(%ProcedureTemplate) = 'HANDYWEBCLIENTBROWSEPROCEDURE') 
+#ACCEPT
+#ENDRESTRICT
+#!
+#!SHEET,AT(,,288),HSCROLL
+#SHEET,HSCROLL,AT(,,464)
+#INSERT(%MITLicensePATHSR)
+#INSERT(%ExplainPATHSR)
+  #TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #!BOXED('LONGPATH SAVE and RESTORE'),AT(,,280)
+  #BOXED('LONGPATH SAVE and RESTORE ( ' & %Procedure & ' )'),AT(,,454),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%ExplainTextPATHSR),AT(,,260,54)
+    #DISPLAY(%ExplainTextPATHSR),AT(,,434,54)
+  #ENDBOXED
+#ENDTAB
+#ENDSHEET
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#AT(%DataSection),PRIORITY(1000)
+#EMBED(%EOGRYB_BegData,'Before: Data definition')
+SaveFilePath          STRING(FILE:MaxFilePath) #<! PATH save/restore variable
+#EMBED(%EOGRYB_EndData,'After: Data definition')
+#ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! RA.2018.06.01: Save the current long path we got
+#AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(9950)
+#!UD.DebugLevel('============================================================')
+#!UD.DebugLevel('INIT: PATH="' & CLIP(LONGPATH()) & '"  <-----<<<')  
+#EMBED(%EOGRYB_BegSave,'Before: Save LONGPATH done')
+SaveFilePath = LONGPATH() #<! Save current path
+#EMBED(%EOGRYB_EndSave,'After: Save LONGPATH done')
+#!UD.DebugLevel('SaveFilePath="' & CLIP(SaveFilePath) & '" WHERE AM I')  
+#ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! RA.2018.06.01: Restore the saved long path we got
+#AT(%WindowManagerMethodCodeSection,'Kill','(),BYTE'),PRIORITY(7300)
+#!UD.DebugLevel('SaveFilePath="' & CLIP(SaveFilePath) & '" WHERE AM I')  
+#EMBED(%EOGRYB_BegRestore,'Before: Restore LONGPATH done')
+SETPATH(SaveFilePath) #<! Restore saved path
+#EMBED(%EOGRYB_EndRestore,'After: Restore LONGPATH done')
+#!UD.DebugLevel('KILL: PATH="' & CLIP(LONGPATH()) & '"  <-----<<<')  
+#!UD.DebugLevel('============================================================')
+#ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
