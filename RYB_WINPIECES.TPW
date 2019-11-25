@@ -1,0 +1,180 @@
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%CopyrightWINPIECES)
+  #!BOXED('Version 1.0 [ 2018.03.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+  #BOXED('Version 1.0 [ 2018.03.11 ]'),AT(,,454),PROP(PROP:FontStyle,700)
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY('Add assorted cosmetics to application windows.'   ),AT(10)
+    #DISPLAY('Copyright © 2018-2099 by Roberto Artigas y Soler.'),AT(10)
+    #DISPLAY('All copyrights reserved world wide.'              ),AT(10)
+    #DISPLAY('E-MAIL: roberto.artigas.dev@gmail.com'            ),AT(10)
+  #ENDBOXED
+#!
+#GROUP(%MITLicenseWINPIECES)
+#TAB('WINPIECES'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightWINPIECES) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!-----------------------------------------------------------------------------
+#EXTENSION (RYB_WinPieces_ALL, 'RA.2018.03.11: Assorted cosmetics to application windows'),DESCRIPTION('RYB | Add assorted cosmetics to application windows. Version: ' & %tplVersionWINPIECES & ', Release: ' & %tplReleaseWINPIECES),APPLICATION
+#!-----------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------
+#! Changes:
+#! RA.2018.12.27.THU      Roberto Artigas Jr
+#!  *   Made the width of the templates larger to accomodateC11 wider templates
+#! RA.2018.03.11.SAT      Roberto Artigas Jr 
+#!  *   Created this template
+#PREPARE
+#ENDPREPARE
+#!-----------------------------------------------------------------------------
+#!SHEET,HSCROLL,AT(,,288)
+#SHEET,HSCROLL,AT(,,464)
+#INSERT(%MITLicenseWINPIECES)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #!BOXED(''),AT(,,278)
+  #BOXED(''),AT(,,454)
+    #PROMPT('Choose the VCR option:',DROP('Turn On|Turn Off|Leave Alone')),%raVCRchoice,DEFAULT('Leave Alone')
+  #ENDBOXED
+  #!BOXED(''),AT(,,278)
+  #BOXED(''),AT(,,454)
+    #DISPLAY('Select Wallpaper Image:')   #! ,PROP(PROP:FontStyle,700)
+    #!PROMPT('',OPENDIALOG('Select Wallpaper Image','Images|*.*')),%raWallpaperImage,DEFAULT(''),AT(10,,268)
+    #PROMPT('',OPENDIALOG('Select Wallpaper Image','Images|*.*')),%raWallpaperImage,DEFAULT(''),AT(10,,444)
+    #PROMPT('Set Wallpaper Type:',DROP('Leave Alone|Tiled|Stretched|Centered|None')),%raWallpaperType,DEFAULT('Leave Alone')
+    #ENABLE(%raWallpaperType='None')
+      #PROMPT('Enable Background Color',CHECK),%raSetBackground,DEFAULT(%FALSE),AT(10)
+      #!ENABLE(%raSetBackground = %TRUE)
+        #!PROMPT('Select Background Color',COLORDIALOG('Select Background Color')),%raColorBackground,DEFAULT(COLOR:BTNFACE)
+      #!ENDENABLE
+    #ENDENABLE
+  #ENDBOXED
+  #! RA.2019.08.06: DATE/TIME: DCT DEFAULT|OTHER|WINDOWS SHORT|WINDOWS LONG
+  #BOXED(''),AT(,,454)   
+    #PROMPT('Enable application wide DATE format?',CHECK)                         , %raFormatDateCheck , AT(10) , DEFAULT(0)
+    #ENABLE(%raFormatDateCheck) 
+      #PROMPT('Format DATE default: ',DROP('@D010-B|@D02B|@D017B|@D018B|@D08B'))  , %raFormatDateMask  , REQ    , DEFAULT('@D010-B')
+    #ENDENABLE
+    #PROMPT('Enable application wide TIME format?',CHECK)                         , %raFormatTimeCheck , AT(10) , DEFAULT(0)
+    #ENABLE(%raFormatTimeCheck)
+      #PROMPT('Format TIME default: ',DROP('@T04B|@T06B|@T07B|@T08B'))            , %raFormatTimeMask  , REQ    , DEFAULT('@T04B')
+    #ENDENABLE
+  #ENDBOXED
+#ENDTAB
+#ENDSHEET
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+AT(%CustomGlobalDeclarations)
+  #IF(%raWallpaperImage)
+    #PROJECT(%raWallpaperImage)
+  #ENDIF
+#!-----------------------------------------------------------------------------
+#!----------------------------------------------------------------------------- RA.2019.08.02: Added
+#AT(%WindowManagerMethodDataSection,'Init','(),BYTE'),PRIORITY(8005)
+ThisFeq           LONG(0)  #<! Used for window cosmetic adjustments
+#ENDAT
+#!-----------------------------------------------------------------------------
+#AT (%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(8005)
+! Code to prevent resizer's from getting the screen smaller than the screen design.
+! Be aware that the Ctrl Shift F9 windows have a default size that is normally smaller
+! than screen design. Where the internal information is not shown. Please take care.
+0{PROP:MinWidth}  = 0{PROP:Width}
+0{PROP:MinHeight} = 0{PROP:Height}
+#ENDAT
+#!-----------------------------------------------------------------------------
+#AT (%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(8025)
+  #IF (%raWallpaperType <> 'Leave Alone')
+    #IF (%raWallpaperType <> 'None')
+!BOG-RYB: Set the Wallpaper properties
+0{PROP:WallPaper}   = '~%raWallpaperImage' #<! Set the Wallpaper
+      #CASE(%raWallpaperType)
+      #OF('Centered')
+0{PROP:Centered}    = TRUE
+0{PROP:Stretch}     = FALSE
+0{prop:Tiled}       = FALSE
+      #OF('Stretched')
+0{PROP:Centered}    = FALSE
+0{PROP:Stretch}     = TRUE
+0{prop:Tiled}       = FALSE
+      #OF('Tiled')
+0{PROP:Centered}    = FALSE
+0{PROP:Stretch}     = FALSE
+0{prop:Tiled}       = TRUE
+      #ENDCASE
+!EOG-RYB: Set the Wallpaper properties
+#EMBED(%EOGRYB_SetWallpaper,'After: EOG-RYB: Set the Wallpaper properties')
+    #ELSE
+!BOG-RYB: Clear the Wallpaper properties
+0{PROP:WallPaper}   = '' #<! Clear the Wallpaper
+      #IF(%raSetBackground=%TRUE)
+0{PROP:Background}  = COLOR:BTNFACE #<! Set Background color
+#EMBED(%RYB_AjustWallpaper,'RYB: Adjust the Wallpaper properties')
+LOOP windowControl# = FirstField() TO LastField()
+  IF windowControl#{PROP:TYPE}  = CREATE:PROMPT   OR |
+     windowControl#{PROP:TYPE}  = CREATE:STRING   OR |
+     windowControl#{PROP:TYPE}  = CREATE:SSTRING  OR |
+     windowControl#{PROP:TYPE}  = CREATE:CHECK    OR |
+     windowControl#{PROP:TYPE}  = CREATE:RADIO    THEN
+     windowControl#{PROP:TRN}   = TRUE
+  END #<! IF
+END #<! LOOP
+      #ENDIF
+!EOG-RYB: Clear the Wallpaper properties
+#EMBED(%EOGRYB_ClearWallpaper,'After: EOG-RYB: Clear the Wallpaper properties')
+    #ENDIF
+    #!
+    #IF((%raFormatDateCheck) OR (%raFormatTimeCheck))
+CLEAR(ThisFeq)
+LOOP
+  ThisFeq = 0{PROP:NextField, ThisFeq}
+  IF ThisFeq = 0 THEN BREAK END
+  CASE ThisFeq{PROP:Type}
+  OF   CREATE:entry
+  OROF CREATE:sstring
+    #!TD.Debug('BEF: ThisFeq=[ ' & ThisFeq & ' ], =' & TD.DescribeType( ThisFeq{PROP:Type} ) & '=' & TD.GetFEQDescr( ThisFeq ) & '=' & ThisFeq{PROP:Text} & '=.')
+    CASE(UPPER(SUB(ThisFeq{PROP:Text},1,1)))
+      #IF(%raFormatDateCheck)
+    OF 'D'  ; ThisFeq{PROP:Text} = '%raFormatDateMask'
+      #ENDIF
+      #IF(%raFormatTimeCheck)
+    OF 'T'  ; ThisFeq{PROP:Text} = '%raFormatTimeMask'
+      #ENDIF
+    END!CASE
+    CASE(UPPER(SUB(ThisFeq{PROP:Text},1,2)))            #! RA.2019.08.02: Rick Martin: Warns about this posibility.
+      #IF(%raFormatDateCheck)
+    OF '@D' ; ThisFeq{PROP:Text} = '%raFormatDateMask'
+      #ENDIF
+      #IF(%raFormatTimeCheck)
+    OF '@T' ; ThisFeq{PROP:Text} = '%raFormatTimeMask'
+      #ENDIF
+   END!CASE
+    #!TD.Debug('AFT: ThisFeq=[ ' & ThisFeq & ' ], =' & TD.DescribeType( ThisFeq{PROP:Type} ) & '=' & TD.GetFEQDescr( ThisFeq ) & '=' & ThisFeq{PROP:Text} & '=.')      
+  END!CASE
+END!LOOP
+#!STOP('LOOK: ThisFeq')
+    #ENDIF
+#EMBED(%EOGRYB_SetDateTimeMask,'After: EOG-RYB: Set the DATE-TIME global properties')
+  #ENDIF
+#ENDAT
+#!-----------------------------------------------------------------------------
+#AT (%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(8030)
+  #IF (%raVCRchoice <> 'Leave Alone')
+!BOG-RYB: Set the VCR on the list boxes
+LOOP windowControl# = FirstField() TO LastField()
+  IF windowControl#{PROP:TYPE}  = CREATE:LIST      THEN
+     #IF (%raVCRchoice = 'Turn On')
+     windowControl#{PROP:VCR}   = TRUE
+     #ELSE
+     windowControl#{PROP:VCR}   = FALSE
+     #ENDIF
+  END #<! IF
+END #<! LOOP
+!EOG-RYB: Set the VCR on the list boxes
+#EMBED(%EOGRYB_SetListBoxesVCR,'After: EOG-RYB: Set the VCR on the list boxes')
+  #ENDIF
+#ENDAT
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
