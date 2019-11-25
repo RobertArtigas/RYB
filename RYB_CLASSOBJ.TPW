@@ -1,0 +1,143 @@
+#!#TEMPLATE(zzClassObjects,'Templates Description'),FAMILY('ABC')
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%CopyrightCLASSOBJ)
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightCLASSOBJ01))
+    #DECLARE(%CopyrightCLASSOBJ01)
+  #ENDIF
+  #SET(%CopyrightCLASSOBJ01, 'Class object definitions for ABC.')
+  #SET(%CopyrightCLASSOBJ01, %CopyrightCLASSOBJ01 & '<13,10>Copyright © 2018-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightCLASSOBJ01, %CopyrightCLASSOBJ01 & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightCLASSOBJ01, %CopyrightCLASSOBJ01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#BOXED('Version 1.0 [ 2018.12.31 ]'),AT(,,454),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #!DISPLAY(%CopyrightCLASSOBJ01),AT(,,260,34)
+  #DISPLAY(%CopyrightCLASSOBJ01),AT(,,436,34)
+#ENDBOXED
+#!
+#GROUP(%MITLicenseCLASSOBJ)
+#TAB('CLASSOBJ'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightCLASSOBJ) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#GROUP(%ExplainCLASSOBJ)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainCLASSOBJ01))
+    #DECLARE(%ExplainCLASSOBJ01)
+  #ENDIF
+  #SET(%ExplainCLASSOBJ01, '')
+  #SET(%ExplainCLASSOBJ01, %ExplainCLASSOBJ01 & 'This template is used to place the class object definitions in the data')
+  #SET(%ExplainCLASSOBJ01, %ExplainCLASSOBJ01 & ' area for each procedure.')
+  #SET(%ExplainCLASSOBJ01, %ExplainCLASSOBJ01 & '<13,10><13,10>')
+  #SET(%ExplainCLASSOBJ01, %ExplainCLASSOBJ01 & 'This template has been tested with the ABC template chain.')
+  #SET(%ExplainCLASSOBJ01, %ExplainCLASSOBJ01 & '')
+  #!
+  #IF(NOT VAREXISTS(%ExplainCLASSOBJ02))
+    #DECLARE(%ExplainCLASSOBJ02)
+  #ENDIF
+  #!
+  #SET(%ExplainCLASSOBJ02, '')
+  #SET(%ExplainCLASSOBJ02, %ExplainCLASSOBJ02 & 'NOTE: Make sure the COMPLETE DIRECTORY PATH exists on your machine.')
+#ENDPREPARE
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#EXTENSION(RYB_ClassObjectDefinitions,'RA.2018.12.31: Class object definitions'),DESCRIPTION('RYB | Class object definitions. Version: ' & %tplVersionCLASSOBJ & ', Release: ' & %tplReleaseCLASSOBJ),PROCEDURE
+#!-----------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------
+#! RA.2001.02.31.SUN      Roberto Artigas Jr
+#!  *   Created for the ABC templates
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!
+#DISPLAY('')
+#!SHEET,AT(,,288),HSCROLL
+#SHEET,AT(,,464),HSCROLL
+#INSERT(%MITLicenseCLASSOBJ)
+#INSERT(%ExplainCLASSOBJ)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #BOXED('Procedure Class Definitions'),AT(,,454),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%ExplainCLASSOBJ02),AT(,,260,10),PROP(PROP:FontStyle,700) 
+    #DISPLAY(%ExplainCLASSOBJ02),AT(,,434,10),PROP(PROP:FontStyle,700) 
+    #!BOXED(''),AT(,,270)
+    #BOXED(''),AT(,,444)
+      #PROMPT('Directory: ',@S120),%IncludeDirectory, REQ, DEFAULT('.\classes\')                                                                                        ,AT(70,,374)
+#!      #PROMPT('Include: '  ,@S120),%IncludeFilename , REQ, DEFAULT('_' & %ProgramExtension & '_' & UPPER(SLICE(%Program, 1, INSTRING('.', %Program, 1, 1)-1)) & '.INC') ,AT(70,,376)
+#!      #PREPARE
+#!      #SET(%IncludeLocation,%IncludeDirectory & %IncludeFilename )
+#!      #ENDPREPARE
+#!      #!PROMPT('Location: ' ,@S120),%IncludeLocation , REQ, DEFAULT(%IncludeLocation),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,200)
+#!      #PROMPT('Location: ' ,@S120),%IncludeLocation , REQ, DEFAULT(%IncludeLocation),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,376)
+    #ENDBOXED
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%ExplainCLASSOBJ01),AT(,,260,194)
+    #DISPLAY(%ExplainCLASSOBJ01),AT(,,434,94)
+  #ENDBOXED
+#ENDTAB
+#INSERT(%PrepareTheClassObjects)
+#TAB('Includes')
+  #!BOXED(''),AT(,,280)
+  #BOXED(%Procedure),AT(,,454),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%ExplainCLASSDCT03),AT(,,260,70),PROP(PROP:FontStyle,700) 
+    #!DISPLAY(%ExplainCLASSDCT03),AT(,,436,50),PROP(PROP:FontStyle,700) 
+    #BUTTON('File name'),MULTI(%TheClassObjects, ':: ' & %TheClassGen & ' :: ' & %TheClassName & ' :: ' & %TheClassType & ' :: ' & %TheClassDescr & ' ::'),INLINE,AT(,,,150)
+    #INSERT(%PreambleRYB)
+      #!BOXED('Table Item'),AT(,,288)
+      #BOXED(%Procedure),AT(,,462),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+        #DISPLAY(''),AT(,,,1)
+        #PROMPT(' Do the class definition generation' ,CHECK) , %TheClassGen    , DEFAULT(FALSE)  , AT(10,,452)   
+        #PROMPT('Class Object Name: '                 ,@S100) , %TheClassName   , REQ             , AT(100,,360)
+        #PROMPT('Class Define Name: '                 ,@S100) , %TheClassType   , REQ             , AT(100,,360)
+        #PROMPT('Class Description: '                 ,@S100) , %TheClassDescr  , REQ             , AT(100,,360)
+       #ENDBOXED
+    #ENDBUTTON
+  #ENDBOXED
+#ENDTAB
+#!INSERT(%TabClarionVersion)
+#ENDSHEET
+#AT(%DataSection),PRIORITY(50)
+#EMBED(%RYB_A_ClassObjects,'RYB-BOG: Class Object Definitions')
+#<! RYB: BEGIN: Class Object Definitions
+#FOR(%TheClassObjects)
+  #IF(%TheClassGen)
+    #SET(%Nextline, FORMAT(%TheClassName,@S19) & ' ' & %TheClassType )
+%NextLine #<! %TheClassDescr
+  #ENDIF
+#ENDFOR
+#<! RYB: ENDED: Class Object Definitions
+#EMBED(%RYB_Z_ClassObjects,'RYB-EOG: Class Object Definitions')
+#ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%PrepareTheClassObjects)
+#PREPARE
+#!
+#IF(VAREXISTS(%NextLine)=0)
+  #DECLARE(%Nextline)
+#ENDIF
+#!
+#IF(VAREXISTS(%TheClassObjects)=0)
+  #DECLARE(%TheClassObjects),MULTI,UNIQUE
+  #DECLARE(%TheClassGen     , %TheClassObjects)
+  #DECLARE(%TheClassName    , %TheClassObjects)  
+  #DECLARE(%TheClassType    , %TheClassObjects)  
+  #DECLARE(%TheClassDescr   , %TheClassObjects)
+#ENDIF
+#!
+#!
+#!FREE(%TheTableObjects)
+#!
+#ENDPREPARE
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
