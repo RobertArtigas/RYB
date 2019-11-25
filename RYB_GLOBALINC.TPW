@@ -1,0 +1,157 @@
+#!#TEMPLATE(zzGlobalIncludes,'Templates Description'),FAMILY('ABC')
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%CopyrightGLOBALINC)
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightGLOBALINC01))
+    #DECLARE(%CopyrightGLOBALINC01)
+  #ENDIF
+  #SET(%CopyrightGLOBALINC01, 'Global includes and equates for ABC.')
+  #SET(%CopyrightGLOBALINC01, %CopyrightGLOBALINC01 & '<13,10>Copyright © 2018-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightGLOBALINC01, %CopyrightGLOBALINC01 & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightGLOBALINC01, %CopyrightGLOBALINC01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#BOXED('Version 1.0 [ 2018.12.31 ]'),AT(,,454),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #!DISPLAY(%CopyrightGLOBALINC01),AT(,,260,34)
+  #DISPLAY(%CopyrightGLOBALINC01),AT(,,436,34)
+#ENDBOXED
+#!
+#GROUP(%MITLicenseGLOBALINC)
+#TAB('GLOBALINC'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightGLOBALINC) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#GROUP(%ExplainGLOBALINC)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainGLOBALINC01))
+    #DECLARE(%ExplainGLOBALINC01)
+  #ENDIF
+  #SET(%ExplainGLOBALINC01, '')
+  #SET(%ExplainGLOBALINC01, %ExplainGLOBALINC01 & 'This template is used to place an equate (EQU) file or include (INC) file')
+  #SET(%ExplainGLOBALINC01, %ExplainGLOBALINC01 & ' at a correct embed point after the global includes.')
+  #SET(%ExplainGLOBALINC01, %ExplainGLOBALINC01 & '<13,10><13,10>')
+  #SET(%ExplainGLOBALINC01, %ExplainGLOBALINC01 & 'The equate (EQU) files are normally system wide constants use throughout all')
+  #SET(%ExplainGLOBALINC01, %ExplainGLOBALINC01 & ' applications and the include (INC) files are normally for class definitions')
+  #SET(%ExplainGLOBALINC01, %ExplainGLOBALINC01 & ' used in specific procedures within each application.')
+  #SET(%ExplainGLOBALINC01, %ExplainGLOBALINC01 & '<13,10><13,10>')
+  #SET(%ExplainGLOBALINC01, %ExplainGLOBALINC01 & 'This template has been tested with the ABC template chain.')
+  #SET(%ExplainGLOBALINC01, %ExplainGLOBALINC01 & '')
+  #!
+  #IF(NOT VAREXISTS(%ExplainGLOBALINC02))
+    #DECLARE(%ExplainGLOBALINC02)
+  #ENDIF
+  #!
+  #SET(%ExplainGLOBALINC02, '')
+  #SET(%ExplainGLOBALINC02, %ExplainGLOBALINC02 & 'NOTE: Make sure the COMPLETE DIRECTORY PATH exists on your machine.')
+#ENDPREPARE
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#EXTENSION(RYB_GlobalIncludes,'RA.2018.12.31: Global equates and includes (EQU/INC)'),DESCRIPTION('RYB | Global equates and includes (EQU/INC). Version: ' & %tplVersionGLOBALINC & ', Release: ' & %tplReleaseGLOBALINC),APPLICATION
+#!-----------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------
+#! RA.2001.02.31.SUN      Roberto Artigas Jr
+#!  *   Created for the ABC templates
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!
+#DISPLAY('')
+#!SHEET,AT(,,288),HSCROLL
+#SHEET,AT(,,464),HSCROLL
+#INSERT(%MITLicenseGLOBALINC)
+#INSERT(%ExplainGLOBALINC)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #BOXED('Global Includes'),AT(,,456)
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%ExplainGLOBALINC02),AT(,,260,10),PROP(PROP:FontStyle,700) 
+    #DISPLAY(%ExplainGLOBALINC02),AT(,,436,10),PROP(PROP:FontStyle,700) 
+    #!BOXED(''),AT(,,270)
+    #BOXED(''),AT(,,446)
+      #PROMPT('Directory: ',@S120),%IncludeDirectory, REQ, DEFAULT('.\classes\')                                                                                        ,AT(70,,376)
+#!      #PROMPT('Include: '  ,@S120),%IncludeFilename , REQ, DEFAULT('_' & %ProgramExtension & '_' & UPPER(SLICE(%Program, 1, INSTRING('.', %Program, 1, 1)-1)) & '.INC') ,AT(70,,376)
+#!      #PREPARE
+#!      #SET(%IncludeLocation,%IncludeDirectory & %IncludeFilename )
+#!      #ENDPREPARE
+#!      #!PROMPT('Location: ' ,@S120),%IncludeLocation , REQ, DEFAULT(%IncludeLocation),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,200)
+#!      #PROMPT('Location: ' ,@S120),%IncludeLocation , REQ, DEFAULT(%IncludeLocation),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,376)
+    #ENDBOXED
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%ExplainGLOBALINC01),AT(,,260,194)
+    #DISPLAY(%ExplainGLOBALINC01),AT(,,436,94)
+  #ENDBOXED
+#ENDTAB
+#INSERT(%PrepareTheIncludes)
+#TAB('Includes')
+  #!BOXED(''),AT(,,280)
+  #BOXED(UPPER(%Application) & '.' & UPPER(%ProgramExtension)),AT(,,454),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%ExplainCLASSDCT03),AT(,,260,70),PROP(PROP:FontStyle,700) 
+    #!DISPLAY(%ExplainCLASSDCT03),AT(,,436,50),PROP(PROP:FontStyle,700) 
+    #BUTTON('File name'),MULTI(%TheTableIncludes, ':: ' & %TheTableGen & ' :: ' & %TheTableINC & ' :: ' & %TheTableDescr & ' ::'),INLINE,AT(,,,150)
+    #INSERT(%PreambleRYB)
+      #!BOXED('Table Item'),AT(,,288)
+      #BOXED(UPPER(%Application) & '.' & UPPER(%ProgramExtension)),AT(,,462),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+        #DISPLAY(''),AT(,,,1)
+        #PROMPT(' Do the Equate/Include (EQU/INC) generation' ,CHECK)                                     , %TheTableGen   , DEFAULT(FALSE) , AT(10,,452)   
+        #PROMPT('File name: '   ,OPENDIALOG('Select File','Equates|*.EQU|Includes|*.INC|All Files|*.*'))  , %TheTableINC   , REQ            , AT(70,,392)
+        #PROMPT('Description: ' ,@S100)                                                                   , %TheTableDescr , REQ            , AT(70,,392)
+       #ENDBOXED
+    #ENDBUTTON
+  #ENDBOXED
+#ENDTAB
+#!INSERT(%TabClarionVersion)
+#ENDSHEET
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#AT(%AfterGlobalIncludes),PRIORITY(40)
+#<! RYB: BEGIN: Equates (EQU) definitions
+#FOR(%TheTableIncludes)
+  #IF((INSTRING('.EQU',UPPER(%TheTableINC),1,1) > 0) AND (%TheTableGen))
+    #SET(%Nextline, 'INCLUDE(''' & %TheTableINC & '''),ONCE' )
+  %NextLine #<! %TheTableDescr
+  #ENDIF
+#ENDFOR
+#<! RYB: ENDED: Equates (EQU) definitions
+#ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#AT(%AfterGlobalIncludes),PRIORITY(50)
+#<! RYB: BEGIN: Includes (INC) definitions
+#FOR(%TheTableIncludes)
+  #IF((INSTRING('.INC',UPPER(%TheTableINC),1,1) > 0) AND (%TheTableGen))
+    #SET(%Nextline, 'INCLUDE(''' & %TheTableINC & '''),ONCE' )
+  %NextLine #<! %TheTableDescr
+  #ENDIF
+#ENDFOR
+#<! RYB: ENDED: Includes (INC) definitions
+#ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%PrepareTheIncludes)
+#PREPARE
+#!
+#IF(VAREXISTS(%NextLine)=0)
+  #DECLARE(%Nextline)
+#ENDIF
+#!
+#IF(VAREXISTS(%TheTableIncludes)=0)
+  #DECLARE(%TheTableIncludes),MULTI,UNIQUE
+  #DECLARE(%TheTableGen     , %TheTableIncludes)
+  #DECLARE(%TheTableINC     , %TheTableIncludes)  
+  #DECLARE(%TheTableDescr   , %TheTableIncludes)
+#ENDIF
+#!
+#!
+#!FREE(%TheTableObjects)
+#!
+#ENDPREPARE
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
