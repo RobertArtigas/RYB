@@ -1,0 +1,85 @@
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%CopyrightWHOAMI) 
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightTextWHOAMI))
+    #DECLARE(%CopyrightTextWHOAMI)
+  #ENDIF
+  #SET(%CopyrightTextWHOAMI, 'Appplication, Module, Procedure for ABC.')
+  #SET(%CopyrightTextWHOAMI, %CopyrightTextWHOAMI & '<13,10>Copyright © 2018-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightTextWHOAMI, %CopyrightTextWHOAMI & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightTextWHOAMI, %CopyrightTextWHOAMI & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.12.02 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#!EQUATE(%tplVersionWHOAMI                   , '1.00' )
+#!EQUATE(%tplReleaseWHOAMI                   , '2018.12.02' )
+#BOXED('Version ' & %tplVersionWHOAMI & ' [ ' & %tplReleaseWHOAMI & ' ]'),AT(,,454),PROP(PROP:FontStyle,700)
+  #!DISPLAY(%CopyrightTextWHOAMI),AT(,,260,34)
+  #DISPLAY(%CopyrightTextWHOAMI),AT(,,436,24)
+#ENDBOXED
+#!
+#GROUP(%ExplainWHOAMI)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainTextWHOAMI))
+    #DECLARE(%ExplainTextWHOAMI)
+  #ENDIF
+  #SET(%ExplainTextWHOAMI, '')
+  #SET(%ExplainTextWHOAMI, %ExplainTextWHOAMI & 'This template displays a message with the application, module, and procedure')
+  #SET(%ExplainTextWHOAMI, %ExplainTextWHOAMI & ' names. It is generated in every procedure for your application.')
+  #SET(%ExplainTextWHOAMI, %ExplainTextWHOAMI & ' It makes it easier for a client or customer to find out their procedure location.')
+  #SET(%ExplainTextWHOAMI, %ExplainTextWHOAMI & '<13,10><13,10>')
+  #SET(%ExplainTextWHOAMI, %ExplainTextWHOAMI & 'This template has been tested with the ABC template chains.')
+  #SET(%ExplainTextWHOAMI, %ExplainTextWHOAMI & '')
+#ENDPREPARE
+#!
+#GROUP(%MITLicenseWHOAMI)
+#TAB('WHOAMI'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightWHOAMI) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#EXTENSION(RYB_WhoAmI_ALL, 'RA.2018.12.02: Appplication, Module, Procedure (HotKey CtrlAltF9)'),DESCRIPTION('RYB | Appplication, Module, Procedure (HotKey CtrlAltF9). Version: ' & %tplVersionWHOAMI & ', Release: ' & %tplReleaseWHOAMI),APPLICATION(HotKeyCtrlAltF9(RYB_RAYS))
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------
+#! RA.2018.12.02.SUN    Roberto Artigas
+#!  *    Created this template
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!-----------------------------------------------------------------------------
+#!SHEET,AT(,,288),HSCROLL
+#SHEET,AT(,,464),HSCROLL
+#INSERT(%MITLicenseWHOAMI)
+#INSERT(%ExplainWHOAMI)
+  #TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%ExplainTextWHOAMI),AT(,,260,44)
+    #DISPLAY(%ExplainTextWHOAMI),AT(,,436,34)
+  #ENDTAB
+#ENDSHEET
+#!-----------------------------------------------------------------------------
+#! Alert Hot Key for info message display
+#AT (%WindowManagerMethodCodeSection, 'Init', '(),BYTE'), DESCRIPTION('RYB | Appplication, Module, Procedure (HotKey CtrlAltF9)'), PRIORITY(9990)
+  #IF (%Window)
+ALERT(CtrlAltF9) #<! Appplication, Module, Procedure (HotKey CtrlAltF9)
+  #ENDIF
+#ENDAT
+#!-----------------------------------------------------------------------------
+#AT (%WindowEventHandling,'ALertKey'), DESCRIPTION('RYB | Appplication, Module, Procedure (HotKey CtrlAltF9)'), PRIORITY(7510)
+IF KEYCODE() = CtrlAltF9 THEN
+  MESSAGE('APPLICATION NAME|%Application' & |
+    '|MODULE NAME|%Module' & |
+    '|PROCEDURE NAME|%Procedure' & |
+    '|PROCEDURE CREATED|' & FORMAT(%ProcedureDateCreated,@D010-) & |
+    '|PROCEDURE UPDATED|' & FORMAT(%ProcedureDateChanged,@D010-) & |
+    '|DICTIONARY CHANGED|' & FORMAT(%DictionaryDateChanged,@D010-) & |
+    '|','Procedure Information',Icon:Exclamation)
+END #<! IF KEYCODE() = CtrlAltF9
+#ENDAT
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
