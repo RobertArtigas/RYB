@@ -1,0 +1,183 @@
+#!TEMPLATE (EGC, 'Exclude Global Class Application Builder Class Template v1.0'),FAMILY('ABC')
+#!
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#GROUP(%MITDevuna)
+#INSERT(%MITLicenseText)
+#!BOXED('MIT License'),AT(,,278),PROP(PROP:FontStyle,700)
+#BOXED('MIT License'),AT(,,454),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY('Copyright © ' & YEAR(TODAY()) & ' by Randy Rogers.'),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%MITLicenseText01),AT(,,436,36)
+  #DISPLAY(%MITLicenseText02),AT(,,436,14),PROP(PROP:FontStyle,700)
+  #DISPLAY(%MITLicenseText03),AT(,,436,44)
+#ENDBOXED
+#!
+#GROUP(%CopyrightEGC)
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightEGC01))
+    #DECLARE(%CopyrightEGC01)
+  #ENDIF
+  #SET(%CopyrightEGC01, 'Exclude global classes from generation in this application.')
+  #SET(%CopyrightEGC01, %CopyrightEGC01 & '<13,10>Copyright © 1999-' & YEAR(TODAY()) & ' by Randy Rogers.')
+  #SET(%CopyrightEGC01, %CopyrightEGC01 & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightEGC01, %CopyrightEGC01 & '<13,10>GitHub: https://github.com/Devuna')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#BOXED('Version 1.0 [ 2019.12.13 ]'),AT(,,454),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #!DISPLAY(%CopyrightEGC01),AT(,,260,34)
+  #DISPLAY(%CopyrightEGC01),AT(,,436,34)
+#ENDBOXED
+#!
+#GROUP(%MITLicenseEGC)
+#TAB('EGC'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightEGC) 
+  #INSERT(%MITDevuna)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#GROUP(%ExplainEGC)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainEGC01))
+    #DECLARE(%ExplainEGC01)
+  #ENDIF
+  #SET(%ExplainEGC01, '')
+  #SET(%ExplainEGC01, %ExplainEGC01 & 'The default ABC templates generate an instance of each base class when the target type is DLL and the ''generate.')
+  #SET(%ExplainEGC01, %ExplainEGC01 & ' template globals and ABC''s as EXTERNAL'' check box is not checked. This can cause compile errors for some')
+  #SET(%ExplainEGC01, %ExplainEGC01 & ' ABC compatible classes that require supporting libraries.')
+  #SET(%ExplainEGC01, %ExplainEGC01 & '<13,10><13,10>')
+  #SET(%ExplainEGC01, %ExplainEGC01 & 'For example, our Network Class will cause compiler errors. Adding ''NetworkClass'' to the list box below will override')
+  #SET(%ExplainEGC01, %ExplainEGC01 & ' the default template behaviour and eliminate the compiler errors.')
+  #SET(%ExplainEGC01, %ExplainEGC01 & '<13,10><13,10>')
+  #SET(%ExplainEGC01, %ExplainEGC01 & 'This template has been tested with the ABC template chain.')
+  #SET(%ExplainEGC01, %ExplainEGC01 & '')
+  #!
+  #IF(NOT VAREXISTS(%ExplainEGC02))
+    #DECLARE(%ExplainEGC02)
+  #ENDIF
+  #!
+  #SET(%ExplainEGC02, '')
+  #SET(%ExplainEGC02, %ExplainEGC02 & 'NOTE: Make sure the COMPLETE DIRECTORY PATH exists on your machine.')
+#ENDPREPARE
+#!
+#EXTENSION(RYB_ExcludeGlobalClass,'2019.12.31: Exclude Global Class Generation'),DESCRIPTION('RYB | Exclude Global Class Generation. Version: ' & %tplVersionEGC & ', Release: ' & %tplReleaseEGC),APPLICATION
+#!--------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#DISPLAY(''),AT(,,,1)
+#!-----------------------------------------------------------------------------
+#! RA.2019.12.13.FRI      Roberto Artigas Jr
+#!  *   Added to the RYB collection from a Randy Rogers post on IceTips
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!
+#SHEET,HSCROLL,AT(,,464)
+#INSERT(%MITLicenseEGC)
+#INSERT(%ExplainEGC)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #BOXED('Keystone'),AT(,,454)
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%ExplainEGC01),AT(,,260,194)
+    #DISPLAY(%ExplainEGC01),AT(,,436,64)
+  #ENDBOXED
+  #BOXED('Global Classes'),AT(,,454)
+    #DISPLAY(''),AT(,,,1)
+    #PROMPT  ('Exclude All Non-Topspeed ABC Classes',CHECK),%ExcludeAll,AT(10),DEFAULT(%FALSE)
+    #DISPLAY(''),AT(,,,1)
+    #ENABLE(~%ExcludeAll),CLEAR
+      #DISPLAY ('Exclude Class List:')
+      #!PROMPT('&Exclude Class:',FROM(%pClassname)),%ExcludeClass,MULTI('ABC Classes'),INLINE
+      #BUTTON('&Exclude Class'),AT(,,444,100),MULTI(%ExcludeClass,' ' & %ExcludeClassItem),INLINE
+        #INSERT(%PreambleRYB)
+        #DISPLAY(''),AT(,,,1)
+        #BOXED(''),AT(,,462,100)
+          #PROMPT('&Exclude Class:',FROM(%pClassname)),%ExcludeClassItem
+        #ENDBOXED
+      #ENDBUTTON
+    #ENDENABLE
+  #ENDBOXED
+#ENDTAB
+#ENDSHEET
+#!
+#ATSTART
+#DECLARE(%SortedClassname),MULTI,UNIQUE
+#FOR(%pClassname)
+  #ADD(%SortedClassname,%pClassname)
+#ENDFOR
+  #IF(%ExcludeAll)
+    #FOR(%SortedClassname)
+      #CASE(%SortedClassname)
+      #OF('AsciiFileClass')
+      #OROF('AsciiPrintClass')
+      #OROF('AsciiSearchClass')
+      #OROF('AsciiViewerClass')
+      #OROF('BrowseClass')
+      #OROF('BrowseEIPManager')
+      #OROF('BufferedPairsClass')
+      #OROF('ConstantClass')
+      #OROF('EditCheckClass')
+      #OROF('EditClass')
+      #OROF('EditColorClass')
+      #OROF('EditDropListClass')
+      #OROF('EditEntryClass')
+      #OROF('EditFileClass')
+      #OROF('EditFontClass')
+      #OROF('EditMultiSelectClass')
+      #OROF('EditSpinClass')
+      #OROF('EditTextClass')
+      #OROF('EIPManager')
+      #OROF('EntryLocatorClass')
+      #OROF('ErrorClass')
+      #OROF('FieldPairsClass')
+      #OROF('FileDropClass')
+      #OROF('FileDropComboClass')
+      #OROF('FileManager')
+      #OROF('FilterLocatorClass')
+      #OROF('IncrementalLocatorClass')
+      #OROF('INIClass')
+      #OROF('LocatorClass')
+      #OROF('PopupClass')
+      #OROF('PrintPreviewClass')
+      #OROF('ProcessClass')
+      #OROF('QueryClass')
+      #OROF('QueryFormClass')
+      #OROF('QueryFormVisual')
+      #OROF('QueryListClass')
+      #OROF('QueryListVisual')
+      #OROF('QueryVisual')
+      #OROF('RelationManager')
+      #OROF('ReportManager')
+      #OROF('SelectFileClass')
+      #OROF('StepClass')
+      #OROF('StepCustomClass')
+      #OROF('StepLocatorClass')
+      #OROF('StepLongClass')
+      #OROF('StepRealClass')
+      #OROF('StepStringClass')
+      #OROF('ToolbarClass')
+      #OROF('ToolbarListboxClass')
+      #OROF('ToolbarReltreeClass')
+      #OROF('ToolbarTarget')
+      #OROF('ToolbarUpdateClass')
+      #OROF('TranslatorClass')
+      #OROF('ViewManager')
+      #OROF('WindowManager')
+      #OROF('WindowResizeClass')
+        #! Do Nothing
+      #ELSE
+        #FIX(%pClassname,%SortedClassname)
+        #DELETE(%pClassname)
+      #ENDCASE
+    #ENDFOR
+  #ELSE
+    #FOR(%ExcludeClass)
+      #FIX(%pClassname,%ExcludeClass)
+      #IF(%pClassname = %ExcludeClass)
+        #DELETE(%pClassname)
+      #ENDIF
+    #ENDFOR
+  #ENDIF
+#ENDAT
+#!

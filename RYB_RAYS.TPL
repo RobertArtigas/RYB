@@ -49,6 +49,8 @@
 #EQUATE(%tplReleaseSQLPIECES                , '2019.01.01' )
 #EQUATE(%tplVersionSQLDISCONNECT            , '1.00' )
 #EQUATE(%tplReleaseSQLDISCONNECT            , '2017.12.01' )
+#EQUATE(%tplVersionEGC                      , '1.00' )
+#EQUATE(%tplReleaseEGC                      , '2019.12.13' )
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
@@ -230,6 +232,7 @@
 #INCLUDE('RYB_CLASSOBJ.TPW')                #! RA.2018.12.31: Procedure class object definitions
 #INCLUDE('RYB_SQLPIECES.TPW')               #! RA.2018.02.22: SQL template pieces
 #INCLUDE('RYB_SQLDISCONNECT.TPW')           #! RA.2019.03.01: SQL Handling Disconnect
+#INCLUDE('RYB_EXCLUDEGLOBALCLASS.TPW')      #! RA.2019.12.13: Exclude GLOBAL classes
 #!
 #!INCLUDE('RYB_TESTING.TPW')                 #! RA.2019.04.21: TESTING STRAP - TEMPORARY
 #!-----------------------------------------------------------------------------------------------------
