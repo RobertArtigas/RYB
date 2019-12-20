@@ -111,14 +111,17 @@ ThisFeq           LONG(0)  #<! Used for window cosmetic adjustments
       #IF(%raSetBackground=%TRUE)
 0{PROP:Background}  = COLOR:BTNFACE #<! Set Background color
 #EMBED(%RYB_AjustWallpaper,'RYB: Adjust the Wallpaper properties')
-LOOP windowControl# = FirstField() TO LastField()
-  IF windowControl#{PROP:TYPE}  = CREATE:PROMPT   OR |
-     windowControl#{PROP:TYPE}  = CREATE:STRING   OR |
-     windowControl#{PROP:TYPE}  = CREATE:SSTRING  OR |
-     windowControl#{PROP:TYPE}  = CREATE:CHECK    OR |
-     windowControl#{PROP:TYPE}  = CREATE:RADIO    THEN
-     windowControl#{PROP:TRN}   = TRUE
-  END #<! IF
+LOOP
+  ThisFeq = 0{PROP:NextField, ThisFeq}
+  IF ThisFeq = 0 THEN BREAK END
+  CASE ThisFeq{PROP:Type}
+  OF   CREATE:PROMPT
+  OROF CREATE:STRING
+  OROF CREATE:SSTRING
+  OROF CREATE:CHECK
+  OROF CREATE:RADIO
+     ThisFeq{PROP:TRN}   = TRUE
+  END #<! CASE
 END #<! LOOP
       #ENDIF
 !EOG-RYB: Clear the Wallpaper properties
@@ -162,12 +165,16 @@ END!LOOP
 #AT (%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(8030)
   #IF (%raVCRchoice <> 'Leave Alone')
 !BOG-RYB: Set the VCR on the list boxes
-LOOP windowControl# = FirstField() TO LastField()
-  IF windowControl#{PROP:TYPE}  = CREATE:LIST      THEN
+#!
+CLEAR(ThisFeq)
+LOOP
+  ThisFeq = 0{PROP:NextField, ThisFeq}
+  IF ThisFeq = 0 THEN BREAK END
+  IF ThisFeq{PROP:TYPE}  = CREATE:LIST      THEN
      #IF (%raVCRchoice = 'Turn On')
-     windowControl#{PROP:VCR}   = TRUE
+     ThisFeq{PROP:VCR}   = TRUE
      #ELSE
-     windowControl#{PROP:VCR}   = FALSE
+     ThisFeq{PROP:VCR}   = FALSE
      #ENDIF
   END #<! IF
 END #<! LOOP
