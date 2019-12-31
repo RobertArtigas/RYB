@@ -73,10 +73,14 @@
 #!---------------------------------------------------------------------
 #!---------------------------------------------------------------------
 #!---------------------------------------------------------------------
-#EXTENSION(RYB_PrototypeExplorer,'RA.2018.12.27: Prototype Explorer (DLL/EXE)'),DESCRIPTION('RYB | Prototype Explorer (DLL/EXE). Version: ' & %tplVersionPROTOEXP & ', Release: ' & %tplReleasePROTOEXP),APPLICATION
+#EXTENSION(RYB_PrototypeExplorer,'RA.2018.12.27: Prototype Explorer (DLL/EXE)'),Description('RYB | Prototype Explorer (DLL/EXE). Version: ' & %tplVersionPROTOEXP & ', Release: ' & %tplReleasePROTOEXP),APPLICATION
 #!-----------------------------------------------------------------------------
 #INSERT(%PreambleRYB)
 #!-----------------------------------------------------------------------------
+#! RA.2019.12.26.THU    Roberto Artigas Jr.
+#!  * Added the blank if zero to the procedure comments date/time. [External]
+#!    #SET(%TheProcedureDate,FORMAT(%ProcedureDateChanged,@D010B))
+#!    #SET(%TheProcedureTime,FORMAT(%ProcedureTimeChanged,@T06B))
 #! RA.2018.12.27.THU    Roberto Artigas Jr
 #!  * Adjusted template width for C11 wider templates 
 #! RA.2018.11.22.THU    Roberto Artigas Jr
@@ -307,8 +311,8 @@
   #FOR(%TheProcs)
     #FIX(%Procedure,%TheProcs)
 #!COMMENTS: 0 !!! %Procedure ||| %ProcedureTemplate | %ProcedureExported
-    #SET(%TheProcedureDate,FORMAT(%ProcedureDateChanged,@D010))
-    #SET(%TheProcedureTime,FORMAT(%ProcedureTimeChanged,@T06))
+    #SET(%TheProcedureDate,FORMAT(%ProcedureDateChanged,@D010B))
+    #SET(%TheProcedureTime,FORMAT(%ProcedureTimeChanged,@T06B))
     #SET(%TheTextComments,%ProcedureDescription)
     #CASE(UPPER(%ProcedureTemplate))
     #OF  ('TODO')
@@ -334,8 +338,8 @@
     #FOR(%TheProcs)
       #FIX(%Procedure,%TheProcs)
 #!COMMENTS: 0 !!! %Procedure ||| %ProcedureTemplate | %ProcedureExported
-      #SET(%TheProcedureDate,FORMAT(%ProcedureDateChanged,@D010))
-      #SET(%TheProcedureTime,FORMAT(%ProcedureTimeChanged,@T06))
+      #SET(%TheProcedureDate,FORMAT(%ProcedureDateChanged,@D010B))
+      #SET(%TheProcedureTime,FORMAT(%ProcedureTimeChanged,@T06B))
       #SET(%TheTextComments,%ProcedureDescription)
       #CASE(UPPER(%ProcedureTemplate))
       #OF  ('TODO')
@@ -355,8 +359,8 @@
     #FOR(%ModsProcs)
       #FIX(%Procedure,%ModsProcs)
 #!COMMENTS: 0 !!! %Procedure ||| %ProcedureTemplate | %ProcedureExported
-      #SET(%TheProcedureDate,FORMAT(%ProcedureDateChanged,@D010))
-      #SET(%TheProcedureTime,FORMAT(%ProcedureTimeChanged,@T06))
+      #SET(%TheProcedureDate,FORMAT(%ProcedureDateChanged,@D010B))
+      #SET(%TheProcedureTime,FORMAT(%ProcedureTimeChanged,@T06B))
       #SET(%TheTextComments,%ProcedureDescription)
       #CASE(UPPER(%ProcedureTemplate))
       #OF  ('TODO')
