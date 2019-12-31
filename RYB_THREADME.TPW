@@ -1,0 +1,85 @@
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%CopyrightTHREADME) 
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightTextTHREADME))
+    #DECLARE(%CopyrightTextTHREADME)
+  #ENDIF
+  #SET(%CopyrightTextTHREADME, 'Give me a Thread Number on the Title Bar.')
+  #SET(%CopyrightTextTHREADME, %CopyrightTextTHREADME & '<13,10>Copyright © 2018-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightTextTHREADME, %CopyrightTextTHREADME & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightTextTHREADME, %CopyrightTextTHREADME & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.12.02 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#!EQUATE(%tplVersionTHREADME                   , '1.00' )
+#!EQUATE(%tplReleaseTHREADME                   , '2018.12.02' )
+#BOXED('Version ' & %tplVersionTHREADME & ' [ ' & %tplReleaseTHREADME & ' ]'),AT(,,454),PROP(PROP:FontStyle,700)
+  #!DISPLAY(%CopyrightTextTHREADME),AT(,,260,34)
+  #DISPLAY(%CopyrightTextTHREADME),AT(,,436,24)
+#ENDBOXED
+#!
+#GROUP(%ExplainTHREADME)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainTextTHREADME))
+    #DECLARE(%ExplainTextTHREADME)
+  #ENDIF
+  #SET(%ExplainTextTHREADME, '')
+  #SET(%ExplainTextTHREADME, %ExplainTextTHREADME & 'This template displays a thread number on the title bar.')
+  #SET(%ExplainTextTHREADME, %ExplainTextTHREADME & ' This allows you to track a procedure''s thread number for debugging purposes.')
+  #SET(%ExplainTextTHREADME, %ExplainTextTHREADME & ' Or for any other purpose you desire.')
+  #SET(%ExplainTextTHREADME, %ExplainTextTHREADME & '<13,10><13,10>')
+  #SET(%ExplainTextTHREADME, %ExplainTextTHREADME & 'This template has been tested with the ABC template chains.')
+  #SET(%ExplainTextTHREADME, %ExplainTextTHREADME & '')
+#ENDPREPARE
+#!
+#GROUP(%MITLicenseTHREADME)
+#TAB('THREADME'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightTHREADME) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#EXTENSION(RYB_ThreadMeOnTitle, 'RA.2019.12.31: Thread number on title bar.'),DESCRIPTION('RYB | Thread Number on Title Bar. Version: ' & %tplVersionTHREADME & ', Release: ' & %tplReleaseTHREADME),APPLICATION(HotKeyCtrlAltF9(RYB_RAYS))
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------
+#! RA.2019.12.31.SUN    Roberto Artigas
+#!  *    Created this template (original was destroyed)
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!-----------------------------------------------------------------------------
+#!SHEET,AT(,,288),HSCROLL
+#SHEET,AT(,,464),HSCROLL
+#INSERT(%MITLicenseTHREADME)
+#INSERT(%ExplainTHREADME)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #BOXED(''),AT(,,454)
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%ExplainTextTHREADME),AT(,,260,44)
+    #DISPLAY(%ExplainTextTHREADME),AT(,,436,34)
+  #ENDBOXED
+  #BOXED('Options'),AT(,,454)
+    #DISPLAY(''),AT(,,,1)
+    #PROMPT ('Do Not Add Thread Number to Title Bar (Don''t Thread On Me!)', CHECK),%DontThreadOnMe,AT(10),DEFAULT(%FALSE)
+  #ENDBOXED
+#ENDTAB
+#ENDSHEET
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#! SELF.Open(QuickWindow)
+#AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),WHERE(UPPER(%ProcedureCategory)<>'FORM' AND %DontThreadOnMe=0),PRIORITY(8001)
+0{PROP:Text} = '[ ' & THREAD() & ' ]: ' & 0{PROP:Text}
+#ENDAT
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#! QuickWindow{PROP:Text} = ActionMessage
+#AT(%WindowManagerMethodCodeSection,'Ask','()'),WHERE(UPPER(%ProcedureCategory)='FORM' AND %DontThreadOnMe=0),PRIORITY(3801)
+0{PROP:Text} = '[ ' & THREAD() & ' ]: ' & 0{PROP:Text}
+#ENDAT
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
