@@ -111,6 +111,7 @@ ThisFeq           LONG(0)  #<! Used for window cosmetic adjustments
       #IF(%raSetBackground=%TRUE)
 0{PROP:Background}  = COLOR:BTNFACE #<! Set Background color
 #EMBED(%RYB_AjustWallpaper,'RYB: Adjust the Wallpaper properties')
+CLEAR(ThisFeq)
 LOOP
   ThisFeq = 0{PROP:NextField, ThisFeq}
   IF ThisFeq = 0 THEN BREAK END
