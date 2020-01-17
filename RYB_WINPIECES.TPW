@@ -78,8 +78,8 @@ AT(%CustomGlobalDeclarations)
 #!----------------------------------------------------------------------------- RA.2019.08.02: Added
 #AT(%WindowManagerMethodDataSection,'Init','(),BYTE'),PRIORITY(8005)
 ThisFeq           LONG(0)  #<! Used for window cosmetic adjustments
-WindowXpos        LONG(0)  #<! Check for position off the screen
-WindowYpos        LONG(0)  #<! Check for position off the screen
+WindowXpos        LONG(0)  #<! Check for X position off the screen
+WindowYpos        LONG(0)  #<! Check for Y position off the screen
 #ENDAT
 #!-----------------------------------------------------------------------------
 #AT (%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(8005)
