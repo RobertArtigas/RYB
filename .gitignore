@@ -1,6 +1,9 @@
 *.sublime-workspace
 _archive_
 
+RybProg.Tpl
+TemplateMaker.Tpl
+
 ############
 ## Clarion
 ############
