@@ -83,6 +83,7 @@ WindowYpos        LONG(0)  #<! Check for Y position off the screen
 #ENDAT
 #!-----------------------------------------------------------------------------
 #AT (%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(8005)
+#EMBED(%RYB_SetWindowMinimumSize,'RYB: Set Window Minimum Size')
 ! Code to prevent resizer's from getting the screen smaller than the screen design.
 ! Be aware that the Ctrl Shift F9 windows have a default size that is normally smaller
 ! than screen design. Where the internal information is not shown. Please take care.
