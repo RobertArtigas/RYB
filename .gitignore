@@ -21,6 +21,7 @@ obj/**
 *.bpp
 *.ap~
 PWEE*.txt
+program.clw
 
 ############
 ## Windows
