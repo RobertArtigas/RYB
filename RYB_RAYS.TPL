@@ -53,6 +53,8 @@
 #EQUATE(%tplReleaseEGC                      , '2019.12.13' )
 #EQUATE(%tplVersionTHREADME                 , '1.00' )
 #EQUATE(%tplReleaseTHREADME                 , '2019.12.31' )
+#EQUATE(%tplVersionSQLRECONNECT             , '1.00' )
+#EQUATE(%tplReleaseSQLRECONNECT             , '2020.06.26' )
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
@@ -236,6 +238,7 @@
 #INCLUDE('RYB_SQLDISCONNECT.TPW')           #! RA.2019.03.01: SQL Handling Disconnect
 #INCLUDE('RYB_EXCLUDEGLOBALCLASS.TPW')      #! RA.2019.12.13: Exclude GLOBAL classes
 #INCLUDE('RYB_THREADME.TPW')                #! RA.2019.12.31: Thread number on title bar
+#INCLUDE('RYB_SQLRECONNECT.TPW')            #! RA.2020.06.26: SQL Handling Reconnect
 #!
 #!INCLUDE('RYB_TESTING.TPW')                 #! RA.2019.04.21: TESTING STRAP - TEMPORARY
 #!-----------------------------------------------------------------------------------------------------
