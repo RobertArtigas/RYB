@@ -9,3 +9,6 @@ These are a collection of a lot of odd type items that have been built over a pe
 
 When the author can be identified, they are given credit. When no author can be identified, that fact is noted and hopefully someone will come and claim the utility. This is just a place to collect these utilities and functionality and make it available to all for their use and enjoyment. 
 
+There a few items that are marked as "experimental" and are not completely worked out or tested in some environments. As much due diligence has been done as posible. As time progresses more testing should hopefully will be done. The SQL disconnect/reconnect templates came from different sources and work in some specific environments. Your milleage will vary. Be aware, and excercise extreme care. Do not use this without extensive testing.
+
+
