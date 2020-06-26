@@ -5,6 +5,49 @@
 #!-----------------------------------------------------------------------------
 #INSERT(%PreambleRYB)
 #!-----------------------------------------------------------------------------------------------------
+#!
+#! RA.2020.06.26: Comments from: Erik Lankreijer
+#! i can not see that working. it does not do any recovery attempt.
+#! for example: FileManager.Open failes, you get and error, the error gets thrown, you do a reconnect of sorts. and then what? 
+#! the rest of the code will magically try to open the file again. 
+#! and if it fails on an insert does it retry the insert after a reconnect?
+#! IMHO you need to derive a Filemanager and each function do something like this
+#! LOOP
+#!   parentcall
+#!   IF NOT connected THEN reconnect ; CYCLE END
+#!   BREAK
+#! END
+#!
+#! Mike_Duglas Mar '19
+#! We don’t use PROP:Disconnect to restore MySQL connections, instead we have a template 
+#! which puts following code into each Hide:Access:FileName. FunctionDone method:
+#!
+#! PUSHERRORS()
+#! CASE ERRORCODE()
+#! OF FileSystemErr
+#!   #IF (%iaTracer)
+#!   %iaTracer(SELF.GetName() &'::FunctionDone('& opCode &') FILEERROR '& FILEERROR() &' ['& FILEERRORCODE() &']')
+#!   #ENDIF
+#!  
+#!   IF opCode <> DriverOp:OPEN  ! protect against recursion
+#!     !-- close
+#!    LOOP WHILE SELF.Opened
+#!      SELF.Close()
+#!    END
+#!     !-- reopen
+#!    IF SELF.UseFile() = Level:Benign
+#!      POPERRORS()
+#!      RETURN TRUE
+#!    END
+#!   ELSE  
+#!     #IF (%iaTracer)
+#!     %iaTracer(SELF.GetName() &'::FunctionDone(DriverOp:OPEN) cannot be processed')
+#!     #ENDIF
+#!   END
+#! END
+#! POPERRORS()
+#! AFAIK it works very well.
+#!
 #! RA.2019.05.07: Question from Mauricio. Was not working. Needed to add @ Global Objects | ABC Objects | File Managers | File Manager for <File Name> (File Manager) | FunctionDone
 #!#AT(%FileManagerCodeSection,%SQLTable,'FunctionDone','(SIGNED opCode,*Params Parameters,*CSTRING ErrCode,*CSTRING ErrMsg),BYTE'),PRIORITY( 5000 )
 #!    #FOR(%File),where(%FileDriver='MSSQL')
