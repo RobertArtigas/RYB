@@ -6,8 +6,17 @@
 #INSERT(%PreambleRYB)
 #!-----------------------------------------------------------------------------------------------------
 #!
+#!--------------------------------------------------------------------------------------------------------------------!
+#! RA.2020.06.26: This needs some serious evaluation. This will eventually (or already has) become a problem.         !
+#! While the latest ODBC drivers might have some built features to resolve the problem, clarion needs to be aware.    !
+#! There might be some issues associated with how each backend deals with the disconnect and at what time it happens. !
+#! The File Manager might need an upgrade. This means derivation or new version to deal with SQL backends.            !
+#! Critical sections might be needed in more areas and reconnect and resume of interrupted operation needs handled.   !
+#! It has been brought up a bit more as of late. "Critical" systems have a bit more stringent requirements.           !
+#!--------------------------------------------------------------------------------------------------------------------!
+#!
 #! RA.2020.06.26: Comments from: Erik Lankreijer
-#! i can not see that working. it does not do any recovery attempt.
+#! I can not see that working. it does not do any recovery attempt.
 #! for example: FileManager.Open failes, you get and error, the error gets thrown, you do a reconnect of sorts. and then what? 
 #! the rest of the code will magically try to open the file again. 
 #! and if it fails on an insert does it retry the insert after a reconnect?
