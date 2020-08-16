@@ -4,6 +4,10 @@ _archive_
 RybProg.Tpl
 TemplateMaker.Tpl
 
+.*
+LICENSE
+READ.md
+
 ############
 ## Clarion
 ############
