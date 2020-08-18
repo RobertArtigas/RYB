@@ -3,9 +3,7 @@ IF you want me to continue improving these utilities, THEN send me an e-mail tha
  It might be useful to include your use case scenario and a description of why you want this improvement and how it helps the business you are involved in working.
 
 # RYB (Run Your Business)
-Run Your Business (RYB) template collection. 
-
-Read this first, then go to the [**WIKI**](https://github.com/RobertArtigas/RYB/wiki) page.
+Run Your Business (RYB) template collection. Read this first, then go to the [**WIKI**](https://github.com/RobertArtigas/RYB/wiki) page.
 
 These are a set of functional templates. Some that I use every day in a number of working projects.
 
