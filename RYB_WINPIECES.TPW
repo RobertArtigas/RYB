@@ -26,6 +26,8 @@
 #! RA.2020.01.16.THU      Roberto Artigas Jr (request by Dave Schwartz)
 #!  *   Added code to CENTER the windows that got moved off the viewable screen (negative coordinates)
 #!  *   Added @D05B to the date options (Australia)
+#! RA.2019.08.02          Roberto Artigas Jr (assistance by Rick Martin)
+#!  *   Added date/time CONTROL changes to the screen to standarize windows
 #! RA.2018.12.27.THU      Roberto Artigas Jr
 #!  *   Made the width of the templates larger to accomodate C11 wider templates
 #! RA.2018.03.11.SAT      Roberto Artigas Jr 
