@@ -72,10 +72,11 @@
 #ENDSHEET
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
-AT(%CustomGlobalDeclarations)
+#AT(%CustomGlobalDeclarations)
   #IF(%raWallpaperImage)
     #PROJECT(%raWallpaperImage)
   #ENDIF
+#ENDAT
 #!-----------------------------------------------------------------------------
 #!----------------------------------------------------------------------------- RA.2019.08.02: Added
 #AT(%WindowManagerMethodDataSection,'Init','(),BYTE'),PRIORITY(8005)
