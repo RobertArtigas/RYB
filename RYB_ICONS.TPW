@@ -688,6 +688,11 @@ END
 #!
   #FOR(%Control),WHERE(%ControlType='BUTTON')
 #!
+#! RA.2020.08.21.FRI:   Per Wolfgang Orth: Is this compatible with Capesoft's AnyText? (Not at this time.)
+#!                      When I investigate AnyText will have to see where Mr. Bruce generates the hooks
+#!                      and check where you need to generate the code to replace the icons and messages.
+#!                      ASSUMPTION: AnyText will have to go after, to make sure the correct text is applied
+#!                                  to the control message and tooltip. Yes: setup and text.
 #! RA.2019.01.06.SUN:   Continue adding code for the Handy toolkit.
 #! RA.2018.12.27.THU:   Started adding the %ControlIdentifier and move them to the front of the 
 #!                      case compares. Kept the old compares and moved them to the back since

@@ -43,6 +43,7 @@
   #BOXED(''),AT(,,454)
     #PROMPT('Choose the VCR option:',DROP('Turn On|Turn Off|Leave Alone')),%raVCRchoice,DEFAULT('Leave Alone')
   #ENDBOXED
+  #! RA.2020.08.21: Per Wolfgang Orth: Does THIS work on a FRAME [???] (Application VS Window)
   #!BOXED(''),AT(,,278)
   #BOXED(''),AT(,,454)
     #DISPLAY('Select Wallpaper Image:')   #! ,PROP(PROP:FontStyle,700)
@@ -56,6 +57,8 @@
       #!ENDENABLE
     #ENDENABLE
   #ENDBOXED
+  #! RA.2020.08.21: Per Wolfgang Orth: What about letting you enter the picture for DATE/TIME [???]
+  #!                Reasonable: Could be done. Warning about validation. (Germany, Switzerland)
   #! RA.2020.01.16: DATE: Added @D05B options (Dave Schwartz)
   #! RA.2019.08.06: DATE/TIME: DCT DEFAULT|OTHER|WINDOWS SHORT|WINDOWS LONG
   #BOXED(''),AT(,,454)   
@@ -202,6 +205,47 @@ IF (WindowXpos < 0 OR WindowYpos < 0)       THEN
 END
 #!EMBED(%EOGRYB_CenterTheScreen,'After: EOG-RYB: Center the screen')
 #ENDAT
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#! https://odata.de/Clarion/colored_background_for_appframe/index.php
+#!
+#! Quite a while ago Jim Gambon posted a great solution for this on the Clarion Newsgroups.
+#!
+#! First step:
+#! In the After Global Includes: we add an EQUATE()
+#! GCL_HBRBACKGROUND            EQUATE(-10) 
+#! Then, in the Global Map:
+#! ! background color
+#!    MODULE('Win32API')
+#! GetClassLong        PROCEDURE(LONG thehWnd,LONG theIndex),LONG,PASCAL,NAME('GetClassLongA')
+#! SetClassLong        PROCEDURE(LONG thehWnd,LONG theIndex,LONG theNewValue),LONG,PROC,PASCAL,NAME('SetClassLongA')
+#! CreateSolidBrush    PROCEDURE(LONG TheColor),LONG,PASCAL,NAME('CreateSolidBrush')
+#! DeleteObject        PROCEDURE(LONG theObject),LONG,PROC,PASCAL,NAME('DeleteObject')
+#!    END !MODULE
+#!
+#! ! make sure that "Column 1" is ticked on
+#!
+#! Add these two variable into your AppFrame window, either in the Data-Embed or the Data-Pad:
+#! SaveNewBrush LONG
+#! SaveOldBrush LONG
+#! The color is obtained after the windows opens, so we put the following into the embed right after its opening in ThisWindow.Init:
+#!  SaveOldBrush = GetClassLong(AppFrame{PROP:ClientHandle},GCL_HBRBACKGROUND)
+#!  SaveNewBrush = CreateSolidBrush(0FFFFFFh) ! Solid White
+#!  IF SaveNewBrush <> 0
+#!     SetClassLong(AppFrame{PROP:ClientHandle},GCL_HBRBACKGROUND,SaveNewBrush)
+#!  END !IF
+#!
+#! Its always a good practice to clean up the mess when we leave, so in the TakeCloseEvent handler for ThisWindow object we reset and delete the brush objects:
+#!  IF SaveOldBrush <> 0
+#!     SetClassLong(AppFrame{PROP:ClientHandle},GCL_HBRBACKGROUND,SaveOldBrush)
+#!     SaveOldBrush = 0
+#!  END !IF
+#!
+#!  IF SaveNewBrush <> 0
+#!     DeleteObject(SaveNewBrush)
+#!     SaveNewBrush = 0
+#!  END !IF
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
