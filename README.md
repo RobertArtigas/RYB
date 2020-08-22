@@ -2,9 +2,7 @@
 IF you want me to continue improving these utilities, THEN send me an e-mail that you are using them.
  It might be useful to include your use case scenario and a description of why you want this improvement and how it helps the business you are involved in working.
 
-# RYB (Run Your Business)
-English: Run Your Business (RYB) template collection. 
-Español: Dirige Tu Negocio (RYB) colección de plantillas.
+# RYB: Run Your Business (Dirige Tu Negocio)
 
 You might want to read this first, then go to the [**WIKI**](https://github.com/RobertArtigas/RYB/wiki) page.
 
