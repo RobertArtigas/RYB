@@ -3,7 +3,10 @@ IF you want me to continue improving these utilities, THEN send me an e-mail tha
  It might be useful to include your use case scenario and a description of why you want this improvement and how it helps the business you are involved in working.
 
 # RYB (Run Your Business)
-Run Your Business (RYB) template collection. Read this first, then go to the [**WIKI**](https://github.com/RobertArtigas/RYB/wiki) page.
+English: Run Your Business (RYB) template collection. 
+Español: Dirige Tu Negocio (RYB) colección de plantillas.
+
+You might want to read this first, then go to the [**WIKI**](https://github.com/RobertArtigas/RYB/wiki) page.
 
 These are a set of functional templates. Some that I use every day in a number of working projects.
 
@@ -18,7 +21,9 @@ There a few items that are marked as "experimental" and are not completely worke
 
 # Webinars explaining how to use the RYB templates
 
-ClarionLive :  576 : Aug 21, 2020 : https://www.youtube.com/watch?v=EZHhJ7FmMNI&feature=youtu.be
+ClarionLive : 576 : Aug 21, 2020 : https://www.youtube.com/watch?v=EZHhJ7FmMNI&feature=youtu.be
+
+Clarioneros : 161 : Aug 22, 2020 : 
 
 [Main](https://github.com/RobertArtigas) [Repositories](https://github.com/RobertArtigas?tab=repositories)
 
