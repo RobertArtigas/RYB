@@ -1,6 +1,11 @@
 ## Development
-IF you want me to continue improving these utilities, THEN send me an e-mail that you are using them.
- It might be useful to include your use case scenario and a description of why you want this improvement and how it helps the business you are involved in working.
+IF you want me to continue improving these utilities, THEN e-mail me that you are using them. 
+ It might be useful to include your use case scenario and a description of why you want this improvement 
+ and how it helps the business you are involved in working.
+
+SI desea que continúe mejorando estas utilidades, ENTONCES envíeme un correo electrónico que las está utilizando. 
+  Puede ser útil incluir el escenario de su caso de uso y una descripción de por qué desea esta mejora 
+  y cómo ayuda a la empresa en la que está involucrado.
 
 # RYB: Run Your Business (Dirige Tu Negocio)
 
