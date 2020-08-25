@@ -23,6 +23,8 @@
 #INSERT(%PreambleRYB)
 #!-----------------------------------------------------------------------------
 #! Changes:
+#! RA.2020.08.24.MON      Roberto Artigas Jr (requesy by Wolfgang Orth) 
+#!  *   What about letting you enter the picture for DATE/TIME? Done!
 #! RA.2020.01.16.THU      Roberto Artigas Jr (request by Dave Schwartz)
 #!  *   Added code to CENTER the windows that got moved off the viewable screen (negative coordinates)
 #!  *   Added @D05B to the date options (Australia)
@@ -57,18 +59,21 @@
       #!ENDENABLE
     #ENDENABLE
   #ENDBOXED
+  #! RA.2020.08.24: Per Wolfgang Orth: What about letting you enter the picture for DATE/TIME? Done!
   #! RA.2020.08.21: Per Wolfgang Orth: What about letting you enter the picture for DATE/TIME [???]
-  #!                Reasonable: Could be done. Warning about validation. (Germany, Switzerland)
+  #!                Reasonable: Could be done. (Germany, Switzerland)
   #! RA.2020.01.16: DATE: Added @D05B options (Dave Schwartz)
   #! RA.2019.08.06: DATE/TIME: DCT DEFAULT|OTHER|WINDOWS SHORT|WINDOWS LONG
   #BOXED(''),AT(,,454)   
-    #PROMPT('Enable application wide DATE format?',CHECK)                               , %raFormatDateCheck , AT(10) , DEFAULT(0)
+    #PROMPT('Enable application wide DATE format?',CHECK)     , %raFormatDateCheck , AT(10) , DEFAULT(0)
     #ENABLE(%raFormatDateCheck) 
-      #PROMPT('Format DATE default: ',DROP('@D010-B|@D02B|@D05B|@D017B|@D018B|@D08B'))  , %raFormatDateMask  , REQ    , DEFAULT('@D010-B')
+      #!PROMPT('Format DATE default: ',DROP('@D010-B|@D02B|@D05B|@D017B|@D018B|@D08B'))  , %raFormatDateMask  , REQ    , DEFAULT('@D010-B')
+      #PROMPT('Format DATE default: ',@S120)                  , %raFormatDateMask  , REQ    , DEFAULT('@D010-B')
     #ENDENABLE
-    #PROMPT('Enable application wide TIME format?',CHECK)                               , %raFormatTimeCheck , AT(10) , DEFAULT(0)
+    #PROMPT('Enable application wide TIME format?',CHECK)     , %raFormatTimeCheck , AT(10) , DEFAULT(0)
     #ENABLE(%raFormatTimeCheck)
-      #PROMPT('Format TIME default: ',DROP('@T04B|@T06B|@T07B|@T08B'))                  , %raFormatTimeMask  , REQ    , DEFAULT('@T04B')
+      #!PROMPT('Format TIME default: ',DROP('@T04B|@T06B|@T07B|@T08B'))                  , %raFormatTimeMask  , REQ    , DEFAULT('@T04B')
+      #PROMPT('Format TIME default: ',@S120)                  , %raFormatTimeMask  , REQ    , DEFAULT('@T04B')
     #ENDENABLE
   #ENDBOXED
 #ENDTAB
