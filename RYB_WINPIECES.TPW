@@ -23,7 +23,7 @@
 #INSERT(%PreambleRYB)
 #!-----------------------------------------------------------------------------
 #! Changes:
-#! RA.2020.08.24.MON      Roberto Artigas Jr (requesy by Wolfgang Orth) 
+#! RA.2020.08.24.MON      Roberto Artigas Jr (request by Wolfgang Orth) 
 #!  *   What about letting you enter the picture for DATE/TIME? Done!
 #! RA.2020.01.16.THU      Roberto Artigas Jr (request by Dave Schwartz)
 #!  *   Added code to CENTER the windows that got moved off the viewable screen (negative coordinates)
