@@ -28,4 +28,6 @@ ClarionLive : 576 : Aug 21, 2020 : https://www.youtube.com/watch?v=EZHhJ7FmMNI&f
 
 Clarioneros : 161 : 2020-08-22 : https://clarionlive.com/clarioneros.htm (**OneDrive** link)
 
+Clarioneros : 163 : 2020-09-05 : https://clarionlive.com/clarioneros.htm (**OneDrive** link)
+
 [Main](https://github.com/RobertArtigas) [Repositories](https://github.com/RobertArtigas?tab=repositories)
