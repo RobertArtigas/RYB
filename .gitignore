@@ -1,8 +1,12 @@
 *.sublime-workspace
 _archive_
 
+.gitignore
+.gitattributes
+
 RybProg.Tpl
 TemplateMaker.Tpl
+CB_AltFix.TPL
 
 .*
 LICENSE

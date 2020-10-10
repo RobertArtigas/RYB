@@ -55,6 +55,10 @@
 #EQUATE(%tplReleaseTHREADME                 , '2019.12.31' )
 #EQUATE(%tplVersionSQLRECONNECT             , '1.00' )
 #EQUATE(%tplReleaseSQLRECONNECT             , '2020.06.26' )
+#EQUATE(%tplVersionGENRECORDS               , '1.00' )          #! TEMPORARY
+#EQUATE(%tplReleaseGENRECORDS               , '1999.01.31' )    #! TEMPORARY
+#EQUATE(%tplVersionGROUPS                   , '1.00' )
+#EQUATE(%tplReleaseGROUPS                   , '1999.01.31' )
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
@@ -239,6 +243,7 @@
 #INCLUDE('RYB_EXCLUDEGLOBALCLASS.TPW')      #! RA.2019.12.13: Exclude GLOBAL classes
 #INCLUDE('RYB_THREADME.TPW')                #! RA.2019.12.31: Thread number on title bar
 #INCLUDE('RYB_SQLRECONNECT.TPW')            #! RA.2020.06.26: SQL Handling Reconnect
+#INCLUDE('RYB_GENERATEGROUPS.TPW')          #! RA.1999.01.31: Generate Record Groups
 #!
 #!INCLUDE('RYB_TESTING.TPW')                 #! RA.2019.04.21: TESTING STRAP - TEMPORARY
 #!-----------------------------------------------------------------------------------------------------

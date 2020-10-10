@@ -1,0 +1,397 @@
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%NO20201097)
+#!UTILITY (RYB_GenerateRecords, 'Generate Record Groups'), WIZARD
+#!--------------------------------------------------------------------
+#! Created By:  Roberto Artigas Jr
+#! Author:      1999.01.31 - Roberto Artigas Jr
+#!
+#INSERT(%PrepareFiles)
+#!
+#SHEET
+  #TAB ('Generate Records Groups')
+    #DISPLAY ('This wizard will generate group definitions of the contents of your current dictionary.'), AT(90, 8, 235, 24)
+    #DISPLAY ('To specify how you want the report constructed, click on the Next button.'), AT(90)
+  #ENDTAB
+  #TAB ('Dictionary Print Wizard - Reported Files'), FINISH(1)
+    #DISPLAY ('You can report on each file in your dictionary, or you can select individual files to report on.'), AT(90, 8, 235, 24)
+    #PROMPT ('Report on all files in my dictionary.', CHECK), %DictionaryReportUseAllFiles, DEFAULT(1), AT(90,, 180)
+  #ENDTAB
+  #TAB ('Dictionary Print Wizard - Select Reported Files'), WHERE(~%DictionaryReportUseAllFiles), FINISH(1)
+    #!PROMPT ('File Selection', FROM (%File)), %DictionaryReportFileSelection, INLINE, SELECTION('File Selection'), AT(90, 8, 235)
+    #PROMPT ('File Selection', FROM(%SelectFromFiles)), %DictionaryReportFileSelection, INLINE, SELECTION('File Selection'), AT(90, 8, 235)
+  #ENDTAB
+  #TAB ('Dictionary Print Wizard - Finally...')
+    #DISPLAY ('This concludes the dictionary Group Generate wizard.'), AT(90, 8, 235, 24)
+    #DISPLAY ('Click on the Finish button to generate Groups.'), AT(90, 82, 235, 24)
+  #ENDTAB
+#ENDSHEET
+#!
+#DECLARE(%zNames)
+#DECLARE(%zGroup)
+#DECLARE(%zItems)
+#SET(%zNames, 40)
+#SET(%zGroup, %zNames + 0)
+#SET(%zItems, %zGroup + 2)
+#!
+#DECLARE(%LineWork)
+#DECLARE(%LineNext)
+#DECLARE(%LineText)
+#!
+#COMMENT(90)
+#DECLARE (%ReportedFiles),MULTI,UNIQUE
+#DECLARE (%Groups),MULTI
+#DECLARE (%ValueConstruct)
+#DECLARE (%TheKeyId)
+#DECLARE (%TheKeyNo,LONG)
+#!
+#IF (%DictionaryReportUseAllFiles)
+  #! #FOR (%File)
+  #!   #ADD (%ReportedFiles, %File)
+  #! #ENDFOR
+  #FOR (%SelectFromFiles)
+    #ADD (%ReportedFiles, %SelectFromFiles)
+  #ENDFOR
+#ELSE
+  #FOR (%DictionaryReportFileSelection)
+    #ADD (%ReportedFiles, %DictionaryReportFileSelection)
+  #ENDFOR
+#ENDIF
+#!
+#DECLARE (%OutputFile)
+#FOR (%ReportedFiles)
+  #FIX (%File, %ReportedFiles)
+  #SET (%OutputFile, %FILE & '.inc')
+  #MESSAGE('File Group Definition: ' & %OutputFile, 2)
+  #CREATE (%OutputFile)
+#INSERT(%GiveMeSomeStuff)
+#INSERT(%GiveMeSomeStuff)
+  #CLOSE (%OutputFile)
+#ENDFOR
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%PrepareFiles)
+#PREPARE
+#DECLARE(%SelectFromFiles),MULTI,UNIQUE
+#FOR (%File)
+  #!----------------------------------!
+  #! Ignore certain file DRIVER types !
+  #!----------------------------------!
+  #CASE(%FileDriver)
+    #OF('ASCII')
+  #OROF('BASIC')
+  #OROF('DOS')
+  #OROF('MEMORY')                                                               #! RA.2018.04.12 - Ignored
+      #CYCLE
+  #ENDCASE
+  #!---------------------------!
+  #! Ignore certain FILE types !
+  #!---------------------------!
+  #CASE(%FileType)
+  #OF  ('VIEW')
+  #OROF('ALIAS')
+      #CYCLE
+  #ENDCASE
+  #!-------------------------------------!
+  #! Ignore FILES with NO FIELDS in them !
+  #!-------------------------------------!
+  #IF(NOT ITEMS(%Field))                                                        #! RA.2001.12.01
+    #CYCLE                                                                      #! RA.2001.12.01
+  #ENDIF                                                                        #! RA.2001.12.01
+  #!
+  #IF(NOT VAREXISTS(%nLoc1))
+    #DECLARE(%nLoc1)
+  #ENDIF
+  #IF(NOT VAREXISTS(%nLoc2))
+    #DECLARE(%nLoc2)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileUser))
+    #DECLARE(%NFileUser)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt1))
+    #DECLARE(%NFileOpt1)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt2))
+    #DECLARE(%NFileOpt2)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt3))
+    #DECLARE(%NFileOpt3)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt4))
+    #DECLARE(%NFileOpt4)
+  #ENDIF
+  #!
+  #SET(%nLoc1,INSTRING('RASQL(',%FileUserOptions,1,1))
+  #SET(%nLoc2,INSTRING(')',%FileUserOptions,1,%nLoc1))
+  #SET(%NFileUser,UPPER(SUB(%FileUserOptions,%nLoc1,%nLoc2)))
+  #!SET(%NFileUser,UPPER(EXTRACT(%FileUserOptions,'RASQL')))
+  #SET(%NFileOpt1,EXTRACT(%NFileUser,'RASQL',1))
+  #SET(%NFileOpt2,EXTRACT(%NFileUser,'RASQL',2))
+  #SET(%NFileOpt3,EXTRACT(%NFileUser,'RASQL',3))
+  #SET(%NFileOpt4,EXTRACT(%NFileUser,'RASQL',4))
+  #!
+  #IF(SUB(%NFileOpt1,1,1)='N')                                                  #! Ignore this file
+    #CYCLE
+  #ENDIF
+  #!
+  #ADD (%SelectFromFiles, %File)
+#ENDFOR
+#ENDPREPARE
+#GROUP(%PrepareFilesEnd)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%CopyrightGROUPS)
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightGROUPS01))
+    #DECLARE(%CopyrightGROUPS01)
+  #ENDIF
+  #SET(%CopyrightGROUPS01, 'Generate GROUPS for this dictionary.')
+  #SET(%CopyrightGROUPS01, %CopyrightGROUPS01 & '<13,10>Copyright © 1999-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightGROUPS01, %CopyrightGROUPS01 & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightGROUPS01, %CopyrightGROUPS01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#BOXED('Version '& %tplVersionGROUPS & ' [ ' & %tplReleaseGROUPS & ' ]'),AT(,,454),PROP(PROP:FontStyle,700) 
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%CopyrightGROUPS01),AT(,,436,34)
+#ENDBOXED
+#!
+#GROUP(%MITLicenseGROUPS)
+#TAB('GROUPS'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightGROUPS) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#GROUP(%ExplainGROUPS)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainGROUPS01))
+    #DECLARE(%ExplainGROUPS01)
+  #ENDIF
+  #SET(%ExplainGROUPS01, '')
+  #SET(%ExplainGROUPS01, %ExplainGROUPS01 & 'This template is used to make an include file defining a GROUP for')
+  #SET(%ExplainGROUPS01, %ExplainGROUPS01 & ' each table in your dictionary. You might want to include this extension')
+  #SET(%ExplainGROUPS01, %ExplainGROUPS01 & ' on one application only. Preferably in your DATA application.')
+  #SET(%ExplainGROUPS01, %ExplainGROUPS01 & '<13,10><13,10>')
+  #SET(%ExplainGROUPS01, %ExplainGROUPS01 & 'You can select the ones that you just need or can select them all by choice.')
+  #SET(%ExplainGROUPS01, %ExplainGROUPS01 & ' It will not allow you to default them all since this can generate a lot of files.')
+  #SET(%ExplainGROUPS01, %ExplainGROUPS01 & '<13,10><13,10>')
+  #SET(%ExplainGROUPS01, %ExplainGROUPS01 & 'This template has been tested with the ABC template chains.')
+  #SET(%ExplainGROUPS01, %ExplainGROUPS01 & '')
+  #!
+  #IF(NOT VAREXISTS(%ExplainGROUPS02))
+    #DECLARE(%ExplainGROUPS02)
+  #ENDIF
+  #!
+  #SET(%ExplainGROUPS02, '')
+  #SET(%ExplainGROUPS02, %ExplainGROUPS02 & 'NOTE: Make sure the COMPLETE DIRECTORY PATH exists on your machine.')
+#ENDPREPARE
+#!
+#GROUP(%TabSelectionGROUPS)
+#TAB('Selection')  #!,PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+  #BOXED(''),AT(,,454),PROP(PROP:FontStyle,700)
+    #!DISPLAY(''),AT(,,,1)
+    #!PROMPT ('Generate all files in my dictionary. (Cannot change this option)', CHECK), %DictionaryReportUseAllFiles, DEFAULT(0), AT(10) #!, PROP(PROP:READONLY,1), PROP(PROP:FontStyle,700), PROP(PROP:FontColor,0C79A3H)
+    #PROMPT ('Generate all files in my dictionary.', CHECK), %DictionaryReportUseAllFiles, DEFAULT(0), AT(10)
+    #DISPLAY(''),AT(,,,1)
+    #ENABLE(~%DictionaryReportUseAllFiles)
+      #PROMPT ('File Selection', FROM(%SelectFromFiles)), %DictionaryReportFileSelection, INLINE, SELECTION('File Selection'), AT(,,,198)
+    #ENDENABLE
+  #ENDBOXED
+#ENDTAB
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%GiveMeSomeStuff)
+!BOF
+!
+! File:         %OutputFile
+! Purpose:      Generated File Records as Groups
+! Author:       GenerateGroups Template
+! Narative:     This template is used to pass records structures
+!               back and forth between DLL's when the files
+!               are not shared. Since file definitions are not
+!               available, data has to be passed in areas.
+!
+  #IF (%FileType = 'ALIAS')
+! Name:         %File (An alias for %AliasFile)
+  #ELSE
+! Name:         %File
+  #ENDIF
+! Prefix:       %FilePrefix
+  #IF (%FileDescription)
+! Description:  %FileDescription
+  #ENDIF
+  #IF (%FileName)
+! Filename:     %FileName
+  #ENDIF
+!
+!-Keys-
+!
+  #SUSPEND
+    #FOR (%Key)
+! %[%zNames-1]KeyID %|
+      #FOR (%KeyField)
+        #FIX (%Field, %KeyField)
+        #IF (INSTANCE(%KeyField) = 1)
+%FieldID(%KeyFieldSequence)
+        #ELSE
+!%[%zGroup+1]Null%FieldID(%KeyFieldSequence)
+        #ENDIF
+      #ENDFOR
+    #ENDFOR
+  #RESUME
+!
+!-Keys-
+!
+  #SUSPEND
+    #SET(%TheKeyNo,1)
+    #FOR (%Key)
+      #FOR (%KeyField)
+        #FIX (%Field, %KeyField)
+        #IF (INSTANCE(%KeyField) = 1)
+          #!SET(%TheKeyId,SUB(%KeyID,1,INSTRING('_',%KeyID,1,1)-1))
+          #SET(%TheKeyId, 'Key' & FORMAT(%TheKeyNo,@N02))
+          #SET(%LineWork, UPPER(%FilePrefix) & ':tKey:' & %KeyID & '')
+          #SET(%LineNext, 'GROUP,TYPE,BINDABLE,PRE(t' & UPPER(%FilePrefix) & ':' & %TheKeyId & ')')
+%[%zNames]LineWork %[%zGroup-%zNames]NULL %LineNext
+#!%FilePrefix:tKey:%KeyID GROUP,TYPE,BINDABLE,PRE(t%FilePrefix:%TheKeyId)
+#!%FieldStruct #<! %FieldDescription
+%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
+          #SET(%TheKeyNo, %TheKeyNo + 1)
+        #ELSE
+#!%FieldStruct #<! %FieldDescription
+%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
+        #ENDIF
+      #ENDFOR
+#!  END
+%[%zNames]NULL %[%zGroup-%zNames]NULL END
+    #ENDFOR
+  #RESUME
+!
+!-Record-
+!
+  #SUSPEND
+  #SET(%LineWork, UPPER(%FilePrefix) & ':tRec')
+  #SET(%LineNext, 'GROUP,TYPE,BINDABLE,PRE(t' & UPPER(%FilePrefix) & ')')
+#!%FilePrefix:mRec GROUP,TYPE,BINDABLE,PRE(m%FilePrefix)
+%[%zNames]LineWork %[%zGroup-%zNames]NULL %LineNext
+    #FOR (%Field)
+#!%FieldStruct #<! %FieldDescription
+%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
+    #ENDFOR
+%[%zNames]NULL %[%zGroup-%zNames]NULL END
+  #RESUME
+!
+!-Queue-
+!
+  #SUSPEND
+#SET(%LineWork, UPPER(%FilePrefix) & ':qRec')
+#SET(%LineNext, 'QUEUE(' & UPPER(%FilePrefix) & ':tRec' & '),TYPE,BINDABLE,PRE(q' & UPPER(%FilePrefix) & ')')
+%[%zNames]LineWork %[%zGroup-%zNames]NULL %LineNext
+%[%zNames]NULL %[%zGroup-%zNames]NULL END
+  #RESUME
+!
+!-Equates-
+!
+  #SUSPEND
+%[%zNames]NULL %[%zGroup-%zNames]NULL ITEMIZE(1)
+    #FOR (%Field)
+#SET(%LineWork, 'C_' & UPPER(%FilePrefix) & '_' & UPPER(%FieldID))
+#SET(%LineNext, 'EQUATE()')
+%[%zNames]LineWork %[%zItems-%zNames]NULL %LineNext
+    #ENDFOR
+%[%zNames]NULL %[%zGroup-%zNames]NULL END
+  #RESUME
+!
+!EOF
+#GROUP(%GiveMeSomeStuffEnd)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#EXTENSION(RYB_GenerateGroups,'RA.1999.01.31: Generate table groups'),Description('RYB | Generate table groups in include files. Version: ' & %tplVersionGROUPS & ', Release: ' & %tplReleaseGROUPS),APPLICATION
+#!-----------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------
+#! Created By:          Roberto Artigas y Soler
+#! Author:              2020.10.04 - Roberto Artigas y Soler
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!
+#SHEET,AT(,,464),HSCROLL
+#TAB('Hidden'),WHERE(0=1)
+#INSERT(%PrepareFiles)
+#ENDTAB
+#INSERT(%MITLicenseGROUPS)
+#INSERT(%ExplainGROUPS)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #BOXED('Record GROUP Generator'),AT(,,456),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY(%ExplainGROUPS02),AT(,,436,10),PROP(PROP:FontStyle,700) 
+    #BOXED(''),AT(,,446)
+      #PROMPT('Directory: ',@S120),%IncludeDirectory, REQ, DEFAULT('.\classes\')                                                                                        ,AT(70,,376)
+      #!PROMPT('Include: '  ,@S120),%IncludeFilename , REQ, DEFAULT('_' & %ProgramExtension & '_' & UPPER(SLICE(%Program, 1, INSTRING('.', %Program, 1, 1)-1)) & '.GRP') ,AT(70,,376)
+      #PREPARE
+      #SET(%IncludeLocation,%IncludeDirectory & '') #!%IncludeFilename )
+      #ENDPREPARE
+      #PROMPT('Location: ' ,@S120),%IncludeLocation , REQ, DEFAULT(%IncludeLocation),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,376)
+    #ENDBOXED
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY(%ExplainGROUPS01),AT(,,436,154)
+  #ENDBOXED
+#ENDTAB
+#INSERT(%TabSelectionGROUPS)
+#ENDSHEET
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#ATSTART
+#!
+#DECLARE(%zNames)
+#DECLARE(%zGroup)
+#DECLARE(%zItems)
+#SET(%zNames, 40)
+#SET(%zGroup, %zNames + 0)
+#SET(%zItems, %zGroup + 2)
+#!
+#DECLARE(%LineWork)
+#DECLARE(%LineNext)
+#DECLARE(%LineText)
+#!
+#DECLARE (%ReportedFiles),MULTI,UNIQUE
+#DECLARE (%Groups),MULTI
+#DECLARE (%ValueConstruct)
+#DECLARE (%TheKeyId)
+#DECLARE (%TheKeyNo,LONG)
+#!
+#IF (%DictionaryReportUseAllFiles)
+  #FOR (%SelectFromFiles)
+    #ADD (%ReportedFiles, %SelectFromFiles)
+  #ENDFOR
+#ELSE
+  #FOR (%DictionaryReportFileSelection)
+    #ADD (%ReportedFiles, %DictionaryReportFileSelection)
+  #ENDFOR
+#ENDIF
+#!
+#COMMENT(90)
+#!
+#DECLARE (%OutputFile)
+#FOR (%ReportedFiles)
+  #FIX (%File, %ReportedFiles)
+  #SET (%OutputFile, %IncludeDirectory & %FILE & '.inc')
+  #MESSAGE('File Group Definition: ' & %OutputFile, 2)
+  #!ERROR('File Group Definition: ' & %OutputFile)
+  #CREATE (%OutputFile)
+#INSERT(%GiveMeSomeStuff)
+  #CLOSE (%OutputFile)
+#ENDFOR
+#!
+#ENDAT
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
