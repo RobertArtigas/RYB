@@ -1442,6 +1442,7 @@ END
 #!
   #ENDFOR
 #!
+#EMBED(%EOGRYB_AfterIconsAdjust,'After: EOG-RYB: Icons properties adjustment.')
 #ENDIF
 #ENDAT
 #!
