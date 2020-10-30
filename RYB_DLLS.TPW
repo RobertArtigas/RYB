@@ -289,7 +289,7 @@
 #!---------------------------------------------------------------------
 #!---------------------------------------------------------------------
 #!---------------------------------------------------------------------
-#! RA.2019.10.17: generating a date and a time
+#! RA.2019.10.17: generating a date and a time in RYB_DLLS.TPW
 #AT(%DllExportList),Where(%ProgramExtension = 'DLL') 
 #IF(NOT VAREXISTS(%TheDate))
   #DECLARE(%TheDate)

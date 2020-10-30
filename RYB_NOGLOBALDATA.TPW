@@ -1,0 +1,146 @@
+#!#TEMPLATE(zzNOGLOBALDATAludes,'Templates Description'),FAMILY('ABC')
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%CopyrightNOGLOBALDATA)
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightNOGLOBALDATA01))
+    #DECLARE(%CopyrightNOGLOBALDATA01)
+  #ENDIF
+  #SET(%CopyrightNOGLOBALDATA01, 'No GLOBAL DATA exports.')
+  #SET(%CopyrightNOGLOBALDATA01, %CopyrightNOGLOBALDATA01 & '<13,10>Copyright © 2018-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightNOGLOBALDATA01, %CopyrightNOGLOBALDATA01 & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightNOGLOBALDATA01, %CopyrightNOGLOBALDATA01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#! Version: ' & %tplVersionNOGLOBALDATA & ', Release: ' & %tplReleaseNOGLOBALDATA
+#BOXED('Version ' & %tplVersionNOGLOBALDATA & ' [ ' & %tplReleaseNOGLOBALDATA & ' ]'),AT(,,454),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #!DISPLAY(%CopyrightNOGLOBALDATA01),AT(,,260,34)
+  #DISPLAY(%CopyrightNOGLOBALDATA01),AT(,,436,34)
+#ENDBOXED
+#!
+#GROUP(%MITLicenseNOGLOBALDATA)
+#TAB('NOGLOBALDATA'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightNOGLOBALDATA) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#GROUP(%ExplainNOGLOBALDATA)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainNOGLOBALDATA01))
+    #DECLARE(%ExplainNOGLOBALDATA01)
+  #ENDIF
+  #SET(%ExplainNOGLOBALDATA01, '')
+  #SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & 'This template is used when you want multiple DCT''s defined in an application.')
+  #SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & '<13,10><13,10>')
+  #SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & 'By design one or more of the DCT''s are being used as support for the main')
+  #SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & ' applications and DCT, and you do not want those support DLL''s to export the')
+  #SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & ' GlobalRequest, GlobalResponse, VcrRequest GLOBAL DATA variables which can cause')
+  #SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & ' conflict (duplicate entries) when linking in with the main application DLL''s and')
+  #SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & ' executables.')
+  #SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & '<13,10><13,10>')
+  #!SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & 'You place this template at the top level support DLL that you are linking to')
+  #!SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & ' where your support procedure API calls are located. These procedures are what you')
+  #!SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & ' call from your main application DLL''s and executables.')
+  #!SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & '<13,10><13,10>')
+  #SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & 'This template has been tested with the ABC and Clarion template chain.')
+  #SET(%ExplainNOGLOBALDATA01, %ExplainNOGLOBALDATA01 & '')
+  #!
+  #IF(NOT VAREXISTS(%ExplainNOGLOBALDATA02))
+    #DECLARE(%ExplainNOGLOBALDATA02)
+  #ENDIF
+  #!
+  #SET(%ExplainNOGLOBALDATA02, '')
+  #SET(%ExplainNOGLOBALDATA02, %ExplainNOGLOBALDATA02 & 'NOTE: Not tested in context: Do NOT use at this time!')
+#ENDPREPARE
+#!---------------------------------------------------------------------
+#! #EXTENSION(NoGlobalDataExports,'RA.2011.03.15 - Suppress Global Data Exports (CLARION,CW20,ABC)'),APPLICATION
+#! #ATSTART
+#!   #DECLARE(%HoldGlobalExternal)
+#! #ENDAT
+#! #AT(%BeginningExports)
+#!   #SET(%HoldGlobalExternal,%GlobalExternal)
+#!   #SET(%GlobalExternal,%True)
+#! #ENDAT
+#! #AT(%DLLExportList)
+#!   #SET(%GlobalExternal,%HoldGlobalExternal)
+#! #ENDAT
+#EXTENSION(RYB_NoGlobalDataExports,'RA.2011.03.15: Suppress Global Data Exports (CLARION,CW20,ABC)'),DESCRIPTION('RYB | Suppress Global Data Exports. Version: ' & %tplVersionNOGLOBALDATA & ', Release: ' & %tplReleaseNOGLOBALDATA),APPLICATION
+#!-----------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------
+#! 2020.10.29:      Roberto Artigas y Soler
+#!  *   Does this get done in the DATA DLL or all the DLL's. 
+#!  *   WHEN does this get done. Need to re-examine the generated function.
+#!  *   Has NOT BEEN TESTED in it's current incarnation (no context at this time)
+#!  *   Moved to the RYB_* templates
+#! 2011.03.15:      Roberto Artigas Jr
+#!  *   Combined the class family into one template.
+#! 2000.02.21:      Roberto Artigas Jr
+#!  *   Tested with ABC and the same code works for both.
+#! 2000.01.29:      Roberto Artigas Jr
+#!  *   This is used to make sure that the GLOBAL data area of a code only
+#!      DLL (no DCT, no FRAME) as a subroutine library does not export the
+#!      GlobalRequest, GlobalResponse, VcrRequest DATA variables which can
+#!      conflict (duplicate entries) when linking in with another DLL.
+#!  *   This HAS been tested with a 'Clarion' template generated DLL only.
+#!      This has NOT been tested with an 'ABC' template generated DLL.
+#!      A 'Clarion' generated DLL can link into an 'ABC' generated DLL.
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!
+#DISPLAY('')
+#SHEET,AT(,,464),HSCROLL
+#INSERT(%MITLicenseNOGLOBALDATA)
+#INSERT(%ExplainNOGLOBALDATA)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #BOXED('No GLOBAL DATA exports'),AT(,,456),PROP(PROP:FontStyle,700)    
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY(%ExplainNOGLOBALDATA02),AT(,,436,10),PROP(PROP:FontStyle,700) 
+    #BOXED(''),AT(,,446)
+      #PROMPT('Do not export the GLOBAL DATA variables',CHECK),%DoNotExport, DEFAULT(TRUE), PROP(PROP:FontStyle,700), AT(0)                                                                                        ,AT(70,,376)
+    #ENDBOXED
+    #DISPLAY('')
+    #DISPLAY(%ExplainNOGLOBALDATA01),AT(,,436,94)
+  #ENDBOXED
+#ENDTAB
+#!INSERT(%TabClarionVersion)
+#ENDSHEET
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#ATSTART
+  #DECLARE(%HoldGlobalExternal)
+#ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#AT(%BeginningExports),WHERE(%DoNotExport)
+  #SET(%HoldGlobalExternal,%GlobalExternal)
+  #SET(%GlobalExternal,%True)
+#ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! RA.2019.10.17: generating a date and a time in RYB_DLLS.TPW
+#!#AT(%DllExportList),Where(%ProgramExtension = 'DLL') 
+#!---------------------------------------------------------------------
+#AT(%DLLExportList),WHERE(%DoNotExport)
+#IF(NOT VAREXISTS(%TheDate))
+  #DECLARE(%TheDate)
+#ENDIF
+#IF(NOT VAREXISTS(%TheTime))
+  #DECLARE(%TheTime)
+#ENDIF
+#SET(%TheDate ,FORMAT(TODAY(),@D010))                       #! Set current date
+#SET(%TheTime ,FORMAT(CLOCK(),@T06))                        #! Set current time
+
+#! RA.2020.10.29: BEGIN/ENDED: Not showing at this time (context???).
+;BEGIN: Exporting from RYB_NOGLOBALDATA: %TheDate - %TheTime
+   #SET(%GlobalExternal,%HoldGlobalExternal)
+;ENDED: Exporting from RYB_NOGLOBALDATA: %TheDate - %TheTime
+
+#ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
