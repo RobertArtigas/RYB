@@ -729,10 +729,13 @@ END
     #!--------!
     #! Browse !
     #!--------!
+    #! RA.2020.10.31: Decided not to differentiate at that level. Use item after the colon to provide the difference.
     #! RA.2019.08.17: The Selection ICON is the only thing changed. The control templates have the TIP and MSG text.
     #OF   ('?INTLSELECTLANGUAGE')                           #! RA.2019.08.17: Added
     #OROF ('?INTLSELECTCALENDAR')
     #OROF ('?INTLSELECTCURRENCY')
+    #!OROF('?INTLSELECTCURRENCYALPHA')                      #! RA.2020.10.31: Added: ISO-4217-A3 [???]
+    #!OROF('?INTLSELECTCURRENCYNUMBER')                     #! RA.2020.10.31: Added: ISO-4217-N3 [???]
     #OROF ('?INTLSELECTCOUNTRY')
     #OROF ('?INTLSELECTMEASURE')
     #OROF ('?INTLSELECTTIMEZONE')
