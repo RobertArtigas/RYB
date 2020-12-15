@@ -729,6 +729,7 @@ END
     #!--------!
     #! Browse !
     #!--------!
+    #! RA.2020.11.13: Added a few identefiers that were missing for when I add the control templates.
     #! RA.2020.10.31: Decided not to differentiate at that level. Use item after the colon to provide the difference.
     #! RA.2019.08.17: The Selection ICON is the only thing changed. The control templates have the TIP and MSG text.
     #OF   ('?INTLSELECTLANGUAGE')                           #! RA.2019.08.17: Added
@@ -736,9 +737,16 @@ END
     #OROF ('?INTLSELECTCURRENCY')
     #!OROF('?INTLSELECTCURRENCYALPHA')                      #! RA.2020.10.31: Added: ISO-4217-A3 [???]
     #!OROF('?INTLSELECTCURRENCYNUMBER')                     #! RA.2020.10.31: Added: ISO-4217-N3 [???]
-    #OROF ('?INTLSELECTCOUNTRY')
-    #OROF ('?INTLSELECTMEASURE')
     #OROF ('?INTLSELECTTIMEZONE')
+    #OROF ('?INTLSELECTMEASURECLASS')
+    #OROF ('?INTLSELECTMEASUREDIMENSION')
+    #OROF ('?INTLSELECTUNITOFMEASURE')
+    #OROF ('?INTLSELECTPLANET')
+    #OROF ('?INTLSELECTCONTINENT')
+    #OROF ('?INTLSELECTCONTINENTAREA')
+    #OROF ('?INTLSELECTCOUNTRY')
+    #OROF ('?INTLSELECTSTATES')
+    #OROF ('?INTLSELECTCOUNTY')
       #IF(%raSelIcon)
 %Control{PROP:Left} = TRUE                                  #<! ICONS: Left Justify
 %Control{Prop:Icon} = '~%raSelIcon'                         #<! ICONS: Button: INTLSELECT*
