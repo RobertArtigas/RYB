@@ -99,7 +99,7 @@
 #TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
   #BOXED('No GLOBAL DATA exports'),AT(,,456),PROP(PROP:FontStyle,700)    
     #DISPLAY(''),AT(,,,1)
-    #DISPLAY(%ExplainNOGLOBALDATA02),AT(,,436,10),PROP(PROP:FontStyle,700) 
+    #!DISPLAY(%ExplainNOGLOBALDATA02),AT(,,436,10),PROP(PROP:FontStyle,700) 
     #BOXED(''),AT(,,446)
       #PROMPT('Do not export the GLOBAL DATA variables',CHECK),%DoNotExport, DEFAULT(TRUE), PROP(PROP:FontStyle,700), AT(0)                                                                                        ,AT(70,,376)
     #ENDBOXED

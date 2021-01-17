@@ -1,7 +1,7 @@
 #!--------------------------------------------------------------------
 #!--------------------------------------------------------------------
 #!--------------------------------------------------------------------
-#GROUP(%NO20201097)
+#GROUP(%NO20201007)
 #!UTILITY (RYB_GenerateRecords, 'Generate Record Groups'), WIZARD
 #!--------------------------------------------------------------------
 #! Created By:  Roberto Artigas Jr
@@ -27,6 +27,11 @@
     #DISPLAY ('Click on the Finish button to generate Groups.'), AT(90, 82, 235, 24)
   #ENDTAB
 #ENDSHEET
+#!
+#DECLARE(%BegDate)
+#DECLARE(%BegTime)
+#SET(%BegDate, TODAY())                   #! Begin date
+#SET(%BegTime, CLOCK())                   #! Begin time
 #!
 #DECLARE(%zNames)
 #DECLARE(%zGroup)
@@ -209,6 +214,7 @@
 !BOF
 !
 ! File:         %OutputFile
+! Date-Time:    %@D010@(%BegDate) - %@T06@(%BegTime)
 ! Purpose:      Generated File Records as Groups
 ! Author:       GenerateGroups Template
 ! Narative:     This template is used to pass records structures
@@ -256,7 +262,7 @@
           #!SET(%TheKeyId,SUB(%KeyID,1,INSTRING('_',%KeyID,1,1)-1))
           #SET(%TheKeyId, 'Key' & FORMAT(%TheKeyNo,@N02))
           #SET(%LineWork, UPPER(%FilePrefix) & ':tKey:' & %KeyID & '')
-          #SET(%LineNext, 'GROUP,TYPE,BINDABLE,PRE(t' & UPPER(%FilePrefix) & ':' & %TheKeyId & ')')
+          #SET(%LineNext, 'GROUP,TYPE,BINDABLE,PRE(k' & UPPER(%FilePrefix) & ':' & %TheKeyId & ')')
 %[%zNames]LineWork %[%zGroup-%zNames]NULL %LineNext
 #!%FilePrefix:tKey:%KeyID GROUP,TYPE,BINDABLE,PRE(t%FilePrefix:%TheKeyId)
 #!%FieldStruct #<! %FieldDescription
@@ -276,7 +282,7 @@
 !
   #SUSPEND
   #SET(%LineWork, UPPER(%FilePrefix) & ':tRec')
-  #SET(%LineNext, 'GROUP,TYPE,BINDABLE,PRE(t' & UPPER(%FilePrefix) & ')')
+  #SET(%LineNext, 'GROUP,TYPE,BINDABLE,PRE(r' & UPPER(%FilePrefix) & ')')
 #!%FilePrefix:mRec GROUP,TYPE,BINDABLE,PRE(m%FilePrefix)
 %[%zNames]LineWork %[%zGroup-%zNames]NULL %LineNext
     #FOR (%Field)
@@ -333,7 +339,8 @@
     #DISPLAY(''),AT(,,,1)
     #DISPLAY(%ExplainGROUPS02),AT(,,436,10),PROP(PROP:FontStyle,700) 
     #BOXED(''),AT(,,446)
-      #PROMPT('Directory: ',@S120),%IncludeDirectory, REQ, DEFAULT('.\classes\')                                                                                        ,AT(70,,376)
+      #PROMPT('Directory: ',@S120)  ,%IncludeDirectory  , REQ, DEFAULT('.\classes\')        ,AT(70,,376)
+      #PROMPT('Prefix: ',@S120)     ,%SourcePrefix      , REQ, DEFAULT('group_')            ,AT(70,,376)
       #!PROMPT('Include: '  ,@S120),%IncludeFilename , REQ, DEFAULT('_' & %ProgramExtension & '_' & UPPER(SLICE(%Program, 1, INSTRING('.', %Program, 1, 1)-1)) & '.GRP') ,AT(70,,376)
       #PREPARE
       #SET(%IncludeLocation,%IncludeDirectory & '') #!%IncludeFilename )
@@ -350,6 +357,11 @@
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
 #ATSTART
+#!
+#DECLARE(%BegDate)
+#DECLARE(%BegTime)
+#SET(%BegDate, TODAY())                   #! Begin date
+#SET(%BegTime, CLOCK())                   #! Begin time
 #!
 #DECLARE(%zNames)
 #DECLARE(%zGroup)
@@ -383,7 +395,8 @@
 #DECLARE (%OutputFile)
 #FOR (%ReportedFiles)
   #FIX (%File, %ReportedFiles)
-  #SET (%OutputFile, %IncludeDirectory & %FILE & '.inc')
+  #!SET (%OutputFile, %IncludeDirectory & %FILE & '.inc')
+  #SET (%OutputFile, %IncludeDirectory & %SourcePrefix & %FILE & '.inc')
   #MESSAGE('File Group Definition: ' & %OutputFile, 2)
   #!ERROR('File Group Definition: ' & %OutputFile)
   #CREATE (%OutputFile)
