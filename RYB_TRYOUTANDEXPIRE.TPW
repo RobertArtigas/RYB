@@ -117,9 +117,11 @@
 #! %ProcedureTemplate = 'Source'
 #AT(%ProcessedCode),FIRST
  #IF(%DoExpire)
+  ! RYB-BEG-EXPIRE: Try and Expire Application
   IF TODAY() >= DATE(%ExpMonth, %ExpDay, %ExpYear) THEN
     HALT (0, '%ExpMsg')
   END
+  ! RYB-END-EXPIRE: Try and Expire Application
  #ENDIF
 #ENDAT
 #! %ProcedureTemplate = 'Window'
@@ -129,9 +131,11 @@
 #! %ProcedureTemplate = 'Todo'
 #AT(%ProcedureInitialize),FIRST
  #IF(%DoExpire)
-  IF TODAY() >= DATE(%ExpMonth, %ExpDay, %ExpYear) THEN
-    HALT (0, '%ExpMsg')
-  END
+! RYB-BEG-EXPIRE: Try and Expire Application
+IF TODAY() >= DATE(%ExpMonth, %ExpDay, %ExpYear) THEN
+  HALT (0, '%ExpMsg')
+END
+! RYB-END-EXPIRE: Try and Expire Application
  #ENDIF
 #ENDAT
 #!---------------------------------------------------------------------
