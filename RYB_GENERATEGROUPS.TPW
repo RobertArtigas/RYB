@@ -222,6 +222,7 @@
 !               are not shared. Since file definitions are not
 !               available, data has to be passed in areas.
 !
+!Region
   #IF (%FileType = 'ALIAS')
 ! Name:         %File (An alias for %AliasFile)
   #ELSE
@@ -234,9 +235,11 @@
   #IF (%FileName)
 ! Filename:     %FileName
   #ENDIF
+!EndRegion
 !
 !-Keys-
 !
+!Region
   #SUSPEND
     #FOR (%Key)
 ! %[%zNames-1]KeyID %|
@@ -250,9 +253,11 @@
       #ENDFOR
     #ENDFOR
   #RESUME
+!EndRegion
 !
 !-Keys-
 !
+!Region
   #SUSPEND
     #SET(%TheKeyNo,1)
     #FOR (%Key)
@@ -277,9 +282,11 @@
 %[%zNames]NULL %[%zGroup-%zNames]NULL END
     #ENDFOR
   #RESUME
+!EndRegion
 !
 !-Record-
 !
+!Region
   #SUSPEND
   #SET(%LineWork, UPPER(%FilePrefix) & ':tRec')
   #SET(%LineNext, 'GROUP,TYPE,BINDABLE,PRE(r' & UPPER(%FilePrefix) & ')')
@@ -291,18 +298,22 @@
     #ENDFOR
 %[%zNames]NULL %[%zGroup-%zNames]NULL END
   #RESUME
+!EndRegion
 !
 !-Queue-
 !
+!Region
   #SUSPEND
 #SET(%LineWork, UPPER(%FilePrefix) & ':qRec')
 #SET(%LineNext, 'QUEUE(' & UPPER(%FilePrefix) & ':tRec' & '),TYPE,BINDABLE,PRE(q' & UPPER(%FilePrefix) & ')')
 %[%zNames]LineWork %[%zGroup-%zNames]NULL %LineNext
 %[%zNames]NULL %[%zGroup-%zNames]NULL END
   #RESUME
+!EndRegion
 !
 !-Equates-
 !
+!Region
   #SUSPEND
 %[%zNames]NULL %[%zGroup-%zNames]NULL ITEMIZE(1)
     #FOR (%Field)
@@ -312,6 +323,7 @@
     #ENDFOR
 %[%zNames]NULL %[%zGroup-%zNames]NULL END
   #RESUME
+!EndRegion
 !
 !EOF
 #GROUP(%GiveMeSomeStuffEnd)
