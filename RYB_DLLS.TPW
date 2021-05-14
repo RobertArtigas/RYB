@@ -245,9 +245,9 @@
     #ENDFOR
   #OF('LIB')
   #ENDCASE
-! ========= LOCAL TO THIS APPLICATION =========
+! ========= LOCAL ONLY TO THIS APPLICATION =========
 #INSERT(%GiveMeComments)
-! ========= LOCAL TO THIS APPLICATION =========
+! ========= LOCAL ONLY TO THIS APPLICATION =========
 !
   #FREE(%TheProcs)
   #CASE(%ProgramExtension)

@@ -102,7 +102,10 @@ WindowYpos        LONG(0)  #<! Check for Y position off the screen
 0{PROP:MinHeight} = 0{PROP:Height}
 #ENDAT
 #!-----------------------------------------------------------------------------
-#AT (%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(8025)
+#! RA.2021.02.14: Noticed EZHelp code WAS generating when this was 'Leave Alone', and NOT generating when 'None'
+#! There is a conflict somewhere whit EzHelp. Need to fix the problem.
+#!AT (%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(8025)          #! RA.2021.03.14: Changed
+#AT (%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(8010)
   #IF (%raWallpaperType <> 'Leave Alone')
     #IF (%raWallpaperType <> 'None')
 !BOG-RYB: Set the Wallpaper properties

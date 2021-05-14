@@ -5,7 +5,12 @@
 #!UTILITY (RYB_GenerateRecords, 'Generate Record Groups'), WIZARD
 #!--------------------------------------------------------------------
 #! Created By:  Roberto Artigas Jr
-#! Author:      1999.01.31 - Roberto Artigas Jr
+#! Created:     1999.01.31 - Roberto Artigas y Soler
+#! Author:      Copyright © 1999-2999 by Roberto Artigas y Soler
+#!              All rights reserved world wide.
+#! Changes:
+#! 2021.03.19:      Roberto Artigas y Soler
+#!    *   Changed the ITEMIZE to simple numerical equates. Number showing on line.  
 #!
 #INSERT(%PrepareFiles)
 #!
@@ -43,6 +48,7 @@
 #DECLARE(%LineWork)
 #DECLARE(%LineNext)
 #DECLARE(%LineText)
+#DECLARE(%CountEquate)
 #!
 #COMMENT(90)
 #DECLARE (%ReportedFiles),MULTI,UNIQUE
@@ -315,13 +321,15 @@
 !
 !Region
   #SUSPEND
-%[%zNames]NULL %[%zGroup-%zNames]NULL ITEMIZE(1)
+#!!! %[%zNames]NULL %[%zGroup-%zNames]NULL ITEMIZE(1)
+    #SET(%CountEquate, 0)
     #FOR (%Field)
+      #SET(%CountEquate, %CountEquate + 1)
 #SET(%LineWork, 'C_' & UPPER(%FilePrefix) & '_' & UPPER(%FieldID))
-#SET(%LineNext, 'EQUATE()')
+#SET(%LineNext, 'EQUATE(' & %CountEquate & ')')
 %[%zNames]LineWork %[%zItems-%zNames]NULL %LineNext
     #ENDFOR
-%[%zNames]NULL %[%zGroup-%zNames]NULL END
+#!!! %[%zNames]NULL %[%zGroup-%zNames]NULL END
   #RESUME
 !EndRegion
 !
@@ -385,6 +393,7 @@
 #DECLARE(%LineWork)
 #DECLARE(%LineNext)
 #DECLARE(%LineText)
+#DECLARE(%CountEquate)
 #!
 #DECLARE (%ReportedFiles),MULTI,UNIQUE
 #DECLARE (%Groups),MULTI
