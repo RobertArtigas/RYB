@@ -92,7 +92,7 @@
     #DISPLAY(%ExplainRYBTABLES02),AT(,,436,10),PROP(PROP:FontStyle,700) 
     #BOXED(''),AT(,,446)
       #PROMPT('Table Directory: '   ,@S120)   , %TheDirectory     , REQ   , DEFAULT('.\classes\')         , AT(100,,344)
-      #PROMPT('Table Name: '        ,@S120)   , %TheTableName     , REQ   , DEFAULT('RES_TABLES.EQU')     , AT(100,,344)
+      #PROMPT('Table Name: '        ,@S120)   , %TheTableName     , REQ   , DEFAULT('RYB_TABLES.EQU')     , AT(100,,344)
       #PROMPT('Table ID: '          ,@S120)   , %TheTableID       , REQ   , DEFAULT('CLISTS_')            , AT(100,,344)
       #PROMPT('Table Prefix: '      ,@S120)   , %TheTablePrefix   , REQ   , DEFAULT('CTABLE_')            , AT(100,,344)
       #PROMPT('Table Value Size: '  ,@N8  )   , %TheDataSize      , REQ   , DEFAULT(16)                   , AT(100,,40)
@@ -141,8 +141,8 @@
 #!---------------------------------------------------------------------
 #GROUP(%BuildTheIncludes)
 !ABCIncludeFile
-  OMIT('_EndOfInclude_', _RES_TABLES_)
-_RES_TABLES_ EQUATE(1)
+  OMIT('_EndOfInclude_', _RYB_TABLES_)
+_RYB_TABLES_ EQUATE(1)
 !BOF
 !
 ! File:         %IncludeLocation
