@@ -63,6 +63,8 @@
 #EQUATE(%tplReleaseNOGLOBALDATA             , '2000.01.29' )
 #EQUATE(%tplVersionTRYANDEXPIRE             , '1.00' )
 #EQUATE(%tplReleaseTRYANDEXPIRE             , '2000.08.02' )
+#EQUATE(%tplVersionRYBTABLES                , '1.00' )
+#EQUATE(%tplReleaseRYBTABLES                , '2021.03.14' )
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
@@ -125,7 +127,8 @@
   #IF(NOT VAREXISTS(%FamilyFound))
     #DECLARE(%FamilyFound)
   #ENDIF
-  #INSERT(%FamilyFind, %FamilyFound)
+  #!INSERT(%FamilyFind, %FamilyFound)
+  #CALL(%FamilyFind, %FamilyFound)
   #IF(NOT VAREXISTS(%FamilyTextRYB))
     #DECLARE(%FamilyTextRYB)
   #ENDIF
@@ -250,6 +253,7 @@
 #INCLUDE('RYB_GENERATEGROUPS.TPW')          #! RA.1999.01.31: Generate Record Groups
 #INCLUDE('RYB_NOGLOBALDATA.TPW')            #! RA.2000.01.29: Suppress Global Data Exports
 #INCLUDE('RYB_TRYOUTANDEXPIRE.TPW')         #! RA.2000.08.02: Expire application on a date
+#INCLUDE('RYB_CTABLES.TPW')                 #! RA.2021.03.14: Equates for system wide tables
 #!
 #!INCLUDE('RYB_TESTING.TPW')                 #! RA.2019.04.21: TESTING STRAP - TEMPORARY
 #!-----------------------------------------------------------------------------------------------------
