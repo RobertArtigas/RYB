@@ -1,0 +1,124 @@
+#!TEMPLATE(RYB_TESTS,'2018.01.21: Run Your Business Template Collection'),FAMILY('ABC')
+#!
+#!
+#GROUP(%CopyrightTPLINSTANCE)
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightTPLINSTANCE01))
+    #DECLARE(%CopyrightTPLINSTANCE01)
+  #ENDIF
+  #SET(%CopyrightTPLINSTANCE01,                           'Show template instances.')
+  #SET(%CopyrightTPLINSTANCE01, %CopyrightTPLINSTANCE01 & '<13,10>Copyright © 2021-' & YEAR(TODAY()) & ' by Eric Lankreijer.')
+  #SET(%CopyrightTPLINSTANCE01, %CopyrightTPLINSTANCE01 & '<13,10>All copyrights reserved world wide.')
+  #!SET(%CopyrightTPLINSTANCE01, %CopyrightTPLINSTANCE01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#! Version: ' & %tplVersionTPLINSTANCE & ', Release: ' & %tplReleaseTPLINSTANCE
+#BOXED('Version ' & %tplVersionTPLINSTANCE & ' [ ' & %tplReleaseTPLINSTANCE & ' ]'),AT(,,454),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #!DISPLAY(%CopyrightTPLINSTANCE01),AT(,,260,34)
+  #DISPLAY(%CopyrightTPLINSTANCE01),AT(,,436,34)
+#ENDBOXED
+#!
+#GROUP(%MITLicenseTPLINSTANCE)
+#TAB('TPLINSTANCE'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightTPLINSTANCE) 
+  #!INSERT(%MITLicense)
+  #!INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#GROUP(%ExplainTPLINSTANCE)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainTPLINSTANCE01))
+    #DECLARE(%ExplainTPLINSTANCE01)
+  #ENDIF
+  #SET(%ExplainTPLINSTANCE01, '')
+  #SET(%ExplainTPLINSTANCE01, %ExplainTPLINSTANCE01 & 'This is run to show the template instances in this application.')
+  #SET(%ExplainTPLINSTANCE01, %ExplainTPLINSTANCE01 & '<13,10>')
+  #SET(%ExplainTPLINSTANCE01, %ExplainTPLINSTANCE01 & 'This template has been tested with the ABC and Clarion template chain.')
+  #SET(%ExplainTPLINSTANCE01, %ExplainTPLINSTANCE01 & '')
+  #!
+  #IF(NOT VAREXISTS(%ExplainTPLINSTANCE02))
+    #DECLARE(%ExplainTPLINSTANCE02)
+  #ENDIF
+  #!
+  #SET(%ExplainTPLINSTANCE02, '')
+  #SET(%ExplainTPLINSTANCE02, %ExplainTPLINSTANCE02 & 'NOTE: Not tested in context: Do NOT use at this time!')
+#ENDPREPARE
+#!
+#UTILITY(RYB_ListTemplateInstances,'EL.2021.05.06: List Template instance numbers')
+#!------------------------------------------------------------------------------------------
+#! RA.2021.05.16: 
+#!------------------------------------------------------------------------------------------
+#! Auteur  : Eric Lankreijer
+#! Date    : 06-05-2021 (created)
+#! Version : 1.0
+#!------------------------------------------------------------------------------------------
+#PREPARE
+#DECLARE(%LineText)
+#DECLARE(%LineWork)
+#EQUATE(%BegDate, TODAY())
+#EQUATE(%BegTime, CLOCK())
+#DECLARE(%ProcedureList),MULTI,UNIQUE
+#ENDPREPARE
+#!
+#INSERT(%PreambleRYB)
+#!
+#PREPARE
+#ENDPREPARE
+#!
+#DISPLAY('')
+#SHEET,AT(,,464),HSCROLL
+#INSERT(%MITLicenseTPLINSTANCE)
+#INSERT(%ExplainTPLINSTANCE)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #BOXED('Show Template Instances'),AT(,,456),PROP(PROP:FontStyle,700)    
+    #DISPLAY(''),AT(,,,1)
+    #PROMPT ('Output File:', @s255), %OutputFile, DEFAULT('Instances.txt')
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY('')
+    #DISPLAY(%ExplainTPLINSTANCE01),AT(,,436,18)
+  #ENDBOXED
+#ENDTAB
+#!INSERT(%TabClarionVersion)
+#ENDSHEET
+#!
+#CREATE (%OutputFile)
+!BOF
+!
+! File:         %OutputFile
+! Date-Time:    %@D010@(%BegDate) - %@T06@(%BegTime)
+! Purpose:      Define template instances for applications
+#SET(%LineText, '! Author:       Copyright © 2021-' & YEAR(TODAY()) & ' by Eric Lankreijer')
+%LineText
+!               All Rights Reserved World Wide.
+!
+#SET(%LineText, UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+! Application: %LineText
+! Instances:
+  #FOR (%Procedure)
+    #ADD(%ProcedureList,%Procedure)
+  #ENDFOR
+  #FOR (%ProcedureList)
+    #FIX(%Procedure,%ProcedureList)
+    #SET(%LineText, UPPER(%ProcedureTemplate))
+    #IF(%ProcedureDescription)
+!     %[60]Procedure %[20]LineText %[20]NULL ! %ProcedureDescription
+    #ELSE
+!     %[60]Procedure %[20]LineText %[20]NULL
+    #ENDIF
+    #IF(UPPER(%ProcedureTemplate) = 'EXTERNAL')
+    #ELSE
+      #FOR (%ActiveTemplate)
+        #FOR (%ActiveTemplateInstance)
+          #SET(%LineText, FORMAT(%ActiveTemplateInstance,@N02) & ' (' & FORMAT(%ActiveTemplateParentInstance,@N02) & ')')
+          #SET(%LineWork, LEFT(%ActiveTemplateInstanceDescription))
+!           %[60]ActiveTemplate %[20]ActiveTemplateType %[16]LineText %LineWork
+        #ENDFOR
+      #ENDFOR
+    #ENDIF
+  #ENDFOR
+!
+!EOF
+#CLOSE (%OutputFile)
+#RUN('NOTEPAD.EXE "' & %OutputFile & '"')
+#!
