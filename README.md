@@ -3,9 +3,9 @@ IF you want me to continue improving these utilities, THEN e-mail me that you ar
  It might be useful to include your use case scenario and a description of why you want this improvement 
  and how it helps the business you are involved in working.
 
-SI desea que continúe mejorando estas utilidades, ENTONCES envíeme un correo electrónico que las está utilizando. 
-  Puede ser útil incluir el escenario de su caso de uso y una descripción de por qué desea esta mejora 
-  y cómo ayuda a la empresa en la que está involucrado.
+SI desea que continÃºe mejorando estas utilidades, ENTONCES envÃ­eme un correo electrÃ³nico que las estÃ¡ utilizando. 
+  Puede ser Ãºtil incluir el escenario de su caso de uso y una descripciÃ³n de por quÃ© desea esta mejora 
+  y cÃ³mo ayuda a la empresa en la que estÃ¡ involucrado.
 
 # RYB: Run Your Business (Dirige Tu Negocio)
 
@@ -30,6 +30,13 @@ Clarioneros : 161 : 2020-08-22 : https://clarionlive.com/clarioneros.htm (**OneD
 
 Clarioneros : 163 : 2020-09-05 : https://clarionlive.com/clarioneros.htm (**OneDrive** link)
 
+##
+###
+
+Criminals are never materially handicapped by such rules; the only effect is to disarm the peaceful citizen and put him fully at the mercy of the lawless. Such rules look very pretty on paper; in practice they are as foolish and footless as the attempt of the mice to bell the cat.<BR/>
+_Robert A. Heinlein_
+
+##
 
 [Code](https://github.com/RobertArtigas/RYB) 
 [Wiki](https://github.com/RobertArtigas/RYB/wiki) 
