@@ -4,6 +4,8 @@ _archive_
 .gitignore
 .gitattributes
 
+setup
+
 RybProg.Tpl
 TemplateMaker.Tpl
 CB_AltFix.TPL
