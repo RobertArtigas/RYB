@@ -51,7 +51,7 @@
 #DECLARE(%LineText)
 #DECLARE(%CountEquate)
 #!
-#COMMENT(90)
+#COMMENT(180)
 #DECLARE (%ReportedFiles),MULTI,UNIQUE
 #DECLARE (%Groups),MULTI
 #DECLARE (%ValueConstruct)
@@ -296,12 +296,14 @@
 #!%FilePrefix:tKey:%KeyID GROUP,TYPE,BINDABLE,PRE(t%FilePrefix:%TheKeyId)
 #!%FieldStruct #<! %FieldDescription
 #!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
-%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName
+#!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName
+%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName #<! %zFldRange %FieldDescription
           #SET(%TheKeyNo, %TheKeyNo + 1)
         #ELSE
 #!%FieldStruct #<! %FieldDescription
 #!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
-%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName
+#!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName
+%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName #<! %zFldRange %FieldDescription
         #ENDIF
       #ENDFOR
 #!  END
@@ -327,10 +329,10 @@
       #OROF('END')
         #CYCLE
       #ENDCASE
-#CALL(%BuildAttributesFieldNameGRPFLD,%zTheName)
+     #CALL(%BuildAttributesFieldNameGRPFLD,%zTheName)
 #! ! %FieldStruct%zTheName
 #! %[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
-%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName
+%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName #<! %zFldRange %FieldDescription
     #ENDFOR
 %[%zNames]NULL %[%zGroup-%zNames]NULL END
   #RESUME
@@ -456,7 +458,7 @@
   #ENDFOR
 #ENDIF
 #!
-#COMMENT(90)
+#COMMENT(180)
 #!
 #DECLARE (%OutputFile)
 #FOR (%ReportedFiles)
