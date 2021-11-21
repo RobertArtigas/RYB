@@ -67,6 +67,8 @@
 #EQUATE(%tplReleaseRYBTABLES                , '2021.03.14' )
 #EQUATE(%tplVersionTPLINSTANCE              , '1.00' )
 #EQUATE(%tplReleaseTPLINSTANCE              , '2021.05.06' )
+#EQUATE(%tplVersionGRPFLD                   , '1.00' )
+#EQUATE(%tplReleaseGRPFLD                   , '2021.11.18' )
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
@@ -257,6 +259,7 @@
 #INCLUDE('RYB_TRYOUTANDEXPIRE.TPW')         #! RA.2000.08.02: Expire application on a date
 #INCLUDE('RYB_CTABLES.TPW')                 #! RA.2021.03.14: Equates for system wide tables
 #INCLUDE('RYB_TEMPLATEINSTANCES.TPW')       #! EL.2021.05.06: Show template instances
+#INCLUDE('RYB_GROUPSFIELDS.TPW')            #! RA.2021.11.20: Groups with name attributes
 #!
 #!INCLUDE('RYB_TESTING.TPW')                 #! RA.2019.04.21: TESTING STRAP - TEMPORARY
 #!-----------------------------------------------------------------------------------------------------

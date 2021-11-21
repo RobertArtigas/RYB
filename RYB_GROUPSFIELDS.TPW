@@ -1,0 +1,612 @@
+#!---------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%NO20211120)
+#!UTILITY (RYB_GenerateRecords, 'Generate Record Groups'), WIZARD
+#!--------------------------------------------------------------------
+#! Created By:  Roberto Artigas Jr
+#! Created:     1999.01.31 - Roberto Artigas y Soler
+#! Author:      Copyright © 1999-2999 by Roberto Artigas y Soler
+#!              All rights reserved world wide.
+#! Changes:
+#! 2021.03.19:      Roberto Artigas y Soler
+#!    *   Changed the ITEMIZE to simple numerical equates. Number showing on line.  
+#!
+#INSERT(%PrepareFilesGRPFLD)
+#!
+#SHEET
+  #TAB ('Generate Records Groups')
+    #DISPLAY ('This wizard will generate group definitions of the contents of your current dictionary.'), AT(90, 8, 235, 24)
+    #DISPLAY ('To specify how you want the report constructed, click on the Next button.'), AT(90)
+  #ENDTAB
+  #TAB ('Dictionary Print Wizard - Reported Files'), FINISH(1)
+    #DISPLAY ('You can report on each file in your dictionary, or you can select individual files to report on.'), AT(90, 8, 235, 24)
+    #PROMPT ('Report on all files in my dictionary.', CHECK), %DictionaryReportUseAllFiles, DEFAULT(1), AT(90,, 180)
+  #ENDTAB
+  #TAB ('Dictionary Print Wizard - Select Reported Files'), WHERE(~%DictionaryReportUseAllFiles), FINISH(1)
+    #!PROMPT ('File Selection', FROM (%File)), %DictionaryReportFileSelection, INLINE, SELECTION('File Selection'), AT(90, 8, 235)
+    #PROMPT ('File Selection', FROM(%SelectFromFiles)), %DictionaryReportFileSelection, INLINE, SELECTION('File Selection'), AT(90, 8, 235)
+  #ENDTAB
+  #TAB ('Dictionary Print Wizard - Finally...')
+    #DISPLAY ('This concludes the dictionary Group Generate wizard.'), AT(90, 8, 235, 24)
+    #DISPLAY ('Click on the Finish button to generate Groups.'), AT(90, 82, 235, 24)
+  #ENDTAB
+#ENDSHEET
+#!
+#DECLARE(%BegDate)
+#DECLARE(%BegTime)
+#SET(%BegDate, TODAY())                   #! Begin date
+#SET(%BegTime, CLOCK())                   #! Begin time
+#!
+#DECLARE(%zNames)
+#DECLARE(%zGroup)
+#DECLARE(%zItems)
+#SET(%zNames, 40)
+#SET(%zGroup, %zNames + 0)
+#SET(%zItems, %zGroup + 2)
+#!
+#DECLARE(%LineWork)
+#DECLARE(%LineNext)
+#DECLARE(%LineText)
+#DECLARE(%CountEquate)
+#!
+#COMMENT(90)
+#DECLARE (%ReportedFiles),MULTI,UNIQUE
+#DECLARE (%Groups),MULTI
+#DECLARE (%ValueConstruct)
+#DECLARE (%TheKeyId)
+#DECLARE (%TheKeyNo,LONG)
+#!
+#IF (%DictionaryReportUseAllFiles)
+  #! #FOR (%File)
+  #!   #ADD (%ReportedFiles, %File)
+  #! #ENDFOR
+  #FOR (%SelectFromFiles)
+    #ADD (%ReportedFiles, %SelectFromFiles)
+  #ENDFOR
+#ELSE
+  #FOR (%DictionaryReportFileSelection)
+    #ADD (%ReportedFiles, %DictionaryReportFileSelection)
+  #ENDFOR
+#ENDIF
+#!
+#DECLARE (%OutputFile)
+#FOR (%ReportedFiles)
+  #FIX (%File, %ReportedFiles)
+  #SET (%OutputFile, %FILE & '.inc')
+  #MESSAGE('File Group Definition: ' & %OutputFile, 2)
+  #CREATE (%OutputFile)
+#INSERT(%GiveMeSomeStuffGRPFLD)
+#INSERT(%GiveMeSomeStuffGRPFLD)
+  #CLOSE (%OutputFile)
+#ENDFOR
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%PrepareFilesGRPFLD)
+#PREPARE
+#DECLARE(%SelectFromFiles),MULTI,UNIQUE
+#FOR (%File)
+  #!----------------------------------!
+  #! Ignore certain file DRIVER types !
+  #!----------------------------------!
+  #CASE(%FileDriver)
+    #OF('ASCII')
+  #OROF('BASIC')
+  #OROF('DOS')
+  #OROF('MEMORY')                                                               #! RA.2018.04.12 - Ignored
+      #CYCLE
+  #ENDCASE
+  #!---------------------------!
+  #! Ignore certain FILE types !
+  #!---------------------------!
+  #CASE(%FileType)
+  #OF  ('VIEW')
+  #OROF('ALIAS')
+      #CYCLE
+  #ENDCASE
+  #!-------------------------------------!
+  #! Ignore FILES with NO FIELDS in them !
+  #!-------------------------------------!
+  #IF(NOT ITEMS(%Field))                                                        #! RA.2001.12.01
+    #CYCLE                                                                      #! RA.2001.12.01
+  #ENDIF                                                                        #! RA.2001.12.01
+  #!
+  #IF(NOT VAREXISTS(%nLoc1))
+    #DECLARE(%nLoc1)
+  #ENDIF
+  #IF(NOT VAREXISTS(%nLoc2))
+    #DECLARE(%nLoc2)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileUser))
+    #DECLARE(%NFileUser)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt1))
+    #DECLARE(%NFileOpt1)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt2))
+    #DECLARE(%NFileOpt2)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt3))
+    #DECLARE(%NFileOpt3)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt4))
+    #DECLARE(%NFileOpt4)
+  #ENDIF
+  #!
+  #SET(%nLoc1,INSTRING('RASQL(',%FileUserOptions,1,1))
+  #SET(%nLoc2,INSTRING(')',%FileUserOptions,1,%nLoc1))
+  #SET(%NFileUser,UPPER(SUB(%FileUserOptions,%nLoc1,%nLoc2)))
+  #!SET(%NFileUser,UPPER(EXTRACT(%FileUserOptions,'RASQL')))
+  #SET(%NFileOpt1,EXTRACT(%NFileUser,'RASQL',1))
+  #SET(%NFileOpt2,EXTRACT(%NFileUser,'RASQL',2))
+  #SET(%NFileOpt3,EXTRACT(%NFileUser,'RASQL',3))
+  #SET(%NFileOpt4,EXTRACT(%NFileUser,'RASQL',4))
+  #!
+  #IF(SUB(%NFileOpt1,1,1)='N')                                                  #! Ignore this file
+    #CYCLE
+  #ENDIF
+  #!
+  #ADD (%SelectFromFiles, %File)
+#ENDFOR
+#ENDPREPARE
+#GROUP(%PrepareFilesEndGRPFLD)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%CopyrightGRPFLD)
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightGRPFLD01))
+    #DECLARE(%CopyrightGRPFLD01)
+  #ENDIF
+  #SET(%CopyrightGRPFLD01, 'Generate GROUPS with extended FIELD names for this dictionary.')
+  #SET(%CopyrightGRPFLD01, %CopyrightGRPFLD01 & '<13,10>Copyright © 1999-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightGRPFLD01, %CopyrightGRPFLD01 & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightGRPFLD01, %CopyrightGRPFLD01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#BOXED('Version '& %tplVersionGRPFLD & ' [ ' & %tplReleaseGRPFLD & ' ]'),AT(,,454),PROP(PROP:FontStyle,700) 
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%CopyrightGRPFLD01),AT(,,436,34)
+#ENDBOXED
+#!
+#GROUP(%MITLicenseGRPFLD)
+#TAB('GRPFLD'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightGRPFLD) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#GROUP(%ExplainGRPFLD)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainGRPFLD01))
+    #DECLARE(%ExplainGRPFLD01)
+  #ENDIF
+  #SET(%ExplainGRPFLD01, '')
+  #SET(%ExplainGRPFLD01, %ExplainGRPFLD01 & 'This template is used to make an include file defining a GROUP for')
+  #SET(%ExplainGRPFLD01, %ExplainGRPFLD01 & ' each table in your dictionary with field extended names. You might want to include this extension')
+  #SET(%ExplainGRPFLD01, %ExplainGRPFLD01 & ' on one application only. Preferably in your DATA application.')
+  #SET(%ExplainGRPFLD01, %ExplainGRPFLD01 & '<13,10><13,10>')
+  #SET(%ExplainGRPFLD01, %ExplainGRPFLD01 & 'These field extended name attributes will allow to create generic programming code when appropriate.')
+  #SET(%ExplainGRPFLD01, %ExplainGRPFLD01 & ' This is posible since some of the dictionary attributes are available at program run time.')
+  #SET(%ExplainGRPFLD01, %ExplainGRPFLD01 & '<13,10><13,10>')
+  #SET(%ExplainGRPFLD01, %ExplainGRPFLD01 & 'You can select the tables that you just need or can select all the tables by choice.')
+  #SET(%ExplainGRPFLD01, %ExplainGRPFLD01 & ' It will not allow you to default all the tables since this can generate a lot of files.')
+  #SET(%ExplainGRPFLD01, %ExplainGRPFLD01 & '<13,10><13,10>')
+  #SET(%ExplainGRPFLD01, %ExplainGRPFLD01 & 'This template has been tested with the ABC template chains.')
+  #SET(%ExplainGRPFLD01, %ExplainGRPFLD01 & '')
+  #!
+  #IF(NOT VAREXISTS(%ExplainGRPFLD02))
+    #DECLARE(%ExplainGRPFLD02)
+  #ENDIF
+  #!
+  #SET(%ExplainGRPFLD02, '')
+  #SET(%ExplainGRPFLD02, %ExplainGRPFLD02 & 'NOTE: Make sure the COMPLETE DIRECTORY PATH exists on your machine.')
+#ENDPREPARE
+#!
+#GROUP(%TabSelectionGRPFLD)
+#TAB('Selection')  #!,PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+  #BOXED(''),AT(,,454),PROP(PROP:FontStyle,700)
+    #!DISPLAY(''),AT(,,,1)
+    #!PROMPT ('Generate all files in my dictionary. (Cannot change this option)', CHECK), %DictionaryReportUseAllFiles, DEFAULT(0), AT(10) #!, PROP(PROP:READONLY,1), PROP(PROP:FontStyle,700), PROP(PROP:FontColor,0C79A3H)
+    #PROMPT ('Generate all files in my dictionary.', CHECK), %DictionaryReportUseAllFiles, DEFAULT(0), AT(10)
+    #DISPLAY(''),AT(,,,1)
+    #ENABLE(~%DictionaryReportUseAllFiles)
+      #PROMPT ('File Selection', FROM(%SelectFromFiles)), %DictionaryReportFileSelection, INLINE, SELECTION('File Selection'), AT(,,,198)
+    #ENDENABLE
+  #ENDBOXED
+#ENDTAB
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%GiveMeSomeStuffGRPFLD)
+!BOF
+!
+! File:         %OutputFile
+! Date-Time:    %@D010@(%BegDate) - %@T06@(%BegTime)
+! Purpose:      Generated File Records as Groups
+! Author:       GenerateGroups Template
+! Narative:     This template is used to pass records structures
+!               back and forth between DLL's when the files
+!               are not shared. Since file definitions are not
+!               available, data has to be passed in areas.
+!
+!Region
+  #IF (%FileType = 'ALIAS')
+! Name:         %File (An alias for %AliasFile)
+  #ELSE
+! Name:         %File
+  #ENDIF
+! Prefix:       %FilePrefix
+  #IF (%FileDescription)
+! Description:  %FileDescription
+  #ENDIF
+  #IF (%FileName)
+! Filename:     %FileName
+  #ENDIF
+!EndRegion
+!
+!-Keys-
+!
+!Region
+  #SUSPEND
+    #FOR (%Key)
+      #IF(%KeyIndex <> 'KEY')
+        #CYCLE
+      #ENDIF
+      #IF(~ITEMS(%KeyField))
+        #CYCLE
+      #ENDIF
+! %[%zNames-1]KeyID %|
+      #FOR (%KeyField)
+        #FIX (%Field, %KeyField)
+        #IF (INSTANCE(%KeyField) = 1)
+%FieldID(%KeyFieldSequence)
+        #ELSE
+!%[%zGroup+1]Null%FieldID(%KeyFieldSequence)
+        #ENDIF
+      #ENDFOR
+    #ENDFOR
+  #RESUME
+!EndRegion
+!
+!-Keys-
+!
+!Region
+  #SUSPEND
+    #SET(%TheKeyNo,1)
+    #FOR (%Key)
+      #SET(%zFldFrom,0)     #! RA.2021.11.20.SAT: Added
+      #IF(%KeyIndex <> 'KEY')
+        #CYCLE
+      #ENDIF
+      #IF(~ITEMS(%KeyField))
+        #CYCLE
+      #ENDIF
+      #FOR (%KeyField)
+        #FIX (%Field, %KeyField)
+        #CALL(%BuildAttributesFieldNameGRPFLD,%zTheName)
+        #IF (INSTANCE(%KeyField) = 1)
+          #!SET(%TheKeyId,SUB(%KeyID,1,INSTRING('_',%KeyID,1,1)-1))
+          #SET(%TheKeyId, 'Key' & FORMAT(%TheKeyNo,@N02))
+          #SET(%LineWork, UPPER(%FilePrefix) & '_tKey_' & %KeyID & '')
+          #SET(%LineNext, 'GROUP,TYPE,BINDABLE,PRE(k' & UPPER(%FilePrefix) & '_' & %TheKeyId & ')')
+%[%zNames]LineWork %[%zGroup-%zNames]NULL %LineNext
+#!%FilePrefix:tKey:%KeyID GROUP,TYPE,BINDABLE,PRE(t%FilePrefix:%TheKeyId)
+#!%FieldStruct #<! %FieldDescription
+#!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
+%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName
+          #SET(%TheKeyNo, %TheKeyNo + 1)
+        #ELSE
+#!%FieldStruct #<! %FieldDescription
+#!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
+%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName
+        #ENDIF
+      #ENDFOR
+#!  END
+%[%zNames]NULL %[%zGroup-%zNames]NULL END 
+    #ENDFOR
+  #RESUME
+!EndRegion
+!
+!-Record-
+!
+!Region
+  #SUSPEND
+  #SET(%LineWork, UPPER(%FilePrefix) & '_tRec')
+  #SET(%LineNext, 'GROUP,TYPE,BINDABLE,PRE(r' & UPPER(%FilePrefix) & ')')
+#!%FilePrefix:mRec GROUP,TYPE,BINDABLE,PRE(m%FilePrefix)
+%[%zNames]LineWork %[%zGroup-%zNames]NULL %LineNext
+    #SET(%zFldFrom,0)     #! RA.2021.11.20.SAT: Added
+    #FOR(%Field)
+      #CASE(%FieldType)
+      #OF  ('BLOB')
+      #OROF('MEMO')
+      #OROF('GROUP')
+      #OROF('END')
+        #CYCLE
+      #ENDCASE
+#CALL(%BuildAttributesFieldNameGRPFLD,%zTheName)
+#! ! %FieldStruct%zTheName
+#! %[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
+%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName
+    #ENDFOR
+%[%zNames]NULL %[%zGroup-%zNames]NULL END
+  #RESUME
+!EndRegion
+!
+!-Queue-
+!
+!Region
+  #SUSPEND
+#SET(%LineWork, UPPER(%FilePrefix) & '_qRec')
+#SET(%LineNext, 'QUEUE(' & UPPER(%FilePrefix) & '_tRec' & '),TYPE,BINDABLE,PRE(q' & UPPER(%FilePrefix) & ')')
+%[%zNames]LineWork %[%zGroup-%zNames]NULL %LineNext
+%[%zNames]NULL %[%zGroup-%zNames]NULL END
+  #RESUME
+!EndRegion
+!
+!-Equates-
+!
+!Region
+  #SUSPEND
+#!!! %[%zNames]NULL %[%zGroup-%zNames]NULL ITEMIZE(1)
+    #SET(%CountEquate, 0)
+    #FOR (%Field)
+      #CASE(%FieldType)
+      #OF  ('BLOB')
+      #OROF('MEMO')
+      #OROF('GROUP')
+      #OROF('END')
+        #CYCLE
+      #ENDCASE
+      #SET(%CountEquate, %CountEquate + 1)
+#SET(%LineWork, 'C_' & UPPER(%FilePrefix) & '_' & UPPER(%FieldID))
+#SET(%LineNext, 'EQUATE(' & %CountEquate & ')')
+%[%zNames]LineWork %[%zItems-%zNames]NULL %LineNext
+    #ENDFOR
+#!!! %[%zNames]NULL %[%zGroup-%zNames]NULL END
+  #RESUME
+!EndRegion
+!
+!EOF
+#GROUP(%GiveMeSomeStuffEndGRPFLD)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#EXTENSION(RYB_GenGroupFields,'RA.1999.01.31: Groups with extended field names'),Description('RYB | Generate groups with extended field names in include files. Version: ' & %tplVersionGRPFLD & ', Release: ' & %tplReleaseGRPFLD),APPLICATION
+#!-----------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------
+#! Created By:          Roberto Artigas y Soler
+#! Author:              2021.11.20 - Roberto Artigas y Soler
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!
+#SHEET,AT(,,464),HSCROLL
+#TAB('Hidden'),WHERE(0=1)
+#INSERT(%PrepareFilesGRPFLD)
+#ENDTAB
+#INSERT(%MITLicenseGRPFLD)
+#INSERT(%ExplainGRPFLD)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #BOXED('Record GROUPS-FIELDS Generator'),AT(,,456),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY(%ExplainGRPFLD02),AT(,,436,10),PROP(PROP:FontStyle,700) 
+    #BOXED(''),AT(,,446)
+      #PROMPT('Directory: ',@S120)  ,%IncludeDirectory  , REQ, DEFAULT('.\classes\')        ,AT(70,,376)
+      #PROMPT('Prefix: ',@S120)     ,%SourcePrefix      , REQ, DEFAULT('group_')            ,AT(70,,376)
+      #!PROMPT('Include: '  ,@S120),%IncludeFilename , REQ, DEFAULT('_' & %ProgramExtension & '_' & UPPER(SLICE(%Program, 1, INSTRING('.', %Program, 1, 1)-1)) & '.GRP') ,AT(70,,376)
+      #PREPARE
+      #SET(%IncludeLocation,%IncludeDirectory & '') #!%IncludeFilename )
+      #ENDPREPARE
+      #PROMPT('Location: ' ,@S120),%IncludeLocation , REQ, DEFAULT(%IncludeLocation),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,376)
+    #ENDBOXED
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY(%ExplainGRPFLD01),AT(,,436,154)
+  #ENDBOXED
+#ENDTAB
+#INSERT(%TabSelectionGRPFLD)
+#ENDSHEET
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#ATSTART
+#!
+#DECLARE(%BegDate)
+#DECLARE(%BegTime)
+#SET(%BegDate, TODAY())                   #! Begin date
+#SET(%BegTime, CLOCK())                   #! Begin time
+#!
+#DECLARE(%zNames)
+#DECLARE(%zGroup)
+#DECLARE(%zItems)
+#SET(%zNames, 40)
+#SET(%zGroup, %zNames + 0)
+#SET(%zItems, %zGroup + 2)
+#!
+#DECLARE(%LineWork)
+#DECLARE(%LineNext)
+#DECLARE(%LineText)
+#DECLARE(%CountEquate)
+#!
+#DECLARE (%ReportedFiles),MULTI,UNIQUE
+#DECLARE (%Groups),MULTI
+#DECLARE (%ValueConstruct)
+#DECLARE (%TheKeyId)
+#DECLARE (%TheKeyNo,LONG)
+#!                                        #! RA.2021.11.20.SAT: Added
+#DECLARE(%zTheName)
+#DECLARE(%zFldRange)
+#DECLARE(%zFldSize)
+#DECLARE(%zFldFrom)
+#DECLARE(%zFldTo)
+#SET(%zFldFrom, 0)
+#SET(%zFldTo  , 0)
+#!
+#IF (%DictionaryReportUseAllFiles)
+  #FOR (%SelectFromFiles)
+    #ADD (%ReportedFiles, %SelectFromFiles)
+  #ENDFOR
+#ELSE
+  #FOR (%DictionaryReportFileSelection)
+    #ADD (%ReportedFiles, %DictionaryReportFileSelection)
+  #ENDFOR
+#ENDIF
+#!
+#COMMENT(90)
+#!
+#DECLARE (%OutputFile)
+#FOR (%ReportedFiles)
+  #FIX (%File, %ReportedFiles)
+  #!SET (%OutputFile, %IncludeDirectory & %FILE & '.inc')
+  #SET (%OutputFile, %IncludeDirectory & %SourcePrefix & %FILE & '.inc')
+  #MESSAGE('File Group Definition: ' & %OutputFile, 2)
+  #!ERROR('File Group Definition: ' & %OutputFile)
+  #CREATE (%OutputFile)
+#INSERT(%GiveMeSomeStuffGRPFLD)
+  #CLOSE (%OutputFile)
+#ENDFOR
+#!
+#ENDAT
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#! RA.2019.11.21: This has to be inside a field loop for all fields to get something.
+#! This will give you an alternative if there is nothing added to the external name attributes.
+#! Results can be also used to replace the name external attributes in the dictionary.
+#! Used as comments in a few places where I generate structures from the dictionary. 
+#GROUP(%BuildFieldTypeGRPFLD,*%pTheField)                                             #! RA.2019.11.29: Added
+#IF(NOT VAREXISTS(%TheFieldType))
+  #DECLARE(%TheFieldType)
+#ENDIF
+#!
+#CASE(UPPER(%FieldType))
+#OF  ('DECIMAL')
+#OROF('PDECIMAL')
+  #SET(%pTheField , %FieldType & '(' & %FieldMemoSize & ',' & %FieldPlaces & ')')
+#OF  ('STRING')
+#OROF('MEMO')
+#OROF('BLOB')
+#OROF('CSTRING')
+#OROF('PSTRING')
+#OROF('USTRING')
+  #SET(%pTheField , %FieldType & '(' & %FieldMemoSize & ')')
+#ELSE
+  #SET(%pTheField , %FieldType)
+#ENDCASE
+#SET(%pTheField, UPPER(%pTheField))
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%BuildAttributesFieldNameGRPFLD,*%pTheName)                                    #! RA.2019.11.21: Added
+#IF(NOT VAREXISTS(%TheName))
+  #DECLARE(%TheName)
+#ENDIF
+#IF(NOT VAREXISTS(%TheFieldType))
+  #DECLARE(%TheFieldType)
+#ENDIF
+#IF(NOT VAREXISTS(%TheFieldName))
+  #DECLARE(%TheFieldName)
+#ENDIF
+#!
+  #SET(%TheName     , '')
+  #SET(%TheName     , %TheName & ',NAME(<39>')
+  #CASE(UPPER(%FieldID))
+  #OF  ('TIMESTAMP')
+    #SET(%TheName   , %TheName & 'ts')
+  #OF  ('SERVERTIMESTAMP')
+    #SET(%TheName   , %TheName & 'sts')
+  #OF  ('DELETETIMESTAMP')
+  #OROF('DELETEDTIMESTAMP')
+    #SET(%TheName   , %TheName & 'dts')
+  #ELSE
+    #SET(%TheName   , %TheName & %FieldID)
+  #ENDCASE
+#!
+  #!CASE(UPPER(%FieldType))
+  #!OF  ('DECIMAL')
+  #!OROF('PDECIMAL')
+    #!SET(%TheFieldType , %FieldType & '(' & %FieldMemoSize & ',' & %FieldPlaces & ')')
+  #!OF  ('STRING')
+  #!OROF('MEMO')
+  #!OROF('BLOB')
+  #!OROF('CSTRING')
+  #!OROF('PSTRING')
+  #!OROF('USTRING')
+    #!SET(%TheFieldType , %FieldType & '(' & %FieldMemoSize & ')')
+  #!ELSE
+    #!SET(%TheFieldType , %FieldType)
+  #!ENDCASE
+  #CALL(%BuildFieldTypeGRPFLD,%TheFieldType)
+  #SET(%TheName     , %TheName & ' | ' & %TheFieldType)
+#!
+  #SET(%TheName     , %TheName & ' | ' & UPPER(%FieldDisplayPicture))
+#!
+#! RA.2021.11.20.SAT: Calculate the field length range
+  #CALL(%CalculatePositionGRPFLD,%zFldFrom,%zFldTo,%zFldSize,%FieldType,%FieldMemoSize)
+  #IF(%zFldFrom <> 0)
+    #SET(%zFldRange , '[' & FORMAT(%zFldFrom,@N03) & '-' & FORMAT((%zFldFrom - 1 + %FieldMemoSize),@N03) & ']')
+    #SET(%zFldFrom  , %zFldTo + 0)
+  #ELSE
+    #SET(%zFldFrom  , 1)
+    #SET(%zFldRange , '[' & FORMAT(%zFldFrom,@N03) & '-' & FORMAT((            0 + %FieldMemoSize),@N03) & ']')
+    #SET(%zFldFrom  , %zFldTo + 1)
+  #ENDIF
+  #SET(%TheName     , %TheName & ' | ' & %zFldRange)
+#!  
+  #CASE(UPPER(%FieldID))
+  #OF  ('GUID')
+    #SET(%TheName   , %TheName & ' | Salt')
+  #ENDCASE
+#!
+#!  #SET(%TheName   , %TheName & ' | ' & EXTRACT(%FieldQuickOptions,'TAB'))
+#!
+#! RA.2021.04.10: Remove the ALT-& marker from text. Add back if needed.
+#! RA.2020.05.06: Checkboxes do not have a PROMPT. So fake a prompt to allow for editing.
+#! RA.2020.02.05: Add the field display prompt that way we can set the field edit prompt.
+  #FOR(%FieldScreenControl)
+    #IF(INSTRING('CHECK(',%FieldScreenControl,1,1) > 0)                 #! RA.2020.05.06: Added for checkboxes
+      #SET(%TheFieldName, EXTRACT(%FieldScreenControl,'CHECK',1))
+      #CALL(%ReplaceSubString,%TheFieldName,'&','')                     #! RA.2021.04.10: Remove the ALT-& from text.
+      #SET(%TheFieldName, 'PROMPT(' & %TheFieldName & ')')
+    #ENDIF
+    #IF(INSTRING('PROMPT(',%FieldScreenControl,1,1) > 0)
+      #SET(%TheFieldName, EXTRACT(%FieldScreenControl,'PROMPT'))
+      #CALL(%ReplaceSubString,%TheFieldName,'&','')                     #! RA.2021.04.10: Remove the ALT-& from text.
+    #ENDIF
+  #ENDFOR
+  #CALL(%ReplaceSubString,%TheFieldName,'&','')                         #! RA.2021.04.10: Remove the ALT-& from text.
+  #CALL(%ReplaceSubString,%TheFieldName,'''','''''')
+  #SET(%TheName , %TheName & ' | ' & %TheFieldName)
+#! RA.2021.11.20.SAT: Add column header to the extended name attribute
+  #SET(%TheFieldName, 'COLUMN(''''' & %FieldHeader &  ''''')')
+  #SET(%TheName , %TheName & ' | ' & %TheFieldName)
+#!
+#! RA.2019.11.21: This contains the original name external attributes in the dictionary.
+#! There might be a need to parse what currently exists there in the old external name attributes  
+#! and add what does not exist into the new. Not needed at this time. But food for future thought.
+#! 
+  #SET(%TheFieldName, %FieldName)
+#!
+  #! RA.2020.02.05: Leave case intact here.
+  #!SET(%TheName    , LOWER(%TheName) & '<39>)')
+  #SET(%TheName     , %TheName & '<39>)')
+#! [???] Add name string display for debugging
+#! ---- %TheFieldName
+#! ---- %TheName
+#SET(%pTheName      , %TheName)
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%CalculatePositionGRPFLD,*%FldFrom,*%FldTo,*%FldSize,%pFieldType,%pFieldMemoSize)
+#! %%FldFrom=%FldFrom, %%FldTo=%FldTo, %%FldSize=%FldSize, %%pFieldType=%pFieldType, %%pFieldMemoSize=%pFieldMemoSize 
+  #SET(%FldSize, %pFieldMemoSize)
+#CASE(%pFieldType)
+#OF  ('CSTRING')
+  #SET(%FldSize, %pFieldMemoSize - 1)
+#ENDCASE
+  #SET(%FldTo  , %FldFrom + %FldSize)
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
