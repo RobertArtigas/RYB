@@ -10,6 +10,13 @@
 #! Author:      Copyright © 1999-2999 by Roberto Artigas y Soler
 #!              All rights reserved world wide.
 #! Changes:
+#! 2021.11.21.SUN:  Roberto Artigas y Soler
+#!    *   Added field position and field description as comments.
+#!        Added documentation to https://github.com/RobertArtigas/RYB/wiki/Generate-Groups-and-Fields
+#! 2021.11.20.SAT:  Roberto Artigas y Soler
+#!    *   Lots of changes to get field extended name attributes added.
+#!        Copied #GROUPS from DCT2SQL and modified this template to get field position in the extended property.
+#!        Tied in the extended properties and added COLUMN('...') so editing labels are available. 
 #! 2021.03.19:      Roberto Artigas y Soler
 #!    *   Changed the ITEMIZE to simple numerical equates. Number showing on line.  
 #!
@@ -388,6 +395,14 @@
 #!-----------------------------------------------------------------------------
 #! Created By:          Roberto Artigas y Soler
 #! Author:              2021.11.20 - Roberto Artigas y Soler
+#! Changes:
+#! 2021.11.21.SUN:  Roberto Artigas y Soler
+#!    *   Added field position and field description as comments.
+#!        Added documentation to https://github.com/RobertArtigas/RYB/wiki/Generate-Groups-and-Fields
+#! 2021.11.20.SAT:  Roberto Artigas y Soler
+#!    *   Lots of changes to get field extended name attributes added.
+#!        Copied #GROUPS from DCT2SQL and modified this template to get field position in the extended property.
+#!        Tied in the extended properties and added COLUMN('...') so editing labels are available. 
 #!-----------------------------------------------------------------------------
 #PREPARE
 #ENDPREPARE
