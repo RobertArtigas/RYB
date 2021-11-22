@@ -286,6 +286,7 @@
       #ENDIF
       #FOR (%KeyField)
         #FIX (%Field, %KeyField)
+        #CALL(%BuildFieldTypeGRPFLD,%zFldType)
         #CALL(%BuildAttributesFieldNameGRPFLD,%zTheName)
         #IF (INSTANCE(%KeyField) = 1)
           #!SET(%TheKeyId,SUB(%KeyID,1,INSTRING('_',%KeyID,1,1)-1))
@@ -297,13 +298,15 @@
 #!%FieldStruct #<! %FieldDescription
 #!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
 #!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName
-%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName #<! %zFldRange %FieldDescription
+#!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName #<! %zFldRange %FieldDescription
+%[%zNames]FieldID %[%zItems-%zNames]NULL %zFldType%zTheName #<! %zFldRange %FieldDescription
           #SET(%TheKeyNo, %TheKeyNo + 1)
         #ELSE
 #!%FieldStruct #<! %FieldDescription
 #!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
 #!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName
-%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName #<! %zFldRange %FieldDescription
+#!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName #<! %zFldRange %FieldDescription
+%[%zNames]FieldID %[%zItems-%zNames]NULL %zFldType%zTheName #<! %zFldRange %FieldDescription
         #ENDIF
       #ENDFOR
 #!  END
@@ -329,10 +332,12 @@
       #OROF('END')
         #CYCLE
       #ENDCASE
-     #CALL(%BuildAttributesFieldNameGRPFLD,%zTheName)
+      #CALL(%BuildFieldTypeGRPFLD,%zFldType)
+      #CALL(%BuildAttributesFieldNameGRPFLD,%zTheName)
 #! ! %FieldStruct%zTheName
 #! %[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
-%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName #<! %zFldRange %FieldDescription
+#!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName #<! %zFldRange %FieldDescription
+%[%zNames]FieldID %[%zItems-%zNames]NULL %zFldType%zTheName #<! %zFldRange %FieldDescription
     #ENDFOR
 %[%zNames]NULL %[%zGroup-%zNames]NULL END
   #RESUME
@@ -441,6 +446,7 @@
 #DECLARE (%TheKeyNo,LONG)
 #!                                        #! RA.2021.11.20.SAT: Added
 #DECLARE(%zTheName)
+#DECLARE(%zFldType)
 #DECLARE(%zFldRange)
 #DECLARE(%zFldSize)
 #DECLARE(%zFldFrom)
