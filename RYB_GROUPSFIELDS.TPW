@@ -569,11 +569,11 @@
 #! RA.2021.11.20.SAT: Calculate the field length range
   #CALL(%CalculatePositionGRPFLD,%zFldFrom,%zFldTo,%zFldSize,%FieldType,%FieldMemoSize)
   #IF(%zFldFrom <> 0)
-    #SET(%zFldRange , '[' & FORMAT(%zFldFrom,@N03) & '-' & FORMAT((%zFldFrom - 1 + %FieldMemoSize),@N03) & ']')
+    #SET(%zFldRange , '[' & FORMAT(%zFldFrom,@N04) & '-' & FORMAT((%zFldFrom - 1 + %FieldMemoSize),@N04) & ']')
     #SET(%zFldFrom  , %zFldTo + 0)
   #ELSE
     #SET(%zFldFrom  , 1)
-    #SET(%zFldRange , '[' & FORMAT(%zFldFrom,@N03) & '-' & FORMAT((            0 + %FieldMemoSize),@N03) & ']')
+    #SET(%zFldRange , '[' & FORMAT(%zFldFrom,@N04) & '-' & FORMAT((            0 + %FieldMemoSize),@N04) & ']')
     #SET(%zFldFrom  , %zFldTo + 1)
   #ENDIF
   #SET(%TheName     , %TheName & ' | ' & %zFldRange)
