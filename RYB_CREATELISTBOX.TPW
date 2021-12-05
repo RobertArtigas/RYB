@@ -1,0 +1,1239 @@
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%NO20211126)
+#!UTILITY (RYB_CreateListBox, 'Generate Record Groups'), WIZARD
+#!--------------------------------------------------------------------
+#! Created By:  Roberto Artigas Jr
+#! Created:     2021.12.05 - Roberto Artigas y Soler
+#! Author:      Copyright © 1999-2999 by Roberto Artigas y Soler
+#!              All rights reserved world wide.
+#! Changes:
+#! 2021.12.05:      Roberto Artigas y Soler
+#!    *   Implementation of the DCT2SQL #GROUPS that have been there for a while
+#!        into an new template.  
+#!
+#INSERT(%PrepareFilesLISTBOX)
+#!
+#SHEET
+  #TAB ('Generate Records Groups')
+    #DISPLAY ('This wizard will generate group definitions of the contents of your current dictionary.'), AT(90, 8, 235, 24)
+    #DISPLAY ('To specify how you want the report constructed, click on the Next button.'), AT(90)
+  #ENDTAB
+  #TAB ('Dictionary Print Wizard - Reported Files'), FINISH(1)
+    #DISPLAY ('You can report on each file in your dictionary, or you can select individual files to report on.'), AT(90, 8, 235, 24)
+    #PROMPT ('Report on all files in my dictionary.', CHECK), %ReportUseAllFilesLISTBOX, DEFAULT(1), AT(90,, 180)
+  #ENDTAB
+  #TAB ('Dictionary Print Wizard - Select Reported Files'), WHERE(~%ReportUseAllFilesLISTBOX), FINISH(1)
+    #!PROMPT ('File Selection', FROM (%File)), %ReportFileSelectionLISTBOX, INLINE, SELECTION('File Selection'), AT(90, 8, 235)
+    #PROMPT ('File Selection', FROM(%SelectFromFilesLISTBOX)), %ReportFileSelectionLISTBOX, INLINE, SELECTION('File Selection'), AT(90, 8, 235)
+  #ENDTAB
+  #TAB ('Dictionary Print Wizard - Finally...')
+    #DISPLAY ('This concludes the dictionary Group Generate wizard.'), AT(90, 8, 235, 24)
+    #DISPLAY ('Click on the Finish button to generate Groups.'), AT(90, 82, 235, 24)
+  #ENDTAB
+#ENDSHEET
+#!
+#DECLARE(%BegDate)
+#DECLARE(%BegTime)
+#SET(%BegDate, TODAY())                   #! Begin date
+#SET(%BegTime, CLOCK())                   #! Begin time
+#!
+#DECLARE(%zNames)
+#DECLARE(%zGroup)
+#DECLARE(%zItems)
+#SET(%zNames, 40)
+#SET(%zGroup, %zNames + 0)
+#SET(%zItems, %zGroup + 2)
+#!
+#DECLARE(%LineWork)
+#DECLARE(%LineNext)
+#DECLARE(%LineText)
+#DECLARE(%CountEquate)
+#!
+#COMMENT(90)
+#DECLARE (%ReportedFilesLISTBOX),MULTI,UNIQUE
+#DECLARE (%Groups),MULTI
+#DECLARE (%ValueConstruct)
+#DECLARE (%TheKeyId)
+#DECLARE (%TheKeyNo,LONG)
+#!
+#IF (%ReportUseAllFilesLISTBOX)
+  #! #FOR (%File)
+  #!   #ADD (%ReportedFilesLISTBOX, %File)
+  #! #ENDFOR
+  #FOR (%SelectFromFilesLISTBOX)
+    #ADD (%ReportedFilesLISTBOX, %SelectFromFilesLISTBOX)
+  #ENDFOR
+#ELSE
+  #FOR (%ReportFileSelectionLISTBOX)
+    #ADD (%ReportedFilesLISTBOX, %ReportFileSelectionLISTBOX)
+  #ENDFOR
+#ENDIF
+#!
+#DECLARE (%OutputFile)
+#FOR (%ReportedFilesLISTBOX)
+  #FIX (%File, %ReportedFilesLISTBOX)
+  #SET (%OutputFile, %FILE & '.inc')
+  #MESSAGE('File Group Definition: ' & %OutputFile, 2)
+  #CREATE (%OutputFile)
+#INSERT(%GiveMeSomeStuffLISTBOX)
+  #CLOSE (%OutputFile)
+#ENDFOR
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%PrepareFilesLISTBOX)
+#PREPARE
+#DECLARE(%SelectFromFilesLISTBOX),MULTI,UNIQUE
+#FOR (%File)
+  #!----------------------------------!
+  #! Ignore certain file DRIVER types !
+  #!----------------------------------!
+  #CASE(%FileDriver)
+    #OF('ASCII')
+  #OROF('BASIC')
+  #OROF('DOS')
+  #OROF('MEMORY')                                                               #! RA.2018.04.12 - Ignored
+      #CYCLE
+  #ENDCASE
+  #!---------------------------!
+  #! Ignore certain FILE types !
+  #!---------------------------!
+  #CASE(%FileType)
+  #OF  ('VIEW')
+  #OROF('ALIAS')
+      #CYCLE
+  #ENDCASE
+  #!-------------------------------------!
+  #! Ignore FILES with NO FIELDS in them !
+  #!-------------------------------------!
+  #IF(NOT ITEMS(%Field))                                                        #! RA.2001.12.01
+    #CYCLE                                                                      #! RA.2001.12.01
+  #ENDIF                                                                        #! RA.2001.12.01
+  #!
+  #IF(NOT VAREXISTS(%nLoc1))
+    #DECLARE(%nLoc1)
+  #ENDIF
+  #IF(NOT VAREXISTS(%nLoc2))
+    #DECLARE(%nLoc2)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileUser))
+    #DECLARE(%NFileUser)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt1))
+    #DECLARE(%NFileOpt1)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt2))
+    #DECLARE(%NFileOpt2)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt3))
+    #DECLARE(%NFileOpt3)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt4))
+    #DECLARE(%NFileOpt4)
+  #ENDIF
+  #!
+  #SET(%nLoc1,INSTRING('RASQL(',%FileUserOptions,1,1))
+  #SET(%nLoc2,INSTRING(')',%FileUserOptions,1,%nLoc1))
+  #SET(%NFileUser,UPPER(SUB(%FileUserOptions,%nLoc1,%nLoc2)))
+  #!SET(%NFileUser,UPPER(EXTRACT(%FileUserOptions,'RASQL')))
+  #SET(%NFileOpt1,EXTRACT(%NFileUser,'RASQL',1))
+  #SET(%NFileOpt2,EXTRACT(%NFileUser,'RASQL',2))
+  #SET(%NFileOpt3,EXTRACT(%NFileUser,'RASQL',3))
+  #SET(%NFileOpt4,EXTRACT(%NFileUser,'RASQL',4))
+  #!
+  #IF(SUB(%NFileOpt1,1,1)='N')                                                  #! Ignore this file
+    #CYCLE
+  #ENDIF
+  #!
+  #ADD (%SelectFromFilesLISTBOX, %File)
+#ENDFOR
+#ENDPREPARE
+#GROUP(%PrepareFilesEndLISTBOX)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%CopyrightLISTBOX)
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightLISTBOX01))
+    #DECLARE(%CopyrightLISTBOX01)
+  #ENDIF
+  #SET(%CopyrightLISTBOX01, 'Generate GROUPS for this dictionary.')
+  #SET(%CopyrightLISTBOX01, %CopyrightLISTBOX01 & '<13,10>Copyright © 1999-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightLISTBOX01, %CopyrightLISTBOX01 & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightLISTBOX01, %CopyrightLISTBOX01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#BOXED('Version '& %tplVersionGROUPS & ' [ ' & %tplReleaseGROUPS & ' ]'),AT(,,454),PROP(PROP:FontStyle,700) 
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%CopyrightLISTBOX01),AT(,,436,34)
+#ENDBOXED
+#!
+#GROUP(%MITLicenseLISTBOX)
+#TAB('LISTBOX'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightLISTBOX) 
+  #INSERT(%MITLicense)
+  #!INSERT(%ClarionFamily)                    #! RA.2021.11.26: Not usefull in #UTILITY templates
+#ENDTAB
+#!
+#GROUP(%ExplainLISTBOX)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainLISTBOX01))
+    #DECLARE(%ExplainLISTBOX01)
+  #ENDIF
+  #SET(%ExplainLISTBOX01, '')
+  #SET(%ExplainLISTBOX01, %ExplainLISTBOX01 & 'This template is used to make an include List box definition for')
+  #SET(%ExplainLISTBOX01, %ExplainLISTBOX01 & ' a table based in your dictionary.')
+  #SET(%ExplainLISTBOX01, %ExplainLISTBOX01 & ' Depending on your selections you can create more than one, but only the last')
+  #SET(%ExplainLISTBOX01, %ExplainLISTBOX01 & ' one created will be displayed by notepad.')
+  #SET(%ExplainLISTBOX01, %ExplainLISTBOX01 & '<13,10><13,10>')
+  #SET(%ExplainLISTBOX01, %ExplainLISTBOX01 & '<13,10><13,10>')
+  #SET(%ExplainLISTBOX01, %ExplainLISTBOX01 & 'This template has been tested with the ABC template chains.')
+  #SET(%ExplainLISTBOX01, %ExplainLISTBOX01 & '')
+  #!
+  #IF(NOT VAREXISTS(%ExplainLISTBOX02))
+    #DECLARE(%ExplainLISTBOX02)
+  #ENDIF
+  #!
+  #SET(%ExplainLISTBOX02, '')
+  #SET(%ExplainLISTBOX02, %ExplainLISTBOX02 & 'NOTE: Make sure the COMPLETE DIRECTORY PATH exists on your machine.')
+#ENDPREPARE
+#!
+#GROUP(%TabSelectionLISTBOX)
+#TAB('Selection')  #!,PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+  #BOXED(''),AT(,,454),PROP(PROP:FontStyle,700)
+    #!DISPLAY(''),AT(,,,1)
+    #!PROMPT ('Generate all files in my dictionary. (Cannot change this option)', CHECK), %ReportUseAllFilesLISTBOX, DEFAULT(0), AT(10) #!, PROP(PROP:READONLY,1), PROP(PROP:FontStyle,700), PROP(PROP:FontColor,0C79A3H)
+    #PROMPT ('Generate all files in my dictionary.', CHECK), %ReportUseAllFilesLISTBOX, DEFAULT(0), AT(10)
+    #DISPLAY(''),AT(,,,1)
+    #ENABLE(~%ReportUseAllFilesLISTBOX)
+      #PROMPT ('File Selection', FROM(%SelectFromFilesLISTBOX)), %ReportFileSelectionLISTBOX, INLINE, SELECTION('File Selection'), AT(,,,198)
+    #ENDENABLE
+  #ENDBOXED
+#ENDTAB
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%GiveMeSomeStuffLISTBOX)
+#!
+#CALL(%Utzd2c2aTabsFields)
+#!
+!BOF
+!
+! File:         %OutputFile
+! Table:        %FilePrefix:%File
+! Date-Time:    %@D010@(%BegDate) - %@T06@(%BegTime)
+! Purpose:      Generated List box format for Clarion
+! Author:       Create List Box Template
+! Narative:     This template is used to create list box formats
+!               from dictionary entries.
+!
+!Region Class_YES
+#SET(%NextLine, '?' & %FilePrefix & %ListFeqLISTBOX)                    #! pScreenID
+#SET(%WorkLine, %FilePrefix & %QueueSuffixLISTBOX)                      #! pObjectID 
+#SET(%MoreLine, %QueueNameLISTBOX)                                      #! pQueueID
+!-------------------------------------------------------------------------------------------------!
+! Control:      %[81]NextLine !
+! Class Name:   %[81]WorkLine !
+! Queue List:   %[81]MoreLine !
+#CALL(%UtzScreenListForClarion,%NextLine,%WorkLine,%MoreLine)
+!EndRegion
+!
+!Region Class_NO
+#SET(%NextLine, '?' & %FilePrefix & %ListFeqLISTBOX)                    #! pScreenID
+#SET(%WorkLine, %FilePrefix & %QueueSuffixLISTBOX)                      #! pObjectID 
+        #SET(%WorkLine            ,'') 
+#SET(%MoreLine, %QueueNameLISTBOX)                                      #! pQueueID
+!-------------------------------------------------------------------------------------------------!
+! Control:      %[81]NextLine !
+! Queue List:   %[81]MoreLine !
+#CALL(%UtzScreenListForClarion,%NextLine,%WorkLine,%MoreLine)
+!EndRegion
+#!
+#!Region
+#!EndRegion
+#!
+#!Region
+#!EndRegion
+#!
+#!Region
+#!EndRegion
+#!
+#!Region
+#!EndRegion
+!
+!EOF
+#GROUP(%GiveMeSomeStuffEndLISTBOX)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!EXTENSION(RYB_CreateListBox,'RA.1999.01.31: Create List Box'),Description('RYB | Generate List Box Formats. Version: ' & %tplVersionLISTBOX & ', Release: ' & %tplReleaseLISTBOX) !,APPLICATION
+#UTILITY(RYB_CreateListBox,'RYB | Generate List Box Formats.')
+#!-----------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------
+#! Created:     2021.12.05 - Roberto Artigas y Soler
+#! Author:      Copyright © 1999-2999 by Roberto Artigas y Soler
+#!              All rights reserved world wide.
+#! Changes:
+#! 2021.12.05:      Roberto Artigas y Soler
+#!    *   Implementation of the DCT2SQL #GROUPS that have been there for a while
+#!        into an new template. Testing still needed.
+#!
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!
+#SHEET,AT(,,464),HSCROLL
+#INSERT(%PrepareFilesLISTBOX)
+#INSERT(%MITLicenseLISTBOX)
+#INSERT(%ExplainLISTBOX)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #BOXED('List Box Definition Generator'),AT(,,456),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY(%ExplainLISTBOX02),AT(,,436,10),PROP(PROP:FontStyle,700) 
+    #BOXED(''),AT(,,446)
+      #PROMPT('Directory: ',@S120)  ,%IncludeDirectoryLISTBOX  , REQ, DEFAULT('.\classes\')         ,AT(70,,376)
+      #PROMPT('Prefix: ',@S120)     ,%SourcePrefixLISTBOX      , REQ, DEFAULT('lbd_')               ,AT(70,,376)
+      #!PROMPT('Include: '  ,@S120),%IncludeFilename , REQ, DEFAULT('_' & %ProgramExtension & '_' & UPPER(SLICE(%Program, 1, INSTRING('.', %Program, 1, 1)-1)) & '.GRP') ,AT(70,,376)
+      #PREPARE
+      #SET(%IncludeLocationLISTBOX,%IncludeDirectoryLISTBOX & '') #!%IncludeFilename )
+      #ENDPREPARE
+      #PROMPT('Location: ' ,@S120),%IncludeLocationLISTBOX , REQ, DEFAULT(%IncludeLocationLISTBOX),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,376)
+    #ENDBOXED
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY(%ExplainLISTBOX01),AT(,,436,154)
+  #ENDBOXED
+#ENDTAB
+#TAB('Options')
+  #BOXED('Parameters to pass the List Box Generator'),AT(,,456)
+    #DISPLAY(''),AT(,,,1)
+    #PROMPT('List FEQ Suffix: ',@S120)  ,%ListFeqLISTBOX  , REQ, DEFAULT('_ListQ')                  ,AT(70,,386)
+    #PROMPT('Queue Name: ',@S120)  ,%QueueNameLISTBOX  , REQ, DEFAULT('ListQ')                      ,AT(70,,386)
+    #DISPLAY('')
+    #PROMPT('Queue is inside a class',CHECK),%WantClassLISTBOX, DEFAULT(TRUE), PROP(PROP:FontStyle,700), AT(70)
+    #PREPARE
+      #IF(%WantClassLISTBOX)
+        #SET(%QueueSuffixLISTBOX,'_oListClass') 
+      #ELSE
+        #SET(%QueueSuffixLISTBOX,'') 
+      #ENDIF
+    #ENDPREPARE
+    #ENABLE(%WantClassLISTBOX=1)
+      #PROMPT('Queue Suffix: ',@S120)  ,%QueueSuffixLISTBOX  , DEFAULT('_oListClass')               ,AT(70,,386)
+    #ENDENABLE
+  #ENDBOXED
+#ENDTAB
+#INSERT(%TabSelectionLISTBOX)
+#!
+#PREPARE
+  #SET (%OutputFile, %IncludeDirectoryLISTBOX & %SourcePrefixLISTBOX & %FILE & '.inc')
+#ENDPREPARE
+#!
+#TAB('Hidden'),WHERE(0=1)
+  #BOXED('Check me out'),AT(,,456),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #PROMPT('OutputFile: ',@S120)  ,%OutputFile  ,AT(70,,376)
+  #ENDBOXED
+#ENDTAB
+#ENDSHEET
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!ATSTART
+#!
+#DECLARE(%BegDate)
+#DECLARE(%BegTime)
+#SET(%BegDate, TODAY())                   #! Begin date
+#SET(%BegTime, CLOCK())                   #! Begin time
+#!
+#DECLARE(%zNames)
+#DECLARE(%zGroup)
+#DECLARE(%zItems)
+#SET(%zNames, 40)
+#SET(%zGroup, %zNames + 0)
+#SET(%zItems, %zGroup + 2)
+#!
+#DECLARE(%LineWork)
+#DECLARE(%LineNext)
+#DECLARE(%LineText)
+#DECLARE(%CountEquate)
+#!
+#DECLARE (%ReportedFilesLISTBOX),MULTI,UNIQUE
+#DECLARE (%Groups),MULTI
+#DECLARE (%ValueConstruct)
+#DECLARE (%TheKeyId)
+#DECLARE (%TheKeyNo,LONG)
+#!
+#DECLARE (%NumberFields)                              #! RA.2021.11.26: Added
+#DECLARE (%CountFields)
+#DECLARE (%nLoc1)
+#DECLARE (%nLoc2)
+#DECLARE (%NFieldUser)
+#DECLARE (%NFieldOpt1)
+#DECLARE (%NFieldOpt2)
+#DECLARE (%NFieldOpt3)
+#DECLARE (%NFieldOpt4)
+#DECLARE (%NextLine)                                  #! pScreenID
+#DECLARE (%WorkLine)                                  #! pObjectID 
+#DECLARE (%MoreLine)                                  #! pQueueID
+#DECLARE (%NextWork)
+#DECLARE (%IndexFields)
+#DECLARE (%BuildPart1)
+#DECLARE (%BuildPart2)
+#!
+#IF (%ReportUseAllFilesLISTBOX)
+  #FOR (%SelectFromFilesLISTBOX)
+    #ADD (%ReportedFilesLISTBOX, %SelectFromFilesLISTBOX)
+  #ENDFOR
+#ELSE
+  #FOR (%ReportFileSelectionLISTBOX)
+    #ADD (%ReportedFilesLISTBOX, %ReportFileSelectionLISTBOX)
+  #ENDFOR
+#ENDIF
+#!
+#COMMENT(90)
+#!
+#DECLARE (%OutputFile)
+#FOR (%ReportedFilesLISTBOX)
+  #FIX (%File, %ReportedFilesLISTBOX)
+  #!SET (%OutputFile, %IncludeDirectoryLISTBOX & %FILE & '.inc')
+  #SET (%OutputFile, %IncludeDirectoryLISTBOX & %SourcePrefixLISTBOX & %FILE & '.inc')
+  #MESSAGE('File Group Definition: ' & %OutputFile, 2)
+  #!ERROR('File Group Definition: ' & %OutputFile)
+  #CREATE (%OutputFile)
+  #INSERT(%GiveMeSomeStuffLISTBOX)
+  #CLOSE (%OutputFile)
+#ENDFOR
+#RUN('NOTEPAD.EXE "' & %OutputFile & '"')
+#!
+#!ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! RA.2020.05.19.SUN: Removed the passed parameters %pDecLength and %pDecDigits. 
+#! RA.2020.05.17.SUN: HOW, WHEN: Does this need to handle arrays? 
+#! RA.2020.05.17.SUN: Will need more testing. Better if there is a bit extra space.
+#! RA.2020.05.13.WED: Now calls the #GROUP that calculates length and decimals.
+#! RA.2020.05.12.TUE: Decimal and digits should be already set when we come here.
+#!---------------------------------------------------------------------
+#! RA.2020.05.19.SUN: Used as replacement for the dictionary calculated list field display width. [???]
+#! RA.2020.05.12.TUE: Used for the Report Control horizontal field widths. May have other uses. [???]
+#!---------------------------------------------------------------------
+#!GROUP(%UtzCalcDspSize,*%pDspSize,%pFieldFormatWidth,%pFieldMemoSize,%pFieldType,%pHeaderLength,%pFieldPicture,%pDecLength,%pDecDigits,%pFieldID,%pFieldHeader)
+#GROUP(%UtzCalcDspSize,*%pDspSize,%pFieldFormatWidth,%pFieldMemoSize,%pFieldType,%pHeaderLength,%pFieldPicture,%pFieldID,%pFieldHeader)
+#IF(NOT VAREXISTS(%zLength))
+  #DECLARE(%zFixit10)
+  #DECLARE(%zLength)
+  #DECLARE(%zDigits)
+  #DECLARE(%zLenDec)
+  #DECLARE(%zDspSize)
+  #DECLARE(%zAdjusts)
+#ENDIF
+#CASE(UPPER(%pFieldType))
+#OF  ('CSTRING')
+  #SET(%pFieldMemoSize , %pFieldMemoSize - 1)
+#! --997-- %%pFieldMemoSize = %pFieldMemoSize
+#ENDCASE
+#SET(%zFixit10, 10)
+#SET(%zAdjusts, CHOOSE((%pFieldMemoSize > %pHeaderLength),%pFieldMemoSize,%pHeaderLength))
+#!SET(%zDspSize, %pFieldFormatWidth)
+#SET(%zDspSize, (%zAdjusts * %zFixit10))
+#CALL(%UtzCalcLenDig,%zLength,%zDigits,%pFieldType,%pFieldPicture)
+#! ANY, MEMO, BLOB, GROUP, BYTE, BOOL, BFLOAT4, BFLOAT8,
+#! DATE, TIME, SHORT, USHORT, LONG, ULONG, SIGNED, UNSIGNED, 
+#! REAL, SREAL, DECIMAL, PDECIMAL, STRING, PSTRING, ASTRING,
+#! BSTRING, CSTRING, USTRING, WORD, DWORD, BOOLEAN. 
+#CASE(%pFieldType)
+#OF  ('STRING') 
+#OROF('ASTRING')
+#OROF('BSTRING')
+#OROF('CSTRING')
+#OROF('PSTRING')
+#OROF('USTRING')
+#OROF('MEMO')
+#OROF('BLOB')
+ #IF(%zAdjusts > 30)
+    #SET(%zDspSize,   INT(30.0 * %zFixit10))
+  #ENDIF
+  #!
+  #CASE(%zAdjusts)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 1.5 * %zFixit10 * %zAdjusts))
+  #ENDCASE
+  #!
+#OF  ('DATE')
+#OROF('TIME')
+  #SET(%zDspSize,     INT( 5.0 * %zFixit10))
+#OF  ('SHORT')  
+#OROF('USHORT')  
+#OROF('WORD')  
+  #!
+  #CASE(%zLength)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 1.5 * %zFixit10 * %zLength))
+  #ELSE
+    #SET(%zDspSize,   INT( 5.0 * %zFixit10))
+  #ENDCASE
+  #!
+#OF  ('LONG')  
+#OROF('ULONG')  
+#OROF('DWORD')  
+  #!
+  #CASE(%zLength)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 1.5 * %zFixit10 * %zLength))
+  #ELSE
+    #SET(%zDspSize,   INT( 6.0 * %zFixit10))
+  #ENDCASE
+  #!
+#OF  ('REAL')  
+#OROF('SREAL')  
+#OROF('DECIMAL')  
+#OROF('PDECIMAL')  
+#OROF('BFLOAT4')  
+#OROF('BFLOAT8')  
+  #!
+  #SET(%zAdjusts, %zLength + %zDigits)
+  #CASE(%zAdjusts)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 1.5 * %zFixit10 * %zAdjusts))
+  #ELSE
+    #SET(%zDspSize,   INT( 1.0 * %zFixit10 * %zAdjusts))
+  #ENDCASE
+  #!
+#OF  ('BYTE')  
+#OROF('BOOL')  
+#OROF('BOOLEAN')  
+  #!
+  #CASE(%zLength)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 1.5 * %zFixit10 * %zLength))
+  #ELSE
+    #SET(%zDspSize,   INT( 1.0 * %zFixit10))
+  #ENDCASE
+  #!
+#ENDCASE
+#!
+#IF(INSTRING('GUID',UPPER(%pFieldID),1,1) > 0)
+  #SET(%zDspSize,     INT( 9.0 * %zFixit10))
+#ENDIF
+#!
+#! --999-- %@N03@(%zDspSize)=( %@N03@(%pFieldFormatWidth) , %@N03@(%pFieldMemoSize) , %@S10@(%pFieldType) , %@N03@(%pHeaderLength) , %@S10@(%pFieldPicture) , %@N04@(%zLength) , %@N02@(%zDigits) , %@S40@(%pFieldID) , %@S20@(%pFieldHeader) )
+#SET(%pDspSize, %zDspSize)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! RA.2021.08.20.FRI: Need to handle masks: LONG=@P##-####P, LONG=@P###-##-####P [???]
+#!
+#! RA.2020.05.13.WED: Changed so it should handle all the Clarion types.
+#! RA.2020.05.13.WED: Need to implement all the types as I get some testing fields.
+#! RA.2020.05.12.TUE: Get the decimal length and digits from the mask.
+#GROUP(%UtzCalcLenDig,*%pLength,*%pDigits,%pFieldType,%pFieldPicture)
+#IF(NOT VAREXISTS(%zLength))
+  #DECLARE(%zLength)
+  #DECLARE(%zDigits)
+  #DECLARE(%zLenDec)
+#ENDIF
+#IF(NOT VAREXISTS(%zPos1))
+  #DECLARE(%zPos1)
+#ENDIF
+#SET(%zLength, 0)
+#SET(%zDigits, 0)
+#!SET(%zLenDec, '')
+#SET(%zLenDec,UPPER(%pFieldPicture))
+#!
+#! ANY, MEMO, BLOB, GROUP, BYTE, BOOL, BFLOAT4, BFLOAT8,
+#! DATE, TIME, SHORT, USHORT, LONG, ULONG, SIGNED, UNSIGNED, 
+#! REAL, SREAL, DECIMAL, PDECIMAL, STRING, PSTRING, ASTRING,
+#! BSTRING, CSTRING, USTRING, WORD, DWORD, BOOLEAN. 
+#!
+#CASE(%pFieldType)
+#OF  ('DECIMAL')
+#OROF('PDECIMAL')
+#OROF('DEC')
+#OROF('NUMERIC')
+#!
+#OROF('SREAL')
+#OROF('BFLOAT4')
+#OROF('FLOAT')
+#OROF('FLOAT4')
+#!
+#OROF('REAL')
+#OROF('BFLOAT8')
+#OROF('DOUBLE')
+#OROF('FLOAT8')
+#!
+#OROF('SHORT')
+#OROF('LONG')
+  #CALL(%ReplaceSubString,%zLenDec,'-','')
+  #CALL(%ReplaceSubString,%zLenDec,'_','')
+  #CALL(%ReplaceSubString,%zLenDec,'$','')
+  #CALL(%ReplaceSubString,%zLenDec,'@','')
+  #CALL(%ReplaceSubString,%zLenDec,'N','')
+  #CALL(%ReplaceSubString,%zLenDec,'B','')
+  #CALL(%ReplaceSubString,%zLenDec,'(','')
+  #CALL(%ReplaceSubString,%zLenDec,')','')
+  #SET(%zPos1,INSTRING('.',%zLenDec,1,1))
+  #IF(%zPos1 > 0)
+    #SET(%zLength,SUB(%zLenDec,1,%zPos1-1))
+    #SET(%zDigits,SUB(%zLenDec,%zPos1+1,LEN(%zLenDec)))
+  #ELSE 
+    #SET(%zLength,%zLenDec)
+    #SET(%zDigits,0)
+  #ENDIF
+#OF  ('STRING')
+#OROF('CSTRING')
+  #CALL(%ReplaceSubString,%zLenDec,'@','')
+  #CALL(%ReplaceSubString,%zLenDec,'S','')
+  #SET(%zLength,%zLenDec)
+  #SET(%zDigits,0)
+#OF  ('DATE')
+  #SET(%zLength,8)
+  #SET(%zDigits,0)
+#OF  ('TIME')
+  #SET(%zLength,6)
+  #SET(%zDigits,0)
+#ELSE
+! ---- DATA TYPE UNKNOWN ----  
+! ---- %%pFieldType=%@S10@(%pFieldType) %%pFieldPicture=%@S20@(%pFieldPicture) %%zLenDec=%@S20@(%zLenDec), %%zLength=%@N04@(%zLength), %%zDigits=%@N02@(%zDigits) %%pFieldType=%@S10@(%pFieldType)
+#ENDCASE
+#!
+#! RA.2021.08.10.FRI: Check from @P, @K. Use the length of the mask itself.
+#! -00- %%pFieldType=%@S10@(%pFieldType) %%pFieldPicture=%@S20@(%pFieldPicture) %%zLenDec=%@S20@(%zLenDec), %%zLength=%@N04@(%zLength), %%zDigits=%@N02@(%zDigits) %%pFieldType=%@S10@(%pFieldType)
+#IF(%zLength=0 AND %zDigits=0)
+  #SET(%zLenDec,SUB(UPPER(%pFieldPicture),1,2))
+#! -01- %%pFieldType=%@S10@(%pFieldType) %%pFieldPicture=%@S20@(%pFieldPicture) %%zLenDec=%@S20@(%zLenDec), %%zLength=%@N04@(%zLength), %%zDigits=%@N02@(%zDigits) %%pFieldType=%@S10@(%pFieldType)
+  #CASE(%zLenDec)
+  #OF  ('@P')
+  #OROF('@K')
+    #SET(%zLength,LEN(%pFieldPicture))
+    #SET(%zDigits,0)  
+#! -02- %%pFieldType=%@S10@(%pFieldType) %%pFieldPicture=%@S20@(%pFieldPicture) %%zLenDec=%@S20@(%zLenDec), %%zLength=%@N04@(%zLength), %%zDigits=%@N02@(%zDigits) %%pFieldType=%@S10@(%pFieldType)
+  #ELSE
+! ---- MASK TYPE UNKNOWN ----  
+! ---- %%pFieldType=%@S10@(%pFieldType) %%pFieldPicture=%@S20@(%pFieldPicture) %%zLenDec=%@S20@(%zLenDec), %%zLength=%@N04@(%zLength), %%zDigits=%@N02@(%zDigits) %%pFieldType=%@S10@(%pFieldType)
+  #ENDCASE
+#ENDIF
+#!
+#IF(%zLength=0 AND %zDigits=0)
+! -03- %%pFieldType=%@S10@(%pFieldType) %%pFieldPicture=%@S20@(%pFieldPicture) %%zLenDec=%@S20@(%zLenDec), %%zLength=%@N04@(%zLength), %%zDigits=%@N02@(%zDigits) %%pFieldType=%@S10@(%pFieldType)
+#ENDIF
+#!
+#SET(%pLength, %zLength)
+#SET(%pDigits, %zDigits)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! RA.2020.05.21.THU: Create internal table of what fields are in which tab.
+#! A '~' is applied to the front of fields that are not shown to the user.
+#! IOW: They are for programmers and system usage. They sort to the end.
+#!-------------------------------------------------------------------------------------------------!
+#!                                    ----- PURPOSE -----                                          !
+#! The List Box Formatter (IMHO) has for a long time been a time comsuming IDE editing task.       !
+#! No matter how well you edit the dictionary (DCT) the resuling LIST control has to be edited.    !
+#! The LIST control complain is, the short fields are too short, and the long fields are too long. !
+#! This is the attempt at making it a bit easier at what the widths should be for LESS editing.    !
+#! This handles the list field widths for: 1) Clarion, 2) Noyantis.                                !
+#! While this by no means is perfect and will required more adjustments as use cases are found,    !
+#! it produces a generated list that has a bit better spacing (IMHO), than the IDE generated one.  !
+#! It DOES NOT eliminate editing, it should just reduce the editing that has to be done.           !
+#! IF you find a better calculation to do this, THEN just add the calculation here.                !
+#!-------------------------------------------------------------------------------------------------!
+#GROUP(%Utzd2c2aTabsFields)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#PREPARE
+#IF(NOT VAREXISTS(%d2c2aTabsFields))
+#DECLARE(%d2c2aWork)
+#DECLARE(%d2c2aTabsFields),MULTI,UNIQUE
+#DECLARE(%d2c2aTab       ,%d2c2aTabsFields)     #! TAB name where this field is
+#DECLARE(%d2c2aNum       ,%d2c2aTabsFields)     #! Number of the field (in the GROUP structure)
+#DECLARE(%d2c2aSeq       ,%d2c2aTabsFields)     #! Display #??# of the field (recall style byte)
+#DECLARE(%d2c2aFld       ,%d2c2aTabsFields)     #! Field name with prefix
+#DECLARE(%d2c2aDSP       ,%d2c2aTabsFields)     #! Clarion DCT value
+#DECLARE(%d2c2aType      ,%d2c2aTabsFields)     #! Field Type
+#DECLARE(%d2c2aFMS       ,%d2c2aTabsFields)     #! Field Memo Size (DCT)
+#DECLARE(%d2c2aDHL       ,%d2c2aTabsFields)     #! Length of the column header
+#DECLARE(%d2c2aFDP       ,%d2c2aTabsFields)     #! Field display picture
+#DECLARE(%d2c2aLen       ,%d2c2aTabsFields)     #! Length of display picture
+#DECLARE(%d2c2aDig       ,%d2c2aTabsFields)     #! Digits of display picture
+#!DECLARE(%d2c2aDSL1     ,%d2c2aTabsFields)     #! Length of the sort header (RA.2021.09.07.MON: Added Clarion)
+#!DECLARE(%d2c2aDSL2     ,%d2c2aTabsFields)     #! Length of the sort header (RA.2021.09.07.MON: Added Noyantis)
+#DECLARE(%d2c2aCalc1     ,%d2c2aTabsFields)     #! Calculation 1: Clarion
+#DECLARE(%d2c2aCalc2     ,%d2c2aTabsFields)     #! Calculation 2: Noyantis
+#!                                              #! Calculation 3: <next list field width calculation>
+#END
+#ENDPREPARE
+#!
+#FREE(%d2c2aTabsFields)
+#SET(%NumberFields          , 1)
+#SET(%CountFields           , 1)
+#FOR(%Field)
+  #CASE(%FieldType)
+  #OF  ('GROUP')
+  #OROF('END')
+    #CYCLE
+  #ENDCASE
+  #INSERT(%UseQualifiedFieldsD2C)
+  #IF(SUB(%NFieldOpt1,1,1)='N')
+    #CYCLE
+  #ENDIF
+#!
+  #CASE(UPPER(EXTRACT(%FieldQuickOptions,'TAB',1)))
+  #OF  ('INTERNAL')
+  #OROF('WORK')
+    #SET(%d2c2aWork, '~' & EXTRACT(%FieldQuickOptions,'TAB',1) & '-' & FORMAT(%CountFields,@N03) & '-' & %FieldID)
+  #ELSE 
+    #SET(%d2c2aWork,       EXTRACT(%FieldQuickOptions,'TAB',1) & '-' & FORMAT(%CountFields,@N03) & '-' & %FieldID) 
+  #ENDCASE
+#!
+  #ADD(%d2c2aTabsFields     , %d2c2aWork)
+  #SET(%d2c2aTab            , EXTRACT(%FieldQuickOptions,'TAB',1))          #! TAB name where this field is
+  #SET(%d2c2aNum            , %NumberFields)                                #! Number of the field (in the GROUP structure)
+  #SET(%d2c2aSeq            , %CountFields)                                 #! Display #??# of the field (recall style long)
+  #SET(%d2c2aFld            , %Field)                                       #! Field name with prefix
+  #SET(%d2c2aDSP            , %FieldFormatWidth)                            #! Clarion DCT value
+  #SET(%d2c2aFMS            , %FieldMemoSize)                               #! Field Memo Size (DCT)
+  #SET(%d2c2aType           , %FieldType)                                   #! Field Type
+  #SET(%d2c2aDHL            , LEN(%FieldHeader))                            #! Length of the column header
+  #SET(%d2c2aFDP            , %FieldDisplayPicture)                         #! Display Width: DCT original
+  #CALL(%UtzCalcLenDig         , %d2c2aLen, %d2c2aDig, %d2c2aType, %d2c2aFDP)  #! Calculate width length and decimal digits
+  #!SET(%d2c2aDSL1          , 30)                                           #! Length of the sort header (RA.2021.09.07.MON: Added Clarion)
+  #!SET(%d2c2aDSL2          , 30)                                           #! Length of the sort header (RA.2021.09.07.MON: Added Noyantis)
+  #SET(%d2c2aCalc1          , %d2c2aDSP)                                    #! Display Width: Clarion
+  #SET(%d2c2aCalc2          , %d2c2aDSP)                                    #! Display Width: Noyantis
+#!
+#! RA.2021.09.29.WED: Add pSortSize parameter for the additional size for the sort constant (Sort size constant inside #GROUP)
+  #!CALL(%UtzCalcWidthClarion2  , %d2c2aCalc1, %d2c2aDSL1, %d2c2aDSP, %d2c2aFMS, %d2c2aType, %d2c2aDHL, %d2c2aFDP, %Field, %FieldHeader)
+  #!CALL(%UtzCalcWidthNoyantis2 , %d2c2aCalc2, %d2c2aDSL2, %d2c2aDSP, %d2c2aFMS, %d2c2aType, %d2c2aDHL, %d2c2aFDP, %Field, %FieldHeader)
+  #CALL(%UtzCalcWidthClarion   , %d2c2aCalc1, %d2c2aDSP, %d2c2aFMS, %d2c2aType, %d2c2aDHL, %d2c2aFDP, %Field, %FieldHeader)
+  #CALL(%UtzCalcWidthNoyantis  , %d2c2aCalc2, %d2c2aDSP, %d2c2aFMS, %d2c2aType, %d2c2aDHL, %d2c2aFDP, %Field, %FieldHeader)
+#!
+  #SET(%NumberFields        , %NumberFields + 1)                            #! Field number since this can sort
+  #SET(%CountFields         , %CountFields + 1)                             #! There is NOT a style LONG marker in between fields
+  #!SET(%CountFields        , %CountFields + 2)                             #! There is a style LONG marker in between fields
+#ENDFOR
+#!---------!
+#! TESTING !
+#!---------!
+#FOR(%d2c2aTabsFields)
+#! %%d2c2aTabsFields = %[50]d2c2aTabsFields ( %[10]d2c2aTab, %@N03@(%d2c2aNum), %@N03@(%d2c2aSeq), %[50]d2c2aFld, %@N04@(%d2c2aDSP), %@N04@(%d2c2aCalc1), %@N04@(%d2c2aCalc2) )
+#ENDFOR
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! RA.2021.09.29.WED: Backed off the additional parameter for the sort constant. Constraint for building Clarion LIST control.
+#! RA.2021.09.29.WED: Add pSortSize parameter for the additional size for the sort constant.
+#! RA.2020.05.28: NOTE to SELF: Consider taking out the %pFieldMemoSize and just using the %pFieldPicture by itself.
+#!GROUP(%UtzCalcWidthClarion2,*%pDspSize, *%pSortSize,  %pFieldFormatWidth,%pFieldMemoSize,%pFieldType,%pHeaderLength,%pFieldPicture,%pFieldID,%pFieldHeader)
+#GROUP(%UtzCalcWidthClarion,*%pDspSize,%pFieldFormatWidth,%pFieldMemoSize,%pFieldType,%pHeaderLength,%pFieldPicture,%pFieldID,%pFieldHeader)
+#IF(NOT VAREXISTS(%zLength))
+  #DECLARE(%zFixit04)
+  #DECLARE(%zLength)
+  #DECLARE(%zDigits)
+  #DECLARE(%zLenDec)
+  #DECLARE(%zDspSize)
+  #DECLARE(%zAdjusts)
+  #DECLARE(%zHdrSize)
+  #DECLARE(%zFldSize)
+  #DECLARE(%zSortSize)
+  #DECLARE(%zResSizeHdr)
+  #DECLARE(%zResSizeFld)
+  #DECLARE(%zResSize)
+  #DECLARE(%zResCase)
+#ENDIF
+#SET(%zFixit04  , 04)
+#SET(%zSortSize , 03)                         #! RA.2021.09.29.WED: HARD CODED!
+#SET(%zSortSize , %zSortSize * %zFixit04)     #! RA.2021.09.29.WED: Calculate!
+#!
+#CASE(UPPER(%pFieldType))
+#OF  ('CSTRING')
+  #SET(%pFieldMemoSize , %pFieldMemoSize - 1)
+#! --995-- %%pFieldMemoSize = %pFieldMemoSize
+#ENDCASE
+#IF(%pHeaderLength > %pFieldMemoSize)
+  #SET(%pHeaderLength , %pHeaderLength + 2)
+#! --997-- CLA: %pHeaderLength >= %pFieldMemoSize [%pFieldID , %pFieldHeader (%pHeaderLength)]
+#ENDIF
+#!
+#SET(%zAdjusts, CHOOSE((%pFieldMemoSize > %pHeaderLength),%pFieldMemoSize,%pHeaderLength))
+#!SET(%zDspSize, %pFieldFormatWidth)
+#! --002--- (%%pFieldMemoSize=%pFieldMemoSize > %%pHeaderLength=%pHeaderLength) = %%zAdjusts = %zAdjusts
+#SET(%zDspSize, (%zAdjusts * %zFixit04))
+#CALL(%UtzCalcLenDig,%zLength,%zDigits,%pFieldType,%pFieldPicture)
+#!
+#SET(%zResSize  , %zDspSize)                  #! RA.2021.10.02.SAT: Calculate!
+#SET(%zHdrSize  , LEN(%pFieldHeader))         #! RA.2021.09.29.WED: Calculate!
+#SET(%zFldSize  , LEN(%pFieldPicture))        #! RA.2021.09.29.WED: Calculate!
+#SET(%zFldSize  , %zLength)                   #! RA.2021.09.29.WED: Calculate!
+#SET(%zHdrSize  , %zHdrSize  * %zFixit04)     #! RA.2021.09.29.WED: Calculate!
+#SET(%zFldSize  , %zFldSize  * %zFixit04)     #! RA.2021.09.29.WED: Calculate!
+#!
+#! ANY, MEMO, BLOB, GROUP, BYTE, BOOL, BFLOAT4, BFLOAT8,
+#! DATE, TIME, SHORT, USHORT, LONG, ULONG, SIGNED, UNSIGNED, 
+#! REAL, SREAL, DECIMAL, PDECIMAL, STRING, PSTRING, ASTRING,
+#! BSTRING, CSTRING, USTRING, WORD, DWORD, BOOLEAN. 
+#CASE(%pFieldType)
+#OF  ('STRING') 
+#OROF('ASTRING')
+#OROF('BSTRING')
+#OROF('CSTRING')
+#OROF('PSTRING')
+#OROF('USTRING')
+#OROF('MEMO')
+#OROF('BLOB')
+  #!
+  #CASE(%zAdjusts)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 2.5 * %zFixit04 * %zAdjusts))
+  #ELSE
+    #SET(%zDspSize,   INT( 1.0 * %zFixit04 * %zAdjusts))
+  #ENDCASE
+  #!
+  #IF(%zAdjusts > 30)
+    #SET(%zDspSize,   INT(30.0 * %zFixit04))
+  #ENDIF
+  #!
+#OF  ('DATE')
+#OROF('TIME')
+  #SET(%zDspSize,     INT(11.0 * %zFixit04))
+#OF  ('SHORT')  
+#OROF('USHORT')  
+#OROF('WORD')  
+  #!
+  #IF(%zLength = %pHeaderLength)
+    #SET(%zAdjusts, %zLength)
+  #ENDIF
+  #CASE(%zAdjusts)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 2.5 * %zFixit04 * %zAdjusts))
+  #ELSE
+    #SET(%zDspSize,   INT( 1.0 * %zFixit04 * %zAdjusts))
+  #ENDCASE
+  #!
+#OF  ('LONG')  
+#OROF('ULONG')  
+#OROF('DWORD')  
+  #!
+  #IF(%zLength = %pHeaderLength)
+    #SET(%zAdjusts, %zLength)
+  #ENDIF
+  #CASE(%zAdjusts)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 2.5 * %zFixit04 * %zAdjusts))
+  #ELSE
+    #SET(%zDspSize,   INT( 1.0 * %zFixit04 * %zAdjusts))
+  #ENDCASE
+  #!
+#OF  ('REAL')  
+#OROF('SREAL')  
+#OROF('DECIMAL')  
+#OROF('PDECIMAL')  
+#OROF('BFLOAT4')  
+#OROF('BFLOAT8')  
+  #!
+  #SET(%zAdjusts, %zLength + %zDigits)
+  #CASE(%zAdjusts)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 2.5 * %zFixit04 * %zAdjusts))
+  #ELSE
+    #SET(%zDspSize,   INT( 1.0 * %zFixit04 * %zAdjusts))
+  #ENDCASE
+  #!
+#OF  ('BYTE')  
+#OROF('BOOL')  
+#OROF('BOOLEAN')  
+  #!
+  #IF(%zLength = %pHeaderLength)
+    #SET(%zAdjusts, %zLength)
+  #ENDIF
+  #CASE(%zAdjusts)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 2.5 * %zFixit04 * %zAdjusts))
+  #ELSE
+    #SET(%zDspSize,   INT( 1.0 * %zFixit04 * %zAdjusts))
+  #ENDCASE
+  #!
+#ENDCASE
+#!
+#IF(INSTRING('GUID',UPPER(%pFieldID),1,1) > 0)
+  #SET(%zDspSize,     INT(22.0 * %zFixit04))
+#ENDIF
+#!
+#! RA.2021.010.10.SUN: While the calculations also happen for Clarion they do to get used at this time.
+#! Clarion used the sort key and is normally not adjusted as to the order of the fields and the size of the fields.
+#! -------
+#! --111--  %@N03@(%zDspSize)-%@N03@(%zResSize)-%@N03@(%zSortSize)-%@N03@(%zHdrSize)-%@N03@(%zFldSize)=( %@N03@(%pFieldFormatWidth) , %@N03@(%pFieldMemoSize) , %@S10@(%pFieldType) , %@N03@(%pHeaderLength) , %@S20@(%pFieldPicture) , %@N04@(%zLength) , %@N02@(%zDigits) , %@S40@(%pFieldID) , %@S20@(%pFieldHeader) )
+#SET(%zResSizeHdr , %zHdrSize + %zSortSize)
+#SET(%zResSizeFld , %zFldSize + %zSortSize)
+#! --111--A %@N03@(%zDspSize)-%@N03@(%zResSize)-%@N03@(%zSortSize)-%@N04@(%zResSizeHdr)-%@N04@(%zHdrSize)-%@N04@(%zResSizeFld)-%@N04@(%zFldSize)
+#!+++ RA.2021.10.07.THU: Adjust the header to accomodate for the sort literal. (^,v)
+#!+++ Add sort size to the current display size. We have calculated a correcr size for the field vs header.
+#SET(%zResCase    , 'A')
+#!SET(%zResSize   , %zDspSize + %zSortSize)         
+#! --111--B %@N03@(%zDspSize)-%@N03@(%zResSize)-%@N03@(%zSortSize)-%@N04@(%zResSizeHdr)-%@N04@(%zHdrSize)-%@N04@(%zResSizeFld)-%@N04@(%zFldSize)
+#IF(%zResSizeHdr  <= %zFldSize)
+  #SET(%zResCase  , 'B')       
+#ENDIF
+#IF(%zResSize     <= %zResSizeHdr)
+  #SET(%zResCase  , 'A')       
+#ENDIF
+#!
+#CASE(%zResCase)
+#OF('A')
+  #SET(%zResSize  , %zDspSize + %zSortSize)
+#OF('B')
+  #SET(%zResSize  , %zFldSize)  
+#ENDCASE
+#! --111--C %@N03@(%zDspSize)-%@N03@(%zResSize)-%@N03@(%zSortSize)-%@N04@(%zResSizeHdr)-%@N04@(%zHdrSize)-%@N04@(%zResSizeFld)-%@N04@(%zFldSize)
+#!SET(%zDspSize    , %zResSize)   #! RA.2021.10.10.SUN: DO NOT ADJUST CLARION.
+#! --111--  %@N03@(%zDspSize)-%@N03@(%zResSize)-%@N03@(%zSortSize)-%@N03@(%zHdrSize)-%@N03@(%zFldSize)=( %@N03@(%pFieldFormatWidth) , %@N03@(%pFieldMemoSize) , %@S10@(%pFieldType) , %@N03@(%pHeaderLength) , %@S20@(%pFieldPicture) , %@N04@(%zLength) , %@N02@(%zDigits) , %@S40@(%pFieldID) , %@S20@(%pFieldHeader) )
+#! -------
+#SET(%pDspSize  , %zDspSize)
+#!---------------------------------------------------------------------
+#!--------------------------------------------------------------------- 
+#! RA.2021.09.29.WED: Backed off the additional parameter for the sort constant. Constraint for building Clarion LIST control.
+#! RA.2021.09.29.WED: Add pSortSize parameter for the additional size for the sort constant.
+#! RA.2020.05.28: NOTE to SELF: Consider taking out the %pFieldMemoSize and just using the %pFieldPicture by itself.
+#!GROUP(%UtzCalcWidthNoyantis2,*%pDspSize, *%pSortSize,  %pFieldFormatWidth,%pFieldMemoSize,%pFieldType,%pHeaderLength,%pFieldPicture,%pFieldID,%pFieldHeader)
+#GROUP(%UtzCalcWidthNoyantis,*%pDspSize,%pFieldFormatWidth,%pFieldMemoSize,%pFieldType,%pHeaderLength,%pFieldPicture,%pFieldID,%pFieldHeader)
+#IF(NOT VAREXISTS(%zLength))
+  #DECLARE(%zFixit10)
+  #DECLARE(%zLength)
+  #DECLARE(%zDigits)
+  #DECLARE(%zLenDec)
+  #DECLARE(%zDspSize)
+  #DECLARE(%zAdjusts)
+  #DECLARE(%zHdrSize)
+  #DECLARE(%zFldSize)
+  #DECLARE(%zSortSize)
+  #DECLARE(%zResSizeHdr)
+  #DECLARE(%zResSizeFld)
+  #DECLARE(%zResSize)
+  #DECLARE(%zResCase)
+#ENDIF
+#SET(%zFixit10  , 10)
+#SET(%zSortSize , 03)                         #! RA.2021.09.29.WED: HARD CODED!
+#SET(%zSortSize , %zSortSize * %zFixit10)     #! RA.2021.09.29.WED: Calculate!
+#!
+#CASE(UPPER(%pFieldType))
+#OF  ('CSTRING')
+  #SET(%pFieldMemoSize , %pFieldMemoSize - 1)
+#! --996-- %%pFieldMemoSize = %pFieldMemoSize
+#ENDCASE
+#IF(%pHeaderLength > %pFieldMemoSize)
+  #SET(%pHeaderLength , %pHeaderLength + 1)
+#! --997-- NYS: %pHeaderLength >= %pFieldMemoSize [%pFieldID , %pFieldHeader (%pHeaderLength)]
+#ENDIF
+#!
+#SET(%zAdjusts, CHOOSE((%pFieldMemoSize > %pHeaderLength),%pFieldMemoSize,%pHeaderLength))
+#SET(%zDspSize, (%zAdjusts * %zFixit10))
+#CALL(%UtzCalcLenDig,%zLength,%zDigits,%pFieldType,%pFieldPicture)
+#!
+#SET(%zResSize  , %zDspSize)                  #! RA.2021.10.02.SAT: Calculate!
+#SET(%zHdrSize  , LEN(%pFieldHeader))         #! RA.2021.09.29.WED: Calculate!
+#SET(%zFldSize  , LEN(%pFieldPicture))        #! RA.2021.09.29.WED: Calculate! 
+#SET(%zFldSize  , %zLength)                   #! RA.2021.09.29.WED: Calculate!
+#SET(%zHdrSize  , %zHdrSize  * %zFixit10)     #! RA.2021.09.29.WED: Calculate!
+#SET(%zFldSize  , %zFldSize  * %zFixit10)     #! RA.2021.09.29.WED: Calculate!
+#!
+#! ANY, MEMO, BLOB, GROUP, BYTE, BOOL, BFLOAT4, BFLOAT8,
+#! DATE, TIME, SHORT, USHORT, LONG, ULONG, SIGNED, UNSIGNED, 
+#! REAL, SREAL, DECIMAL, PDECIMAL, STRING, PSTRING, ASTRING,
+#! BSTRING, CSTRING, USTRING, WORD, DWORD, BOOLEAN. 
+#CASE(%pFieldType)
+#OF  ('STRING') 
+#OROF('ASTRING')
+#OROF('BSTRING')
+#OROF('CSTRING')
+#OROF('PSTRING')
+#OROF('USTRING')
+#OROF('MEMO')
+#OROF('BLOB')
+  #!
+  #CASE(%zAdjusts)
+  #OF  (1)
+    #SET(%zDspSize,   INT( 1.5 * %zFixit10 * %zAdjusts))
+  #OF  (2)
+    #SET(%zDspSize,   INT( 1.2 * %zFixit10 * %zAdjusts))
+  #OF  (3)
+    #SET(%zDspSize,   INT( 1.1 * %zFixit10 * %zAdjusts))
+  #ELSE
+    #SET(%zDspSize,   INT( 1.0 * %zFixit10 * %zAdjusts))
+  #ENDCASE
+  #!
+  #IF(%zAdjusts > 20)
+    #SET(%zDspSize,   INT(20.0 * %zFixit10))
+  #ENDIF
+  #!
+#OF  ('DATE')
+#OROF('TIME')
+  #SET(%zDspSize,     INT( 7.0 * %zFixit10))
+#OF  ('SHORT')  
+#OROF('USHORT')  
+#OROF('WORD')  
+  #!
+  #IF(%zLength = %pHeaderLength)
+    #SET(%zAdjusts, %zLength)
+  #ENDIF
+  #CASE(%zAdjusts)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 1.5 * %zFixit10 * %zAdjusts))
+  #ELSE
+    #SET(%zDspSize,   INT( 0.7 * %zFixit10 * %zAdjusts))
+  #ENDCASE
+  #!
+#OF  ('LONG')  
+#OROF('ULONG')  
+#OROF('DWORD')  
+  #!
+  #IF(%zLength = %pHeaderLength)
+    #SET(%zAdjusts, %zLength)
+  #ENDIF
+  #CASE(%zAdjusts)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 1.5 * %zFixit10 * %zAdjusts))
+  #ELSE
+    #SET(%zDspSize,   INT( 0.7 * %zFixit10 * %zAdjusts))
+  #ENDCASE
+  #!
+#OF  ('REAL')  
+#OROF('SREAL')  
+#OROF('DECIMAL')  
+#OROF('PDECIMAL')  
+#OROF('BFLOAT4')  
+#OROF('BFLOAT8')  
+  #!
+  #SET(%zAdjusts, %zLength + %zDigits)
+  #CASE(%zAdjusts)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 1.5 * %zFixit10 * %zAdjusts))
+  #ELSE
+    #SET(%zDspSize,   INT( 0.7 * %zFixit10 * %zAdjusts))
+  #ENDCASE
+  #!
+#OF  ('BYTE')  
+#OROF('BOOL')  
+#OROF('BOOLEAN')  
+  #!
+  #IF(%zLength = %pHeaderLength)
+    #SET(%zAdjusts, %zLength)
+  #ENDIF
+  #CASE(%zAdjusts)
+  #OF  (1)
+  #OROF(2)
+  #OROF(3)
+    #SET(%zDspSize,   INT( 1.5 * %zFixit10 * %zAdjusts))
+  #ELSE
+    #SET(%zDspSize,   INT( 1.0 * %zFixit10 * %zAdjusts))
+  #ENDCASE
+  #!
+#ENDCASE
+#!
+#IF(INSTRING('GUID',UPPER(%pFieldID),1,1) > 0)
+  #SET(%zDspSize,     INT(14.0 * %zFixit10))
+#ENDIF
+#!
+#! -------
+#! --222--  %@N03@(%zDspSize)-%@N03@(%zResSize)-%@N03@(%zSortSize)-%@N03@(%zHdrSize)-%@N03@(%zFldSize)=( %@N03@(%pFieldFormatWidth) , %@N03@(%pFieldMemoSize) , %@S10@(%pFieldType) , %@N03@(%pHeaderLength) , %@S20@(%pFieldPicture) , %@N04@(%zLength) , %@N02@(%zDigits) , %@S40@(%pFieldID) , %@S20@(%pFieldHeader) )
+#SET(%zResSizeHdr , %zHdrSize + %zSortSize)
+#SET(%zResSizeFld , %zFldSize + %zSortSize)
+#! --222--A %@N03@(%zDspSize)-%@N03@(%zResSize)-%@N03@(%zSortSize)-%@N04@(%zResSizeHdr)-%@N04@(%zHdrSize)-%@N04@(%zResSizeFld)-%@N04@(%zFldSize)
+#!+++ RA.2021.10.07.THU: Adjust the header to accomodate for the sort literal. (^,v)
+#!+++ Add sort size to the current display size. We have calculated a correct size for the field vs header.
+#SET(%zResCase    , 'A')
+#!SET(%zResSize   , %zDspSize + %zSortSize)         
+#! --222--B %@N03@(%zDspSize)-%@N03@(%zResSize)-%@N03@(%zSortSize)-%@N04@(%zResSizeHdr)-%@N04@(%zHdrSize)-%@N04@(%zResSizeFld)-%@N04@(%zFldSize)
+#IF(%zResSizeHdr  <= %zFldSize)
+  #SET(%zResCase  , 'B')       
+#ENDIF
+#IF(%zResSize     <= %zResSizeHdr)
+  #SET(%zResCase  , 'A')       
+#ENDIF
+#!
+#CASE(%zResCase)
+#OF('A')
+  #SET(%zResSize  , %zDspSize + %zSortSize)
+#OF('B')
+  #SET(%zResSize  , %zFldSize)  
+#ENDCASE
+#! --222--C %@N03@(%zDspSize)-%@N03@(%zResSize)-%@N03@(%zSortSize)-%@N04@(%zResSizeHdr)-%@N04@(%zHdrSize)-%@N04@(%zResSizeFld)-%@N04@(%zFldSize)
+#SET(%zDspSize    , %zResSize)
+#! --222--  %@N03@(%zDspSize)-%@N03@(%zResSize)-%@N03@(%zSortSize)-%@N03@(%zHdrSize)-%@N03@(%zFldSize)=( %@N03@(%pFieldFormatWidth) , %@N03@(%pFieldMemoSize) , %@S10@(%pFieldType) , %@N03@(%pHeaderLength) , %@S20@(%pFieldPicture) , %@N04@(%zLength) , %@N02@(%zDigits) , %@S40@(%pFieldID) , %@S20@(%pFieldHeader) )
+#! -------
+#SET(%pDspSize    , %zDspSize )
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! RA.2020.05.22.FRI: Implemented. See the commented items below.
+#! RA.2020.05.21.THU: This needs generalization by passing parameters.
+#! 
+#!SET(%NextLine, '?' & %FilePrefix & '_ListQ')               #! pScreenID
+#!SET(%WorkLine, %FilePrefix & '_oListClass')                #! pObjectID 
+#!SET(%MoreLine, 'ListQ')                                    #! pQueueID
+#!CALL(%UtzScreenListForClarion,%NextLine,%WorkLine,%MoreLine)
+#!
+#GROUP(%UtzScreenListForClarion,%pScreenID,%pObjectID,%pQueueuID)
+#SET(%IndexFields,0)
+#SET(%CountFields,1)
+#FOR(%d2c2aTabsFields)
+  #FIX(%Field, %d2c2aFld)
+  #CASE(%FieldType)
+  #OF  ('GROUP')
+  #OROF('END')
+    #CYCLE
+  #ENDCASE
+  #INSERT(%UseQualifiedFieldsD2C)
+  #IF(SUB(%NFieldOpt1,1,1)='N')                                                   #! Ignore this field
+    #CYCLE
+  #ENDIF
+  #SET(%IndexFields,%IndexFields+1)
+  #SET(%BuildPart1, '')
+  #IF(%IndexFields=1)
+!-------------------------------------------------------------------------------------------------!
+! This LIST structure is created to replace the one generated by the ABC templates.               !
+! Save your generated window structure first, then cut and paste replacing your LIST structure.   !
+!-------------------------------------------------------------------------------------------------!
+#! ! LIST,AT(4,40,400,40),USE(?%FilePrefix_oList),HVSCROLL, |
+! LIST,AT(4,40,400,40),USE(%pScreenID),HVSCROLL, |
+    #SET(%BuildPart1, 'FORMAT(')
+  #ENDIF
+  #! RA.2020.05.21.THU: The fields in the GROUP get build in record order. They get a diffennt display order.
+  #! Make sure the sequence number #???# points to the correct field. You grab the '%d2c2aSeq' to set it up.
+  #!SET(%NextWork, 0)
+  #!SET(%NextWork, %d2c2aCalc1)
+  #!CALL(%UtzCalcDspSize, %NextWork, %FieldFormatWidth, %FieldMemoSize, %FieldType, LEN(%FieldHeader), %FieldDisplayPicture, %Field, %FieldHeader) 
+  #!SET(%BuildPart2, %d2c2aCalc1 & %FieldJustType & '(' & %FieldJustIndent & ')|MY~' & %FieldHeader & '~' & %FieldPicture & '@#' & %d2c2aSeq & '#')
+  #! RA.2021.11.26.FRI: Removed the 'Y' no style LONG for this generation.    
+  #SET(%BuildPart2, %d2c2aCalc1 & %FieldJustType & '(' & %FieldJustIndent & ')|M~' & %FieldHeader & '~' & %FieldPicture & '@#' & %d2c2aSeq & '#')   
+  #!SET(%BuildPart2, %FieldFormatWidth & %FieldJustType & '(' & %FieldJustIndent & ')|MY~' & %FieldHeader & '~' & %FieldPicture & '@#' & %CountFields & '#')   
+  #SET(%BuildPart1, %BuildPart1 & '''' & %BuildPart2 & '''')
+  #IF(%IndexFields=ITEMS(%Field))
+    #!SET(%NextWork, %FilePrefix & '_oListClass.ListQ')
+    #!SET(%NextWork, %pObjectID & '.' & %pQueueuID)
+    #IF(%pObjectID)
+      #SET(%NextWork, %pObjectID & '.' & %pQueueuID)
+    #ELSE 
+      #SET(%NextWork,                    %pQueueuID)
+    #ENDIF
+    #! RA.2020.05.31.SUN: Remove IMM flag from LIST box. 
+    #!SET(%BuildPart1, %BuildPart1 & '),FROM(' & %NextWork & '),IMM, |')
+    #SET(%BuildPart1, %BuildPart1 & '), |')
+!   %BuildPart1
+    #SET(%BuildPart1, 'FROM(' & %NextWork & '), |')
+  #ELSE
+    #SET(%BuildPart1, %BuildPart1 & ' & |')
+  #ENDIF
+!   %BuildPart1
+  #SET(%CountFields,%CountFields+2) 
+#ENDFOR
+#!
+#SET(%IndexFields,0)
+#SET(%CountFields,1)
+#FOR(%d2c2aTabsFields)
+  #FIX(%Field, %d2c2aFld)
+  #CASE(%FieldType)
+  #OF  ('GROUP')
+  #OROF('END')
+    #CYCLE
+  #ENDCASE
+  #INSERT(%UseQualifiedFieldsD2C)
+  #IF(SUB(%NFieldOpt1,1,1)='N')                                                   #! Ignore this field
+    #CYCLE
+  #ENDIF
+  #SET(%IndexFields,%IndexFields+1)
+  #SET(%BuildPart1, '')
+  #IF(%IndexFields=1)
+    #SET(%BuildPart1, '#FIELDS(')
+  #ENDIF
+  #IF(%pObjectID)
+    #SET(%NextWork, %pObjectID & '.' & %pQueueuID)
+  #ELSE 
+    #SET(%NextWork,                    %pQueueuID)
+  #ENDIF
+  #SET(%BuildPart1, %BuildPart1 & %NextWork & '.' & %FieldID)
+  #IF(%IndexFields=ITEMS(%Field))
+    #SET(%BuildPart1, %BuildPart1 & ')')
+  #ELSE
+    #SET(%BuildPart1, %BuildPart1 & ', |')
+  #ENDIF
+!   %BuildPart1
+  #SET(%CountFields,%CountFields+2) 
+#ENDFOR
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! RA.2020.07.19.SUN: #GROUP(%UtzGetFieldType,*%ThisType,%pType,%pMemo,%pPlaces)
+#GROUP(%UtzGetFieldType,*%ThisType,%pType,%pMemo,%pPlaces)
+#CASE(%pType)
+#OF  ('DECIMAL')
+#OROF('PDECIMAL')
+  #SET(%ThisType , %pType & '(' & %pMemo & ',' & %pPlaces & ')')
+#OF  ('STRING')
+#OROF('MEMO')
+#OROF('BLOB')
+#OROF('PSTRING')
+#OROF('USTRING')
+  #SET(%ThisType , %pType & '(' & %pMemo & ')')
+#OF  ('CSTRING')
+  #SET(%ThisType , %pType & '(' & %pMemo-1 & ')')
+#ELSE
+  #SET(%ThisType , %pType)
+#ENDCASE
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%UseQualifiedFieldsD2C)
+#CASE(%FieldType)
+#OF  ('GROUP')
+#OROF('END')
+  #CYCLE
+#ENDCASE
+#INSERT(%OptionsGetFieldD2C)                                                    #! RYBCLASSGEN(,,,) for Fields
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%OptionsGetFieldD2C)                                                     #! RYBCLASSGEN(,,,) for Fields
+#SET(%nLoc1,INSTRING('RYBCLASSGEN(',%FieldUserOptions,1,1))
+#SET(%nLoc2,INSTRING(')',%FieldUserOptions,1,%nLoc1))
+#SET(%NFieldUser,UPPER(SUB(%FieldUserOptions,%nLoc1,%nLoc2)))
+#!SET(%NFieldUser,UPPER(EXTRACT(%FieldUserOptions,'RYBCLASSGEN')))
+#SET(%NFieldOpt1,EXTRACT(%NFieldUser,'RYBCLASSGEN',1))
+#SET(%NFieldOpt2,EXTRACT(%NFieldUser,'RYBCLASSGEN',2))
+#SET(%NFieldOpt3,EXTRACT(%NFieldUser,'RYBCLASSGEN',3))
+#SET(%NFieldOpt4,EXTRACT(%NFieldUser,'RYBCLASSGEN',4))
+#! %%OptionsGetField: "%NFieldUser", "%NFieldOpt1", "%NFieldOpt2", "%NFieldOpt3", "%NFieldOpt4"
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
