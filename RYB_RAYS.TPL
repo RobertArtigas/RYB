@@ -69,6 +69,8 @@
 #EQUATE(%tplReleaseTPLINSTANCE              , '2021.05.06' )
 #EQUATE(%tplVersionGRPFLD                   , '1.00' )
 #EQUATE(%tplReleaseGRPFLD                   , '2021.11.18' )
+#EQUATE(%tplVersionLISTBOX                  , '1.00' )
+#EQUATE(%tplReleaseLISTBOX                  , '2021.11.26' )
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
@@ -260,6 +262,7 @@
 #INCLUDE('RYB_CTABLES.TPW')                 #! RA.2021.03.14: Equates for system wide tables
 #INCLUDE('RYB_TEMPLATEINSTANCES.TPW')       #! EL.2021.05.06: Show template instances
 #INCLUDE('RYB_GROUPSFIELDS.TPW')            #! RA.2021.11.20: Groups with name attributes
+#INCLUDE('RYB_CREATELISTBOX.TPW')           #! RA.2021.11.26: Create List Box for Clarion
 #!
 #!INCLUDE('RYB_TESTING.TPW')                 #! RA.2019.04.21: TESTING STRAP - TEMPORARY
 #!-----------------------------------------------------------------------------------------------------
