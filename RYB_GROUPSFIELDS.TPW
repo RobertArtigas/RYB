@@ -10,6 +10,8 @@
 #! Author:      Copyright © 1999-2999 by Roberto Artigas y Soler
 #!              All rights reserved world wide.
 #! Changes:
+#! 2021.11.26.FRI:  Roberto Artigas y Soler
+#!    *   Changed 'group_' to 'grpfld_' for default prefix.
 #! 2021.11.21.SUN:  Roberto Artigas y Soler
 #!    *   Added field position and field description as comments.
 #!        Added documentation to https://github.com/RobertArtigas/RYB/wiki/Generate-Groups-and-Fields
@@ -29,11 +31,11 @@
   #ENDTAB
   #TAB ('Dictionary Print Wizard - Reported Files'), FINISH(1)
     #DISPLAY ('You can report on each file in your dictionary, or you can select individual files to report on.'), AT(90, 8, 235, 24)
-    #PROMPT ('Report on all files in my dictionary.', CHECK), %DictionaryReportUseAllFiles, DEFAULT(1), AT(90,, 180)
+    #PROMPT ('Report on all files in my dictionary.', CHECK), %ReportUseAllFilesGRPFLD, DEFAULT(1), AT(90,, 180)
   #ENDTAB
-  #TAB ('Dictionary Print Wizard - Select Reported Files'), WHERE(~%DictionaryReportUseAllFiles), FINISH(1)
-    #!PROMPT ('File Selection', FROM (%File)), %DictionaryReportFileSelection, INLINE, SELECTION('File Selection'), AT(90, 8, 235)
-    #PROMPT ('File Selection', FROM(%SelectFromFiles)), %DictionaryReportFileSelection, INLINE, SELECTION('File Selection'), AT(90, 8, 235)
+  #TAB ('Dictionary Print Wizard - Select Reported Files'), WHERE(~%ReportUseAllFilesGRPFLD), FINISH(1)
+    #!PROMPT ('File Selection', FROM (%File)), %ReportFileSelectionGRPFLD, INLINE, SELECTION('File Selection'), AT(90, 8, 235)
+    #PROMPT ('File Selection', FROM(%SelectFromFilesGRPFLD)), %ReportFileSelectionGRPFLD, INLINE, SELECTION('File Selection'), AT(90, 8, 235)
   #ENDTAB
   #TAB ('Dictionary Print Wizard - Finally...')
     #DISPLAY ('This concludes the dictionary Group Generate wizard.'), AT(90, 8, 235, 24)
@@ -59,28 +61,28 @@
 #DECLARE(%CountEquate)
 #!
 #COMMENT(180)
-#DECLARE (%ReportedFiles),MULTI,UNIQUE
+#DECLARE (%ReportedFilesGRPFLD),MULTI,UNIQUE
 #DECLARE (%Groups),MULTI
 #DECLARE (%ValueConstruct)
 #DECLARE (%TheKeyId)
 #DECLARE (%TheKeyNo,LONG)
 #!
-#IF (%DictionaryReportUseAllFiles)
+#IF (%ReportUseAllFilesGRPFLD)
   #! #FOR (%File)
-  #!   #ADD (%ReportedFiles, %File)
+  #!   #ADD (%ReportedFilesGRPFLD, %File)
   #! #ENDFOR
-  #FOR (%SelectFromFiles)
-    #ADD (%ReportedFiles, %SelectFromFiles)
+  #FOR (%SelectFromFilesGRPFLD)
+    #ADD (%ReportedFilesGRPFLD, %SelectFromFilesGRPFLD)
   #ENDFOR
 #ELSE
-  #FOR (%DictionaryReportFileSelection)
-    #ADD (%ReportedFiles, %DictionaryReportFileSelection)
+  #FOR (%ReportFileSelectionGRPFLD)
+    #ADD (%ReportedFilesGRPFLD, %ReportFileSelectionGRPFLD)
   #ENDFOR
 #ENDIF
 #!
 #DECLARE (%OutputFile)
-#FOR (%ReportedFiles)
-  #FIX (%File, %ReportedFiles)
+#FOR (%ReportedFilesGRPFLD)
+  #FIX (%File, %ReportedFilesGRPFLD)
   #SET (%OutputFile, %FILE & '.inc')
   #MESSAGE('File Group Definition: ' & %OutputFile, 2)
   #CREATE (%OutputFile)
@@ -93,7 +95,7 @@
 #!---------------------------------------------------------------------
 #GROUP(%PrepareFilesGRPFLD)
 #PREPARE
-#DECLARE(%SelectFromFiles),MULTI,UNIQUE
+#DECLARE(%SelectFromFilesGRPFLD),MULTI,UNIQUE
 #FOR (%File)
   #!----------------------------------!
   #! Ignore certain file DRIVER types !
@@ -155,7 +157,7 @@
     #CYCLE
   #ENDIF
   #!
-  #ADD (%SelectFromFiles, %File)
+  #ADD (%SelectFromFilesGRPFLD, %File)
 #ENDFOR
 #ENDPREPARE
 #GROUP(%PrepareFilesEndGRPFLD)
@@ -216,11 +218,11 @@
 #TAB('Selection')  #!,PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
   #BOXED(''),AT(,,454),PROP(PROP:FontStyle,700)
     #!DISPLAY(''),AT(,,,1)
-    #!PROMPT ('Generate all files in my dictionary. (Cannot change this option)', CHECK), %DictionaryReportUseAllFiles, DEFAULT(0), AT(10) #!, PROP(PROP:READONLY,1), PROP(PROP:FontStyle,700), PROP(PROP:FontColor,0C79A3H)
-    #PROMPT ('Generate all files in my dictionary.', CHECK), %DictionaryReportUseAllFiles, DEFAULT(0), AT(10)
+    #!PROMPT ('Generate all files in my dictionary. (Cannot change this option)', CHECK), %ReportUseAllFilesGRPFLD, DEFAULT(0), AT(10) #!, PROP(PROP:READONLY,1), PROP(PROP:FontStyle,700), PROP(PROP:FontColor,0C79A3H)
+    #PROMPT ('Generate all files in my dictionary.', CHECK), %ReportUseAllFilesGRPFLD, DEFAULT(0), AT(10)
     #DISPLAY(''),AT(,,,1)
-    #ENABLE(~%DictionaryReportUseAllFiles)
-      #PROMPT ('File Selection', FROM(%SelectFromFiles)), %DictionaryReportFileSelection, INLINE, SELECTION('File Selection'), AT(,,,198)
+    #ENABLE(~%ReportUseAllFilesGRPFLD)
+      #PROMPT ('File Selection', FROM(%SelectFromFilesGRPFLD)), %ReportFileSelectionGRPFLD, INLINE, SELECTION('File Selection'), AT(,,,198)
     #ENDENABLE
   #ENDBOXED
 #ENDTAB
@@ -396,6 +398,8 @@
 #! Created By:          Roberto Artigas y Soler
 #! Author:              2021.11.20 - Roberto Artigas y Soler
 #! Changes:
+#! 2021.11.26.FRI:  Roberto Artigas y Soler
+#!    *   Changed 'group_' to 'grpfld_' for default prefix.
 #! 2021.11.21.SUN:  Roberto Artigas y Soler
 #!    *   Added field position and field description as comments.
 #!        Added documentation to https://github.com/RobertArtigas/RYB/wiki/Generate-Groups-and-Fields
@@ -418,13 +422,13 @@
     #DISPLAY(''),AT(,,,1)
     #DISPLAY(%ExplainGRPFLD02),AT(,,436,10),PROP(PROP:FontStyle,700) 
     #BOXED(''),AT(,,446)
-      #PROMPT('Directory: ',@S120)  ,%IncludeDirectory  , REQ, DEFAULT('.\classes\')        ,AT(70,,376)
-      #PROMPT('Prefix: ',@S120)     ,%SourcePrefix      , REQ, DEFAULT('group_')            ,AT(70,,376)
+      #PROMPT('Directory: ',@S120)  ,%IncludeDirectoryGRPFLD  , REQ, DEFAULT('.\classes\')        ,AT(70,,376)
+      #PROMPT('Prefix: ',@S120)     ,%SourcePrefixGRPFLD      , REQ, DEFAULT('grpfld_')           ,AT(70,,376)
       #!PROMPT('Include: '  ,@S120),%IncludeFilename , REQ, DEFAULT('_' & %ProgramExtension & '_' & UPPER(SLICE(%Program, 1, INSTRING('.', %Program, 1, 1)-1)) & '.GRP') ,AT(70,,376)
       #PREPARE
-      #SET(%IncludeLocation,%IncludeDirectory & '') #!%IncludeFilename )
+      #SET(%IncludeLocationGRPFLD,%IncludeDirectoryGRPFLD & '') #!%IncludeFilename )
       #ENDPREPARE
-      #PROMPT('Location: ' ,@S120),%IncludeLocation , REQ, DEFAULT(%IncludeLocation),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,376)
+      #PROMPT('Location: ' ,@S120),%IncludeLocationGRPFLD , REQ, DEFAULT(%IncludeLocationGRPFLD),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,376)
     #ENDBOXED
     #DISPLAY(''),AT(,,,1)
     #DISPLAY(%ExplainGRPFLD01),AT(,,436,154)
@@ -454,7 +458,7 @@
 #DECLARE(%LineText)
 #DECLARE(%CountEquate)
 #!
-#DECLARE (%ReportedFiles),MULTI,UNIQUE
+#DECLARE (%ReportedFilesGRPFLD),MULTI,UNIQUE
 #DECLARE (%Groups),MULTI
 #DECLARE (%ValueConstruct)
 #DECLARE (%TheKeyId)
@@ -469,23 +473,23 @@
 #SET(%zFldFrom, 0)
 #SET(%zFldTo  , 0)
 #!
-#IF (%DictionaryReportUseAllFiles)
-  #FOR (%SelectFromFiles)
-    #ADD (%ReportedFiles, %SelectFromFiles)
+#IF (%ReportUseAllFilesGRPFLD)
+  #FOR (%SelectFromFilesGRPFLD)
+    #ADD (%ReportedFilesGRPFLD, %SelectFromFilesGRPFLD)
   #ENDFOR
 #ELSE
-  #FOR (%DictionaryReportFileSelection)
-    #ADD (%ReportedFiles, %DictionaryReportFileSelection)
+  #FOR (%ReportFileSelectionGRPFLD)
+    #ADD (%ReportedFilesGRPFLD, %ReportFileSelectionGRPFLD)
   #ENDFOR
 #ENDIF
 #!
 #COMMENT(180)
 #!
 #DECLARE (%OutputFile)
-#FOR (%ReportedFiles)
-  #FIX (%File, %ReportedFiles)
-  #!SET (%OutputFile, %IncludeDirectory & %FILE & '.inc')
-  #SET (%OutputFile, %IncludeDirectory & %SourcePrefix & %FILE & '.inc')
+#FOR (%ReportedFilesGRPFLD)
+  #FIX (%File, %ReportedFilesGRPFLD)
+  #!SET (%OutputFile, %IncludeDirectoryGRPFLD & %FILE & '.inc')
+  #SET (%OutputFile, %IncludeDirectoryGRPFLD & %SourcePrefixGRPFLD & %FILE & '.inc')
   #MESSAGE('File Group Definition: ' & %OutputFile, 2)
   #!ERROR('File Group Definition: ' & %OutputFile)
   #CREATE (%OutputFile)
