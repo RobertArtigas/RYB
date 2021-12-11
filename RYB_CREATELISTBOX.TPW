@@ -1127,7 +1127,9 @@
 !-------------------------------------------------------------------------------------------------!
 #! ! LIST,AT(4,40,400,40),USE(?%FilePrefix_oList),HVSCROLL, |
 ! LIST,AT(4,40,400,40),USE(%pScreenID),HVSCROLL, |
-    #SET(%BuildPart1, 'FORMAT(')
+    #SET(%BuildPart1, 'FORMAT('''' & |')
+!   %BuildPart1
+    #SET(%BuildPart1, '')
   #ENDIF
   #! RA.2020.05.21.THU: The fields in the GROUP get build in record order. They get a diffennt display order.
   #! Make sure the sequence number #???# points to the correct field. You grab the '%d2c2aSeq' to set it up.
@@ -1149,6 +1151,9 @@
     #ENDIF
     #! RA.2020.05.31.SUN: Remove IMM flag from LIST box. 
     #!SET(%BuildPart1, %BuildPart1 & '),FROM(' & %NextWork & '),IMM, |')
+    #SET(%BuildPart1, %BuildPart1 & ' & |')
+!   %BuildPart1
+    #SET(%BuildPart1, '''''')
     #SET(%BuildPart1, %BuildPart1 & '), |')
 !   %BuildPart1
     #SET(%BuildPart1, 'FROM(' & %NextWork & '), |')
