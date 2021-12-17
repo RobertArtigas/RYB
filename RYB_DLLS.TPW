@@ -73,10 +73,12 @@
 #!---------------------------------------------------------------------
 #!---------------------------------------------------------------------
 #!---------------------------------------------------------------------
-#EXTENSION(RYB_PrototypeExplorer,'RA.2018.12.27: Prototype Explorer (DLL/EXE)'),Description('RYB | Prototype Explorer (DLL/EXE). Version: ' & %tplVersionPROTOEXP & ', Release: ' & %tplReleasePROTOEXP),APPLICATION
+#EXTENSION(RYB_PrototypeExplorer,'RA.2021.12.17: Prototype Explorer (DLL/EXE)'),Description('RYB | Prototype Explorer (DLL/EXE). Version: ' & %tplVersionPROTOEXP & ', Release: ' & %tplReleasePROTOEXP),APPLICATION
 #!-----------------------------------------------------------------------------
 #INSERT(%PreambleRYB)
 #!-----------------------------------------------------------------------------
+#! RA.2021.12.17.FRI    Roberto Artigas y Soler
+#!  *   Separated the beginning and ending generation dates
 #! RA.2019.12.26.THU    Roberto Artigas Jr.
 #!  * Added the blank if zero to the procedure comments date/time. [External]
 #!    #SET(%TheProcedureDate,FORMAT(%ProcedureDateChanged,@D010B))
@@ -289,8 +291,9 @@
 #!---------------------------------------------------------------------
 #!---------------------------------------------------------------------
 #!---------------------------------------------------------------------
-#! RA.2019.10.17: generating a date and a time in RYB_DLLS.TPW
-#AT(%DllExportList),Where(%ProgramExtension = 'DLL') 
+#! RA.2021.12.17: Separated the beginning and ending generation dates
+#! RA.2019.10.17: Generating a date and a time in RYB_DLLS.TPW
+#AT(%DllExportList),Where(%ProgramExtension = 'DLL'),PRIORITY(0001) 
 #IF(NOT VAREXISTS(%TheDate))
   #DECLARE(%TheDate)
 #ENDIF
@@ -299,10 +302,25 @@
 #ENDIF
 #SET(%TheDate ,FORMAT(TODAY(),@D010))                       #! Set current date
 #SET(%TheTime ,FORMAT(CLOCK(),@T06))                        #! Set current time
-
-;BEGIN: Exporting from RYB_DLLS: %TheDate - %TheTime
-;ENDED: Exporting from RYB_DLLS: %TheDate - %TheTime
-
+;BEGIN: %TheDate - %TheTime [0001][%ProgramExtension][%Application][%DictionaryFile] : Exporting from RYB_DLLS 
+#!;ENDED: %TheDate - %TheTime [9999][%ProgramExtension][%Application][%DictionaryFile] : Exporting from RYB_DLLS 
+#ENDAT  
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#! RA.2021.12.17: Separated the beginning and ending generation dates
+#! RA.2019.10.17: Generating a date and a time in RYB_DLLS.TPW
+#AT(%DllExportList),Where(%ProgramExtension = 'DLL'),PRIORITY(9999) 
+#IF(NOT VAREXISTS(%TheDate))
+  #DECLARE(%TheDate)
+#ENDIF
+#IF(NOT VAREXISTS(%TheTime))
+  #DECLARE(%TheTime)
+#ENDIF
+#SET(%TheDate ,FORMAT(TODAY(),@D010))                       #! Set current date
+#SET(%TheTime ,FORMAT(CLOCK(),@T06))                        #! Set current time
+#!;BEGIN: %TheDate - %TheTime [0001][%ProgramExtension][%Application][%DictionaryFile] : Exporting from RYB_DLLS
+;ENDED: %TheDate - %TheTime [9999][%ProgramExtension][%Application][%DictionaryFile] : Exporting from RYB_DLLS
 #ENDAT  
 #!---------------------------------------------------------------------
 #!---------------------------------------------------------------------

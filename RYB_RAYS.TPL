@@ -29,8 +29,8 @@
 #EQUATE(%rybVerRsrvAll  ,'Collection created by Roberto Artigas y Soler.'    )
 #EQUATE(%rybVerEmail    ,'E-MAIL: roberto.artigas.dev@gmail.com'             )
 #!-----------------------------------------------------------------------------------------------------
-#EQUATE(%tplVersionPROTOEXP                 , '1.00' )
-#EQUATE(%tplReleasePROTOEXP                 , '2001.02.12' )
+#EQUATE(%tplVersionPROTOEXP                 , '1.01' )                        #! Prototype Explorer
+#EQUATE(%tplReleasePROTOEXP                 , '2021.12.17' )
 #EQUATE(%tplVersionICONS                    , '1.00' )
 #EQUATE(%tplReleaseICONS                    , '2010.11.09' )
 #EQUATE(%tplVersionWINPIECES                , '1.01' )
