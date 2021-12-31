@@ -1,5 +1,6 @@
 *.sublime-workspace
 _archive_
+_build_
 
 .gitignore
 .gitattributes

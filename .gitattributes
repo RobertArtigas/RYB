@@ -42,8 +42,6 @@
 *.[Dd][Cc][Tt] binary 
 
 
-
-
 # Declare help as documentation folder
 help/* linguist-documentation
 
