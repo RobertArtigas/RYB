@@ -1,0 +1,561 @@
+#! --------------------------------------------------------------!
+#! See Cape01.Tpw for instructions                               !
+#! This code is responsible for generating the class declaration !
+#! and also all the potential method embed points.               !
+#! (c) 2003-2020 by CapeSoft Software                            !
+#! All Rights Reserved                                           !
+#! Version 4.25
+#! CapeSoft Source Location : q:\ObjectTemplate                  !
+#!========================================= start of declaring classes section =========================
+#Group(%GlobalDeclareClassesPR)
+    #Button('Refresh Classes'),WhenAccepted(%RefreshClasses()),at(,,170)
+    #EndButton
+    #Button('Classes'),Multi(%dClasses8Bx,%dClasses8B & '(' & %dBaseClass & ') From ' & %dClassINCFile),at(,,170)
+      #Prompt('Class:',@s255),%dClasses8B
+      #Prompt('Base Class:',@s255),%dBaseClass
+      #Prompt('INC File:',@s255),%dClassINCFile
+      #Display('Methods')
+      #Button('Methods'),Multi(%dMethods8Cx,'[' &%dMethods8Cx & '] ' & %dMethods8C),Inline,prop(PROP:FontName,'Courier New')
+        #Prompt('Method',@s255),%dMethods8C
+      #EndButton
+      #Display('Implements')
+      #Button('Implements'),Multi(%dImplements8Cx,'[' &%dImplements8Cx & '] ' & %dImplements8C),Inline,prop(PROP:FontName,'Courier New')
+        #Prompt('Implements',@s255),%dImplements8C
+      #EndButton
+    #EndButton
+    #Button('Interfaces'),Multi(%dInterfaces8Bx,%dInterfaces8B & ' From ' & %dInterfaceINCFile),at(,,170)
+      #Prompt('Interface:',@s255),%dInterfaces8B
+      #Prompt('INC File:',@s255),%dInterfaceINCFile
+      #Display('Methods')
+      #Button('Methods'),Multi(%dMethods8Dx,'[' &%dMethods8Dx & '] ' & %dMethods8D),Inline,prop(PROP:FontName,'Courier New')
+        #Prompt('Method',@s255),%dMethods8D
+      #EndButton
+    #EndButton
+    #Display('Additional INC Files')
+    #Button('Additional INC Files'),Multi(%dAdditionalINCFiles,%dAdditionalINCFile),Inline,at(,,,40)
+      #prompt('Additional INC files',@S255),%dAdditionalINCFile
+    #EndButton
+    #display()
+    #prompt('Class Version',EXPR),%dClassVersion
+#!========================================= end of declaring classes section =========================
+#!========================================= start of reading classes section =========================
+#Group(%EndGlobal)
+  #IF(%cwversion < 7000)
+    #FREE(%dClasses8Bx)
+  #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%RefreshClasses)
+  #INSERT(%FreeClassesPR,'')
+  #INSERT(%ReadGlobal,4,1)
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%FreeClassesPR,%pIncFile),Auto
+  #Declare(%x)
+  #IF(%pIncFile)
+    #LOOP,FOR(%x,ITEMS(%dClasses8Bx),1),BY(-1)
+      #SELECT(%dClasses8Bx,%x)
+      #IF(upper(%dClassINCFile)=upper(%pIncFile) or %dClassINCFile='')
+        #FREE(%dMethods8Cx)
+        #DELETE(%dClasses8Bx)
+      #ENDIF
+    #ENDLOOP
+  #ELSE
+    #FREE(%dClasses8Bx)
+  #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#! reads the include files, into the class and method lists.
+#Group(%ReadClassesPR,%pIncFile,%pFrom,long %pForceRead=0)
+  #IF(not VarExists(%dClassVersion))
+    #RETURN
+  #ENDIF
+  #IF(%pForceRead=1 or %dClassVersion <> today())
+    #Insert(%FreeClassesPR,%pIncFile)
+  #ENDIF
+  #SET(%pIncFile,lower(%pIncFile))
+  #Insert(%ReadIncludeFilePR,%pIncFile)
+  #SET(%dClassVersion,today())
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%ReadAdditionalIncFiles,%pFrom,long %pForceRead=0)
+  #FOR(%dAdditionalINCFiles)
+    #insert(%ReadClassesPR,%dAdditionalINCFile,%pFrom,%pForceRead)
+  #ENDFOR
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%IncludeAdditionalIncFiles)
+  #FOR(%dAdditionalINCFiles)
+  Include('%dAdditionalINCFile')
+  #ENDFOR
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%ExportAdditionalIncFiles)
+  #FOR(%dAdditionalINCFiles)
+#insert(%ExportClassesPR,%dAdditionalINCFile)
+  #ENDFOR
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%ReadIncludeFilePR,%pIncFile)
+  #IF(varexists(%dClasses8Bx)=0)
+    #RETURN
+  #ENDIF
+  #FIND(%dClassINCFile,upper(%pIncFile))
+  #IF(%dClassINCFile)
+    #RETURN
+  #ENDIF
+  #IF(VarExists(%InClass)=0)
+    #Declare(%InClass)
+  #ENDIF
+  #IF(VarExists(%InInterface)=0)
+    #Declare(%InInterface)
+  #ENDIF
+  #IF(VarExists(%NextLine)=0)
+    #Declare(%NextLine)
+  #ENDIF
+  #IF (FileExists(%pIncFile))
+    #OPEN(%pIncFile),READ
+    #READ(%NextLine)
+    #LOOP WHILE(%NextLine <> %Eof)
+      #Insert(%RemoveComment,%NextLine)
+      #Insert(%ParseForClassPR,%NextLine,%pIncFile)
+      #IF(%InClass=1)
+        #Insert(%ParseForProcedurePR,%NextLine)
+      #ENDIF
+      #Insert(%ParseForInterfacePR,%NextLine,%pIncFile)
+      #IF(%InInterface=1)
+        #Insert(%ParseForInterfaceProcedurePR,%NextLine)
+      #ENDIF
+      #READ (%NextLine)
+    #END
+    #CLOSE(%pIncFile),READ
+  #ELSE
+    #!ERROR('ReadClass File Not Found ' & %pIncFile)
+  #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%RemoveComment,* %pStr),Auto
+  #Declare(%x)
+  #SET(%x,Instring('!',%pStr,1,1))
+  #IF(%x>0)
+    #SET(%pStr,Sub(%pStr,1,%x-1))
+  #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%ParseForClassPR,%pStr,%pIncFile),Auto
+  #Declare(%x)
+  #Declare(%y)
+  #Declare(%pipe)
+  #Declare(%max)
+  #FOR(%dClasses8Bx)
+    #SET(%max,%dClasses8Bx)
+  #ENDFOR
+  #IF(%max>60000)
+    #SET(%max,1)
+  #ENDIF
+  #SET(%pipe,Instring('|',%pStr,1,1))
+  #SET(%y,Instring(' CLASS',Upper(%pStr),1,1))
+  #IF(%y > 0 and %pipe > 0 and %y > %pipe)  #! cater for the word CLASS in Extended External names
+    #SET(%y,0)
+  #ENDIF
+  #IF( %y > 0)
+    #SET(%InClass,1)  #! not in an Interface anymore
+    #SET(%InInterface,0)  #! not in an Interface anymore
+    #SET(%x,Instring(' ',%pStr,1,1))
+    #IF(%x>0)
+      #FIND(%dClasses8B,upper(sub(%pStr,1,%x-1)))
+      #IF(%dClasses8B='')
+        #ADD(%dClasses8Bx,%Max+1)
+        #SET(%dClasses8B,upper(sub(%pStr,1,%x-1)))
+        #set(%dClassINCFile,upper(%pIncFile))
+        #!error('Added Class : ' & %dClasses8B)
+        #SET(%y,Instring(',',%pStr,1,1))
+        #SET(%x,Instring('(',%pStr,1,1))
+        #IF(%x < %y)
+          #SET(%y,Instring(')',%pStr,1,1))
+          #IF(%x < %y)
+            #SET(%dBaseClass,sub(%pStr,%x+1,%y-%x-1))
+          #ENDIF
+        #ENDIF
+      #ELSE
+        #FREE(%dMethods8Cx)
+      #ENDIF
+      #INSERT(%ParseForImplements,%pStr)
+    #ENDIF
+  #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#GROUP(%ParseForImplements,%pStr),Auto
+  #Declare(%x)
+  #Declare(%y)
+  #Declare(%max)
+  #SET(%y,1)
+  #SET(%y,Instring('IMPLEMENTS',Upper(%pStr),1,%y))
+  #LOOP,WHILE(%y)
+    #SET(%x,INSTRING('(',%pStr,1,%y))
+    #SET(%y,INSTRING(')',%pStr,1,%x))
+    #IF(%x and %y and %x < %y)
+      #ADD(%dImplements8Cx,ITEMS(%dImplements8Cx)+1)
+      #SET(%dImplements8C,Sub(%pStr,%x+1,%y-%x-1))
+    #ELSE
+      #BREAK
+    #ENDIF
+    #SET(%y,Instring('IMPLEMENTS',Upper(%pStr),1,%y))
+  #ENDLOOP
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%ParseForInterfacePR,%pStr,%pIncFile),Auto
+  #Declare(%x)
+  #Declare(%y)
+  #Declare(%max)
+  #FOR(%dInterfaces8Bx)
+    #SET(%max,%dInterfaces8Bx)
+  #ENDFOR
+  #IF(%max>60000)
+    #SET(%max,1)
+  #ENDIF
+  #SET(%y,Instring(' INTERFACE',Upper(%pStr),1,1))
+  #IF( %y > 0)
+    #SET(%InClass,0)  #! not in an Interface anymore
+    #SET(%InInterface,1)  #! not in an Interface anymore
+    #SET(%x,Instring(' ',%pStr,1,1))
+    #IF(%x>0)
+      #FIND(%dInterfaces8B,upper(sub(%pStr,1,%x-1)))
+      #IF(%dInterfaces8B='')
+        #ADD(%dInterfaces8Bx,%Max+1)
+        #SET(%dInterfaces8B,upper(sub(%pStr,1,%x-1)))
+        #set(%dInterfaceINCFile,upper(%pIncFile))
+        #!error('Added Interface : ' & %ddInterfaces8B)
+      #ELSE
+        #FREE(%dMethods8Dx)
+      #ENDIF
+    #ENDIF
+  #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%ParseForProcedurePR,%pStr,%pNoParentCall=0),Auto
+  #Declare(%x)
+  #Declare(%y)
+  #Declare(%z)
+  #Declare(%F,long)
+      #SET(%y,Instring(' PROCEDURE ',Upper(%pStr),1,1))
+      #if(%y = 0)
+        #SET(%y,Instring(' PROCEDURE(',Upper(%pStr),1,1))
+      #endIf
+      #if(%y = 0)
+        #SET(%y,Instring(' PROCEDURE,',Upper(%pStr),1,1))
+      #endIf
+      #if(%y = 0)
+        #SET(%y,Instring('<09>PROCEDURE(',Upper(%pStr),1,1))
+      #endIf
+      #if(%y = 0)
+        #SET(%y,Instring('<09>PROCEDURE ',Upper(%pStr),1,1))
+      #endIf
+      #if(%y = 0)
+        #SET(%y,Instring('<09>PROCEDURE,',Upper(%pStr),1,1))
+      #endIf
+      #if(%y = 0)
+        #IF(sub(upper(%pStr),Len(clip(%pStr))-8,9) = 'PROCEDURE')
+          #SET(%y,Len(clip(%pStr))-8)
+        #ENDIF
+      #EndIf
+      #if(%y = 0)
+        #SET(%y,Instring(' FUNCTION ',Upper(%pStr),1,1))       #!support for old FUNCTION
+        #set(%f,%y)
+      #else
+        #set(%f,0)
+      #endif
+      #IF (%y > 0)                                             #! Found a new procedure
+        #SET(%x,Instring(' ',%pStr,1,1))
+        #IF(%x = 0 or %x > %y)
+          #SET(%x,Instring('<09>',%pStr,1,1))
+        #ENDIF
+        #IF((%x <= %y) and (%x > 0))
+          #ADD(%dMethods8Cx,ITEMS(%dMethods8Cx)+1)
+          #SET(%dMethods8C,%pStr)
+        #ENDIF
+      #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%ParseForInterfaceProcedurePR,%pStr,%pNoParentCall=0),Auto
+  #Declare(%x)
+  #Declare(%y)
+  #Declare(%z)
+      #SET(%y,Instring(' PROCEDURE ',Upper(%pStr),1,1))
+      #if(%y = 0)
+        #SET(%y,Instring(' PROCEDURE(',Upper(%pStr),1,1))
+      #endIf
+      #if(%y = 0)
+        #SET(%y,Instring('<09>PROCEDURE(',Upper(%pStr),1,1))
+      #endIf
+      #if(%y = 0)
+        #SET(%y,Instring('<09>PROCEDURE ',Upper(%pStr),1,1))
+      #endIf
+      #if(%y = 0)
+        #IF(sub(upper(%pStr),Len(clip(%pStr))-8,9) = 'PROCEDURE')
+          #SET(%y,Len(clip(%pStr))-8)
+        #ENDIF
+      #EndIf
+      #IF (%y > 0)                                             #! Found a new procedure
+        #!error('found interface method ' & %pStr)
+        #SET(%x,Instring(' ',%pStr,1,1))
+        #IF((%x <= %y) and (%x > 0))
+          #ADD(%dMethods8Dx,ITEMS(%dMethods8Dx)+1)
+          #SET(%dMethods8D,%pStr)
+        #ENDIF
+      #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#! left aligned name, might be of form class.name - return only the name part
+#Group(%GetMethodName,%pStr),Auto
+  #DECLARE(%x)
+  #DECLARE(%y)
+  #SET(%y,Instring('.',%pStr,1,1))
+  #SET(%x,Instring(' ',%pStr,1,1))
+  #IF(%y and %x and %y < %x)
+    #RETURN(sub(%pStr,%y+1,%x-%y-1))
+  #ELSIF(%x)
+    #RETURN(sub(%pStr,1,%x-1))
+  #ELSE
+    #RETURN ''
+  #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#! everything after the first ( inclusive
+#Group(%GetMethodPrototype,%pStr),Auto
+  #DECLARE(%y)
+  #SET(%y,instring('(',%pStr,1,1))
+  #IF(%y>0)
+    #RETURN(clip(sub(%pStr,%y,512)))
+  #ELSE
+    #Set(%y,Instring('PROCEDURE ',upper(%pStr),1,1))
+    #IF(%y)
+      #RETURN(clip(sub(%pStr,%y+10,512)))
+    #ELSE
+      #RETURN('()')
+    #ENDIF
+  #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#! same as GetMethodPrototype, but add () to the front if there are no parameters.
+#Group(%GetMethodPrototypeAdjusted,%pStr),Auto
+  #DECLARE(%returnValue)
+  #SET(%ReturnValue,%GetMethodPrototype(%pStr))
+  #DECLARE(%y)
+  #SET(%y,instring('(',%pStr,1,1))
+  #IF(%y=0)
+    #SET(%ReturnValue,'()' & %ReturnValue)
+  #ENDIF
+  #RETURN(%ReturnValue)
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#! everything from ( to ) inclusive
+#Group(%GetParameters,%pStr),Auto
+   #DECLARE(%y)
+   #DECLARE(%z)
+   #SET(%y,instring('(',%pStr,1,1))
+   #SET(%z,instring(')',%pStr,1,1))
+   #IF(%y>0 and %z>0)
+     #RETURN(sub(%pStr,%y,%z-%y+1))
+   #ELSE
+     #RETURN('()')
+   #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#! everything from ( to ) inclusive ; <, >, *, default values removed.
+#Group(%GetClean,%pStr),Auto
+   #Declare(%clean)
+   #DECLARE(%y)
+   #DECLARE(%z)
+   #SET(%y,instring('(',%pStr,1,1))
+   #SET(%z,instring(')',%pStr,1,1))
+   #IF(%y>0 and %z>0)
+     #SET(%clean,sub(%pStr,%y,%z-%y+1))
+     #Insert(%RemoveConst,%Clean)
+     #Insert(%RemoveDefaults,%Clean)
+     #Insert(%RemoveChar,'<<',%Clean)
+     #Insert(%RemoveChar,'*',%Clean)
+     #Insert(%RemoveChar,'>',%Clean)
+     #RETURN(%clean)
+   #ELSE
+     #RETURN('()')
+   #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%SetReturnType,%pStr),Auto
+  #Declare(%a)
+  #Declare(%b)
+  #Declare(%ReturnStr)
+  #SET(%a,Instring(')',Upper(%pStr),1,1))
+  #IF(%a>0)
+    #SET(%ReturnStr,sub(%pStr,%a+1,512))
+  #ELSE
+    #SET(%a,Instring(' PROCEDURE ',Upper(%pStr),1,1))
+    #if(%a = 0)
+      #SET(%a,Instring(' PROCEDURE(',Upper(%pStr),1,1))
+    #endIf
+    #IF(%a>0)
+      #SET(%ReturnStr,sub(%pStr,%a+11,512))
+    #else
+      #SET(%a,Instring(' FUNCTION ',Upper(%pStr),1,1))
+      #IF(%a>0)
+        #SET(%ReturnStr,sub(%pStr,%a+10,512))
+      #else
+        #SET(%ReturnStr,%pStr)
+      #endif
+    #ENDIF
+  #ENDIF
+  #SET(%a,Instring(',',%ReturnStr,1,1))
+  #IF(%a=0)
+    #return('')
+  #ELSE
+    #SET(%b,Instring(',',%ReturnStr,1,%a+1))
+    #IF(%b=0)
+      #SET(%b,%a+10)
+    #ENDIF
+    #SET(%ReturnStr,Left(sub(%ReturnStr,%a+1,%b-%a-1)))
+    #CASE (Upper(%ReturnStr))
+    #OF('BYTE')
+    #OROF('SHORT')
+    #OROF('USHORT')
+    #OROF('LONG')
+    #OROF('ULONG')
+    #OROF('SIGNED')
+    #OROF('UNSIGNED')
+    #OROF('REAL')
+    #OROF('SREAL')
+    #OROF('BFLOAT4')
+    #OROF('BFLOAT8')
+    #OROF('STRING')
+    #OROF('CSTRING')
+    #OROF('PSTRING')
+    #OROF('DATE')
+    #OROF('TIME')
+    #OROF('?')
+    #orof('BOOL')
+    #orof('HANDLE')
+    #OROF('ANY')
+    #OROF('PCCERT_CONTEXT')
+    #OROF('HCRYPTKEY')
+    #OROF('HCERTSTORE')
+    #OROF('HCRYPTPROV')
+      #return(clip(%ReturnStr))
+    #ELSE
+      #if(sub(%ReturnStr,1,1) = '*')
+        #return('&' & sub(%ReturnStr,2,len(%ReturnStr)))
+      #else
+        #return('')
+      #endif
+    #END
+  #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%RemoveType,* %pStr),Auto
+  #declare(%a,long)
+  #declare(%b,long)
+  #declare(%c,long)
+  #declare(%d,long)
+  #set(%a,0)
+  #declare(%Pars)
+  #declare(%Types)
+  #set(%Types,'')
+  #set(%Pars,'')
+  #if(clip(%pStr) = '')
+    #return('')
+  #elsif(sub(left(%pStr),1,1) = '(')
+    #set(%pStr,slice(left(%pStr),2,(instring(')',%pStr,1,1) - 1)))
+  #endif
+  #LOOP
+    #set(%b,%a + 1)
+    #loop,while((%b = instring(' ',%pStr,1,%b)) and (%b < len(clip(%pStr))))
+      #set(%b,%b + 1)           #!Get rid of leading spaces
+    #endloop
+    #SET(%a,Instring(',',%pStr,1,%b))
+    #IF(%a>0)
+      #set(%c,%a - 1)
+    #else
+      #set(%c,len(%pStr))
+    #endif
+    #set(%d,instring(' ',clip(%pStr),1,%b))
+    #if(%d < %c)
+      #set(%Types,%Types & ',' & slice(%pStr,%b,%d - 1))
+      #set(%Pars,%Pars & ',' & slice(%pStr,%d + 1,%c))
+    #else
+      #set(%Types,%Types & ',?')
+      #set(%Pars,%Pars & ',' & slice(%pStr,%b,%c))
+    #ENDIF
+    #if(%a = 0)
+      #break
+    #endif
+  #ENDLOOP
+  #set(%pStr,'(' & slice(%Pars,2,len(%Pars)) & ')')
+  #return(slice(%Types,2,len(%Types)))
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%RemoveChar,%pChar,* %pStr),Auto
+  #Declare(%a)
+  #LOOP
+    #SET(%a,Instring(%pChar,%pStr,1,1))
+    #IF(%a>0)
+      #SET(%pStr,sub(%pStr,1,%a-1) & sub(%pStr,%a+1,512))
+      #CYCLE
+    #ENDIF
+    #BREAK
+  #ENDLOOP
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%RemoveConst,* %pStr),Auto
+  #Declare(%a)
+  #Declare(%b)
+  #LOOP
+     #SET(%a,Instring('const ',lower(%pStr),1,1))
+     #IF(%a>0)
+       #SET(%pStr,sub(%pStr,1,%a-1) & sub(%pStr,%a+6,512))
+       #CYCLE
+     #ENDIF
+     #BREAK
+   #ENDLOOP
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%RemoveDefaults,* %pStr),Auto
+  #Declare(%a)
+  #Declare(%b)
+  #LOOP
+     #SET(%a,Instring('=',%pStr,1,1))
+     #IF(%a>0)
+        #SET(%b,Instring(',',%pStr,1,%a))
+        #IF(%b=0)
+          #SET(%b,Instring(')',%pStr,1,%a))
+        #ENDIF
+        #IF(%b=0)
+          #BREAK
+        #ENDIF
+        #SET(%pStr,sub(%pStr,1,%a-1) & sub(%pStr,%b,512))
+        #CYCLE
+     #ENDIF
+     #BREAK
+   #ENDLOOP
+#!======================================= end of reading classes section =============================
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%SetFamily)
+  #IF(VarExists(%Family)=0)
+    #Declare(%Family)
+  #ENDIF
+  #IF(VarExists(%cwTemplateVersion)=0)
+    #Declare(%cwTemplateVersion)
+  #ENDIF
+  #IF(VarExists(%AppTemplateFamily))
+    #IF(upper(%AppTemplateFamily)='CLARION')
+      #SET(%Family,'cw20')
+    #ELSIF(upper(%AppTemplateFamily)='IPSERVER')
+      #SET(%Family,'ipserver')
+    #ELSE
+      #SET(%Family,'abc')
+    #ENDIF
+  #ELSE
+    #IF(%cwtemplateversion = 'v2.003')
+      #SET(%Family,'cw20')
+    #ELSE
+      #SET(%Family,'abc')
+    #ENDIF
+  #ENDIF
+  #RETURN(%family)
+#!=============================== start of exports section ===========================================
+#Group(%ExportClassesPR,%pInclude)
+  #context(%program)
+  ; exporting classes from %pInclude
+    #for(%dClasses8Bx),Where(upper(%dClassINCFile)=upper(%pInclude))
+  VMT$%dClasses8B                                              @?
+  TYPE$%dClasses8B                                             @?
+      #For(%dMethods8Cx)
+  %(LINKNAME(%GetMethodName(%dMethods8C) & %GetMethodPrototypeAdjusted(%dMethods8C), %dClasses8B))   @?
+      #ENDFOR
+      #FOR(%dImplements8Cx)
+        #FOR(%dInterfaces8Bx),WHERE(upper(%dInterfaces8B)=upper(%dImplements8C))
+          #!ERROR(%dInterfaces8B & ' = ' & %dImplements8C)
+          #FOR(%dMethods8Dx)
+  %(LINKNAME(%GetMethodName(%dMethods8D) & %GetMethodPrototypeAdjusted(%dMethods8D), %dClasses8B,%dImplements8C))   @?
+          #ENDFOR
+        #ENDFOR
+      #ENDFOR
+    #EndFor
+  ; end of %pInclude classes
+  #EndContext
+#!================================ end of exports section ============================================

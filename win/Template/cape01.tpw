@@ -1,0 +1,653 @@
+#! --------------------------------------------------------------!
+#! This code is responsible for generating the class declaration !
+#! and also all the potential method embed points.               !
+#! (c) 2003-2020 by CapeSoft Software                            !
+#! All Rights Reserved                                           !
+#! Version 4.25                                                  !
+#! CapeSoft Source Location : q:\ObjectTemplate                  !
+#! --------------------------------------------------------------!
+#!
+#!----------------------------------------------------------------
+#!  Immediately after #template statement
+#!
+#!   #Include('cape01.tpw')
+#!   #Include('cape02.tpw')
+#!----------------------------------------------------------------
+#!  In your template create ReadGroup
+#!
+#! #GROUP(%ReadGlobal,%pa,%force)
+#!   #INSERT(%SetFamily)
+#!   #FOR(%applicationTemplate),Where(%applicationTemplate='Activate_Office_Inside(OfficeInside)')
+#!     #FOR(%applicationTemplateInstance)
+#!       #Context(%application,%applicationTemplateInstance)
+#!         #insert(%ReadClassesPR,'ClassFile.Inc',%pa,%force)
+#!         #insert(%ReadAdditionalIncFiles,%pa,%force)                <-- NEW
+#!       #EndContext
+#!     #EndFor
+#!   #EndFor
+#!
+#!------------------------------------------------------------------------------
+#! #SYSTEM
+#!   #equate(%whateverTPLVersion,'1.00')
+#!
+#!----------------------------------------------------------------
+#!                    In the Global Extension
+#!   #Tab('Multi-DLL'),where(%No=0)
+#!     #Boxed('')
+#!       #Prompt('This is part of a Multi-DLL program',Check),%MultiDLL,default(%ProgramExtension='DLL'),at(10)
+#!       #Enable(%MultiDLL=1)
+#!         #Enable(%ProgramExtension='DLL')
+#!           #Prompt('Export ??? Class from this DLL',Check),%RootDLL,at(10)
+#!         #EndEnable
+#!       #EndEnable
+#!     #EndBoxed
+#!   #EndTab
+#!
+#!   #TAB('Classes')
+#!     #Insert(%GlobalDeclareClassesPR)
+#!   #ENDTAB
+#!
+#! #AT(%AfterGlobalIncludes),Where(%No=0)
+#!   include('ClassFile.Inc'),ONCE
+#!   #INSERT(%IncludeAdditionalIncFiles)                              <-- NEW
+#! #ENDAT
+#!
+#! #ATStart
+#!   #IF(%No = 0)
+#!     #INSERT(%ReadGlobal,2,0)
+#!     #INSERT(%CheckFor,'Draw','GloDraw(Draw)','Insight')                  <-- optional
+#!     #INSERT(%CheckForVersion,'Draw',%DrawTPLVersion,'3.00','Insight')    <-- optional
+#!     #INSERT(%CheckForVersionIf,'Draw','GloDraw(Draw)',%DrawTPLVersion,'3.00','SendTo')    <-- optional
+#!   #ENDIF
+#! #ENDAt
+#!
+#! #ATEND
+#!  #IF(%No = 0)
+#!    #INSERT(%EndGlobal)
+#!  #ENDIF
+#! #ENDAT
+#!
+#! #AT(%DllExportList),Where(%programextension = 'DLL' and %RootDLL=1 and %MultiDll=1 and %No=0)
+#! #insert(%ExportClassesPR,'ClassFile.Inc')
+#! #insert(%ExportAdditionalIncFiles)                                                     <-- NEW
+#!   add the following if the _object_ is being exported as well as the class
+#! $%ObjectName   @?
+#! #ENDAT
+#!
+#! #AT(%CustomGlobalDeclarations),where(%No=0)
+#! #INSERT(%Defines,1,'LinkMode','DllMode',%MultiDLL,%RootDll)
+#! #ENDAT
+#!
+#! #AT(%mpDefineAll),where(%No=0)
+#! #INSERT(%Defines,2,'LinkMode','DllMode',%MultiDLL,%RootDll)
+#! #ENDAT
+#!
+#! #AT(%mpDefineAll7),where(%No=0)
+#! #INSERT(%Defines,3,'LinkMode','DllMode',%MultiDLL,%RootDll)
+#! #ENDAT
+#!
+#! #AT(%BeforeGlobalIncludes) ,Where(%No=0)
+#! Whatever:TemplateVersion equate('%WhateverTPLVersion')
+#! #ENDAT
+#!
+#!----------------------------------------------------------------
+#!         For Global Extensions that declare objects
+#!
+#! #atstart
+#! this is in addition to the #ATSTART mentioned above.
+#!   #IF(%No = 0)
+#!     #insert(%AtStartInitialisation)
+#!     #insert(%AddObjectPR,%Classname,%ObjectName,'Global Objects')
+#!   #ENDIF
+#! #endat
+#!
+#!
+#!  Inside Global Extension Prompts
+#!  #Prepare
+#!    #INSERT(%ReadGlobal,1,0)
+#!  #EndPrepare
+#!
+#!  #Tab('Class')
+#!    #prompt('Object',@s255),%ObjectName,default('thismakeover')
+#!    #prompt('Base Class',@s255),%Classname,default('makeover')
+#!  #endTab
+#!
+#! Use this in the case where there is an external _object_ (ie one global _object_)
+#!
+#! #AT(%AfterFileDeclarations),Where(%No = 0)
+#!   #IF(%Family='cw20')
+#!     #insert(%AtStartInitialisation)
+#!   #ENDIF
+#!   #IF(%ObjectIsExternal)
+#! %ObjectName   %Classname,External,DLL(dll_mode)
+#!   #ELSE
+#! #INSERT(%GlobalDeclaration)
+#! #INSERT(%GenerateClassDeclaration,%ClassName,%ObjectName,'Global Objects','CapeSoft Objects')
+#!   #ENDIF
+#! #ENDAT
+#!
+#! Use this in the case where the object is in the app, but the _class_ is in the data dll
+#!
+#! #AT(%AfterFileDeclarations),Where(%No = 0)
+#!   #IF(%Family='cw20')
+#!     #insert(%AtStartInitialisation)
+#!   #ENDIF
+#! #INSERT(%GlobalDeclaration)
+#! #INSERT(%GenerateClassDeclaration,%ClassName,%ObjectName,'Global Objects','CapeSoft Objects')
+#! #ENDAT
+#!
+#!
+#! #AT(%ProgramProcedures),Where(%No = 0)
+#!   #INSERT(%SetFamily)
+#!   #IF(%Family='abc')
+#!     #insert(%AtStartInitialisation)
+#!   #ENDIF
+#!   #IF(%ObjectIsExternal = 0)
+#! #INSERT(%GlobalMethods)
+#! #INSERT(%GenerateMethods,%classname,%ObjectName,'Global Objects','CapeSoft Objects')
+#!   #ENDIF
+#! #ENDAT
+#!                                                               !
+#! #AT(%dMethodCodeSection,%ObjectName & ' (' & %ClassName & ')',%eMethodID),priority(5000),DESCRIPTION('Parent Call')
+#! #INSERT(%ParentCall)
+#! #ENDAT
+#!
+#!----------------------------------------------------------------
+#!           For Local Extensions that declare objects
+#!
+#!  #Prepare
+#!    #INSERT(%ReadGlobal,3,0)
+#!  #EndPrepare
+#!
+#!  #Boxed(''),section,at(,,,45)
+#!    #Prompt('&Object name:',@s255),%ObjectName,default('csVSplit'),at(50,5),promptat(10,5)
+#!    #Prompt('C&lass name:',@s255),%ClassName,default('csVSplitClass'),at(50,20),promptat(10,20)
+#!  #EndBoxed
+#!
+#! #atstart
+#!   #IF(%no=0)
+#!     #insert(%AtStartInitialisation)
+#!     #insert(%AddObjectPR,%ClassName,%ObjectName,'Local Objects')
+#!   #EndIf
+#! #endat
+#!
+#! #AT(%LocalDataClasses) ,Where(%no=0)
+#! #INSERT(%GenerateClassDeclaration,%ClassName,%ObjectName,'Local Objects','CapeSoft Objects')
+#! #ENDAT
+#!
+#! #AT(%DataSection),where(%ProcedureTemplate = 'Source' and %Family = 'cw20' and %no=0)
+#! #insert(%GenerateClassDeclaration,%ClassName,%ObjectName,'Local Objects','CapeSoft Objects')
+#! #EndAt
+#!
+#! #AT(%LocalProcedures),Where(%no=0)
+#! #INSERT(%GenerateMethods,%classname,%ObjectName,'Local Objects','CapeSoft Objects')
+#! #ENDAT
+#!
+#! #AT(%dMethodCodeSection,%ActiveTemplate & %ActiveTemplateInstance,%eMethodID),priority(5000),DESCRIPTION('Parent Call')
+#! #INSERT(%ParentCall)
+#! #ENDAT
+#!
+#! --------------------------------------------------------------!
+#! Optional things you can add:
+#!
+#! 1a. To add your own template generated code to a specific method (in a Local extension template)
+#!    Replace '%eMethodID' with the actual %eMethodID (See step 2 below)
+#! #AT(%dMethodCodeSection,%ActiveTemplate & %ActiveTemplateInstance,'%eMethodID'),priority(nn)
+#! #ENDAT
+#!
+#! 1b. To add your own template generated code to a specific method (in a Global extension template)
+#!    Replace '%eMethodID' with the actual %eMethodID (See step 2 below)
+#! #AT(%dMethodCodeSection,%Object & ' (' & %ClassName & ')','%eMethodID'),priority(nn)
+#! #ENDAT
+#!
+#! 2. To find out the exact ID for the EMBED point (in 1) include the following. Then you will know
+#! exactly what to code into your template to get the code in the right place
+#! #AT(%dMethodCodeSection)
+#! ! eMethodID = %eMethodID
+#! #ENDAT
+#!
+#!========================================= start of declaring classes section =========================
+#!========================================= start of declaring classes section =========================
+#Group(%DeclareClassesLocal)
+  #IF(VarExists(%EmbedName)=0)
+    #Declare(%EmbedName)
+  #ENDIF
+  #IF(VarExists(%EmbedTreeName)=0)
+    #Declare(%EmbedTreeName)
+  #ENDIF
+  #IF(VarExists(%MethodDeclarationStr)=0)
+    #declare(%MethodDeclarationStr)
+  #ENDIF
+  #If(VarExists(%GeneratedBytes)=0)
+    #DECLARE(%GeneratedBytes)
+  #ENDIF
+  #IF(VarExists(%HasGeneratedMethods)=0)
+    #Declare(%HasGeneratedMethods)
+  #ENDIF
+  #IF(VarExists(%HasGeneratedClasses)=0)
+    #Declare(%HasGeneratedClasses)
+  #ENDIF
+  #IF(VarExists(%eObject)=0)
+    #Declare(%eObject),Unique
+  #ENDIF
+  #IF(VarExists(%eObjectClass)=0)
+      #Declare(%eObjectClass,%eObject)
+  #ENDIF
+  #IF(VarExists(%eMethodsDeclaration)=0)
+      #Declare(%eMethodsDeclaration,%eObject),multi
+        #Declare(%eMethods,%eMethodsDeclaration)
+        #DECLARE(%eGenerated,%eMethodsDeclaration,long)
+  #ENDIF
+  #IF(VarExists(%eMethodPrototype)=0)
+        #DECLARE(%eMethodPrototype,%eMethodsDeclaration)
+        #DECLARE(%eMethodID,%eMethodsDeclaration)
+  #ENDIF
+  #IF(VarExists(%eMethodName)=0)
+        #DECLARE(%eMethodName,%eMethodsDeclaration)
+  #ENDIF
+  #IF(VarExists(%fNewMethodList)=0)
+    #declare(%fNewMethodList),Unique
+      #declare(%fNewMethodListObject,%fNewMethodList)
+      #declare(%fNewMethodListMethod,%fNewMethodList)
+      #declare(%fNewMethodListPrototype,%fNewMethodList)
+      #DECLARE(%fNewGenerated,%fNewMethodList)
+      #declare(%fNewMethodID,%fNewMethodList)
+  #EndIf
+#!========================================= end of declaring classes section =========================
+#!======================================= start of admin section =====================================
+#group(%AtStartInitialisation)
+  #INSERT(%SetFamily)
+  #Insert(%DeclareClassesLocal)
+  #SET(%HasGeneratedMethods,0)
+  #SET(%HasGeneratedClasses,0)
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#group(%AddObjectPR,%pC,%o,%pTreeRoot)
+  #Declare(%mname)
+  #Declare(%mprototype)
+  #declare(%TempClass)
+  #declare(%found)
+  #declare(%Tfound)
+  #SET(%TempClass,%pC)
+  #! add the object, and classname to eObject
+  #fix(%eObject,upper(%o))
+  #if(%eObject<> '')
+    #delete(%eObject)
+  #endif
+  #add(%eObject,upper(%o))
+    #set(%eObjectClass,%pC)
+  #!
+  #! find all the methods which appy to the object, including all inherited methods etc.
+  #! populate into eMethodsDeclaration
+  #!
+  #Set(%Tfound,0)
+  #FOR(%applicationTemplate)
+    #FOR(%applicationTemplateInstance)
+      #Context(%application,%applicationTemplateInstance)
+        #SET(%TempClass,%pC)
+        #Loop until (%TempClass='')
+          #FIND(%dClasses8B,upper(%TempClass))
+          #IF(%dClasses8B='')
+          #ELSE
+            #SET(%Tfound,1)
+            #FOR(%dMethods8Cx)
+              #IF(EXTRACT(%dMethods8C,'PRIVATE') <> '')
+                #CYCLE
+              #ENDIF
+              #SET(%Found,0)
+              #SET(%mName,%GetMethodName(%dMethods8C))
+              #SET(%mprototype,%GetMethodPrototype(%dMethods8C))
+              #FOR(%eMethodsDeclaration)
+                #IF(upper(%eMethodID)=upper(%mname & ' ' & left(%mprototype)))
+                  #SET(%found,1)
+                  #BREAK
+                #ENDIF
+              #ENDFOR
+              #IF(%found)
+                #CYCLE
+              #ENDIF
+              #ADD(%eMethodsDeclaration,%dMethods8C)
+                #SET(%eMethods,%dMethods8C)
+                #SET(%eMethodPrototype,%mprototype)
+                #SET(%eMethodID,%mname & ' ' & left(%mprototype))
+                #SET(%eMethodName,%mname)
+                #SET(%eGenerated,0)
+      #insert(%GetEmbedName,%pC,%o,%pTreeRoot)
+      #embed(%InAddClassChangeMethodProperties,'Change a Method''s Properties'),%EmbedTreeName,%eMethodID,hide
+            #ENDFOR
+          #ENDIF
+          #SET(%TempClass,%dBaseClass)
+        #ENDLOOP
+      #EndContext
+      #IF(%Tfound)
+        #BREAK
+      #ENDIF
+    #Endfor
+    #IF(%Tfound)
+      #BREAK
+    #ENDIF
+  #EndFor
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%GetEmbedName,%pC,%o,%pTreeRoot)
+  #SET(%EmbedTreeName,%o & ' (' & %pC & ')')
+  #if (%pTreeRoot='Local Objects')
+    #SET(%EmbedName,%ActiveTemplate & %ActiveTemplateInstance)
+  #else
+    #SET(%EmbedName,%EmbedTreeName)
+  #endif
+#!======================================= end of admin section =======================================
+#!================================ start of class declaration section ================================
+#Group(%GenerateClassDeclaration,%pC,%o,%pTreeRoot,%pTreeNode,%pExtraPars='',%pClassDefOnly=0)
+  #!Error('GenerateClassDeclaration ' & %o &  ' HasGeneratedClasses=' & %HasGeneratedClasses & ' HasGeneratedMethods=' & %HasGeneratedMethods)
+  #SET(%HasGeneratedClasses,1)
+  #insert(%SetFamily)
+  #declare(%MethodName)
+! ----- %o --------------------------------------------------------------------------
+  #if(%pExtraPars <> '')
+%[20]o Class(%pC), %pExtraPars
+  #else
+%[20]o Class(%pC)
+  #endif
+  #if(%pClassDefOnly <> 1)
+    #INSERT(%GetEmbedName,%pC,%o,%pTreeRoot)
+    #! New Property Declarations
+#!Embed(%dMethodNewDeclarations,'Class - New Property Declarations'),%EmbedName,'New Property Declarations',DATA,LABEL,TREE(%pTreeRoot,%pTreeNode,%EmbedTreeName,' Other  Property Declarations{{COLOR('&%ColorDataSection&')}')
+#Embed(%dMethodNewDeclarationsProperty,'Class - New Property Declarations'),%EmbedName,'New Property Declarations',DATA,LABEL,TREE(%pTreeRoot,%pTreeNode,%EmbedTreeName,' Other  Property Declarations{{COLOR('&%ColorDataSection&')}'),HIDE
+    #if(varexists(%ClassPropertyItems))
+      #for(%ClassPropertyItems)
+        #if(%ClassDataType = 'Other')
+%[22]ClassProperty %ClassOtherType
+        #elsif(instring('STRING',upper(%ClassDataType),1,1) and ~%ClassDataIsRef)
+%[22]ClassProperty %ClassDataType(%ClassDataSize)
+        #elsif(%ClassDataIsRef)
+%[22]ClassProperty &%ClassDataType
+        #else
+%[22]ClassProperty %ClassDataType
+        #endif
+      #endfor
+    #endif
+    #! new method declarations
+#Embed(%dMethodNewDeclarations,'Class - New Method Declarations'),%EmbedName,'New Method Declarations',DATA,LABEL,TREE(%pTreeRoot,%pTreeNode,%EmbedTreeName,' Other  Method Declarations{{COLOR('&%ColorDataSection&')}'),HIDE
+#Embed(%dMethodNewDeclarationsMethod,'Class - New Method Declarations'),%EmbedName,'New Method Declarations',DATA,LABEL,TREE(%pTreeRoot,%pTreeNode,%EmbedTreeName,' Other  Method Declarations{{COLOR('&%ColorDataSection&')}'),HIDE
+    #free(%fNewMethodList)
+    #if(varexists(%ClassMethods))
+      #for(%ClassMethods)
+        #insert(%AddNewMethodsToList,%pC,%o,%ClassMethodName,%ClassMethodPrototype)
+      #endfor
+    #endif
+    #For(%fNewMethodList),where(%fNewMethodListObject = %o)
+%[22]fNewMethodListMethod PROCEDURE %fNewMethodListPrototype
+    #EndFor
+    #! derived method declarations
+    #SUSPEND
+    #?! derived method declarations
+    #fix(%eObject,upper(%o))
+    #IF(%eObject<>'')
+      #For(%eMethodsDeclaration)
+        #SET(%MethodName,%GetMethodName(%eMethods))
+        #IF(upper(%MethodName)='_RUNAPPLICATION')  #! special case for SelfService
+        #ELSIF (%EditProcedure='' AND %eGenerated = 0 and %pClassDefOnly <> 2 and %HasGeneratedMethods=1)
+          #CYCLE
+        #ENDIF
+%[22]MethodName PROCEDURE %eMethodPrototype
+      #ENDFor
+    #endif
+    #RESUME
+  #endif
+                     End  ! %o
+! ----- end %o -----------------------------------------------------------------------
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%AddNewMethodsToList,%pC,%o,%pNewMethod,%pPrototype)
+  #ADD(%fNewMethodList,%o & '.' & %pNewMethod & ' PROCEDURE ' & %pPrototype)
+    #set(%fNewMethodListObject,%o)
+    #SET(%fNewMethodListMethod,%pNewMethod)
+    #SET(%fNewMethodListPrototype,%pPrototype)
+    #SET(%fNewMethodID,%pNewMethod & ' ' & %pPrototype)
+#!================================= end of class declaration section =================================
+#!=============================== start of method declaration section ================================
+#Group(%GenerateMethods,%pC,%o,%pTreeRoot,%pTreeNode,%pForceGenerateAll=0)
+  #!Error('GenerateMethods ' & %o &  ' HasGeneratedClasses=' & %HasGeneratedClasses & ' HasGeneratedMethods=' & %HasGeneratedMethods)
+  #SET(%HasGeneratedMethods,1)
+  #declare(%GenerateAll)
+  #insert(%SetFamily)
+  #if(%HasGeneratedClasses=1 or %pForceGenerateAll)
+    #set(%GenerateAll,'1')
+  #else
+    #free(%fNewMethodList)
+    #if(varexists(%ClassMethods))
+      #for(%ClassMethods)
+        #insert(%AddNewMethodsToList,%pC,%o,%ClassMethodName,%ClassMethodPrototype)
+      #endfor
+    #endif
+  #endif
+  #declare(%ThisObjectColor)
+  #INSERT(%GetEmbedName,%pC,%o,%pTreeRoot)
+#insert(%AddNewMethodsCode,%pC,%o,%pTreeRoot)
+#insert(%AddDerivedMethods,%pC,%o,%GenerateAll)
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#group(%AddNewMethodsCode,%pC,%o,string %pTreeRoot='Local Objects')
+  #free(%fNewMethodList)
+  #if(varexists(%ClassMethods))
+    #for(%ClassMethods)
+      #insert(%AddNewMethodsToList,%pC,%o,%ClassMethodName,%ClassMethodPrototype)
+    #endfor
+  #endif
+#Embed(%dMethodNewCodeSection,'Class - New Coded Methods'),%EmbedName,'New Declarations',DATA,LABEL,TREE(%pTreeRoot,%pTreeNode,%EmbedTreeName,' Other Coded Methods{{COLOR('&%ColorCodeSection&')}')
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#group(%AddDerivedMethods,%pC,%o,%pGenerateAll)
+  #declare(%ReturnType)
+  #declare(%eParameters)
+  #declare(%methodname)
+  #fix(%eObject,upper(%o))
+  #IF(%eObject<>'')
+    #For(%eMethodsDeclaration)
+      #if(%eGenerated = '-1')
+        #cycle
+      #endif
+      #SET(%methodname,%eMethodName)
+      #IF(upper(%MethodName)='_RUNAPPLICATION')  #! special case for SelfService
+        #CYCLE
+      #ENDIF
+      #SET(%ReturnType,%SetReturnType(%eMethods))
+      #SET(%eParameters,%GetParameters(%eMethods))
+      #if(%pGenerateAll = '1')
+!----------------------------------------------------
+%o.%MethodName     PROCEDURE %eParameters
+#insert(%GenerateReturnDecl,%ReturnType)
+        #set(%ThisObjectColor,%SetColor(%eMethods))
+#Embed(%dMethodDataSection,'Class Method - Data Section'),%EmbedName,%eMethodID,'DATA',DATA,LABEL,TREE(%pTreeRoot,%pTreeNode,%EmbedTreeName,%eMethodID & %ThisObjectColor,' DATA{{COLOR('&%ColorDataSection&')}')
+  CODE
+#Embed(%dMethodCodeSection,'Class Method - Executable Code Section'),%EmbedName,%eMethodID,'CODE',DATA,LABEL,TREE(%pTreeRoot,%pTreeNode,%EmbedTreeName,%eMethodID & %ThisObjectColor,'CODE{{COLOR('&%ColorCodeSection&')}')
+        #IF(%ReturnType <> '')
+    Return ReturnValue
+        #ENDIF
+#Embed(%dMethodRoutineSection,'Class Method - Routines Section'),%EmbedName,%eMethodID,'Routines',DATA,LABEL,TREE(%pTreeRoot,%pTreeNode,%EmbedTreeName,%eMethodID & %ThisObjectColor,'Routines')
+        #SET(%eGenerated,2)
+      #elsif(%eGenerated = '-1')
+        #cycle
+      #else
+        #SET(%GeneratedBytes,%BytesOutput)
+        #SET(%eGenerated,0)
+        #SUSPEND
+#? !----------------------------------------------------
+#?%o.%MethodName   PROCEDURE %eParameters
+#insert(%GenerateReturnDecl,%ReturnType)
+          #set(%ThisObjectColor,%SetColor(%eMethods))
+#Embed(%dMethodDataSection,'Class Method - Data Section'),%EmbedName,%eMethodID,'DATA',DATA,LABEL,TREE(%pTreeRoot,%pTreeNode,%EmbedTreeName,%eMethodID & %ThisObjectColor,' DATA{{COLOR('&%ColorDataSection&')}')
+  #?CODE
+#Embed(%dMethodCodeSection,'Class Method - Executable Code Section'),%EmbedName,%eMethodID,'CODE',DATA,LABEL,TREE(%pTreeRoot,%pTreeNode,%EmbedTreeName,%eMethodID & %ThisObjectColor,'CODE{{COLOR('&%ColorCodeSection&')}')
+          #IF(%ReturnType <> '')
+    #?Return ReturnValue
+          #ENDIF
+#Embed(%dMethodRoutineSection,'Class Method - Routines Section'),%EmbedName,%eMethodID,'Routines',DATA,LABEL,TREE(%pTreeRoot,%pTreeNode,%EmbedTreeName,%eMethodID & %ThisObjectColor,'Routines')
+        #RESUME
+        #IF(%GeneratedBytes<>%BytesOutput)
+          #SET(%eGenerated,1)
+        #ENDIF
+      #endif
+    #EndFor
+  #EndIf
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#group(%GenerateReturnDecl,%pReturnType)
+    #CASE (left(upper(%pReturnType)))
+    #OF('STRING')
+    #OROF('PSTRING')
+    #OROF('CSTRING')
+    #OROF('?')
+    #OROF('*?')
+    #OROF('&?')
+#?ReturnValue   any
+    #OF('')
+    #ELSE
+#?ReturnValue   %pReturnType
+    #END
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#group(%SetColor,%pMethod)
+    #if(instring('VIRTUAL',upper(%pMethod),1,1))
+      #return('{{COLOR(' & %ColorVirtualMethod & '})')
+    #elsif(instring('PROTECTED',upper(%pMethod),1,1))
+      #return('{{COLOR(' & %ColorProtectedMethod & '})')
+    #else
+      #return('')
+    #endif
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%ParentCall),Auto
+  #Declare(%ReturnType)
+  #Declare(%MethodName)
+  #Declare(%Clean)
+  #SET(%ReturnType,%SetReturnType(%eMethods))
+  #SET(%MethodName,%GetMethodName(%eMethods))
+  #SET(%Clean,%GetClean(%eMethods))
+  #INSERT(%removeType,%Clean)
+  #IF(upper(%MethodName) <> 'CONSTRUCT' and upper(%MethodName) <> 'DESTRUCT')
+    #IF(%ReturnType <> '')
+      #if(sub(%ReturnType,1,1) = '&')
+  #?ReturnValue &= PARENT.%MethodName %Clean
+      #else
+  #?ReturnValue = PARENT.%MethodName %Clean
+      #ENDIF
+    #ELSE
+  #?PARENT.%MethodName %Clean
+    #ENDIF
+  #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%CheckForUsing,%pProduct,%pTemplate),Auto
+  #Declare(%found)
+  #FOR(%ApplicationTemplate),Where(upper(%ApplicationTemplate)=upper(%pTemplate))
+    #Set(%found,1)
+  #ENDFOR
+  #RETURN(%found)
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%CheckForVersionIf,%pProduct,%pTemplate,%pVersionIs,%VersionRequired,%pRequiredBy),Auto
+  #Declare(%found)
+  #FOR(%ApplicationTemplate),Where(upper(%ApplicationTemplate)=upper(%pTemplate))
+    #Set(%found,1)
+  #ENDFOR
+  #IF(%found)
+    #Insert(%CheckForVersion,%pProduct,%pVersionIs,%VersionRequired,%pRequiredBy)
+  #ENDIF
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%CheckForVersion,%pProduct,%pVersionIs,%VersionRequired,%pRequiredBy),Auto
+  #ASSERT(%pVersionIs>= %VersionRequired,'Update ' & %pProduct & ' to version ' & %VersionRequired & ' or later. Required by ' & %pRequiredBy & '. Currently on ' & %pProduct & ' version ' & %pVersionIs)
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%CheckFor,%pProduct,%pTemplate,%pRequiredBy),Auto
+  #Declare(%found)
+  #FOR(%ApplicationTemplate),Where(upper(%ApplicationTemplate)=upper(%pTemplate))
+    #Set(%found,1)
+  #ENDFOR
+  #Assert(%found=1,'Add the ' & %pProduct & ' Global extension to this app ('&%Application&'). (Required by '& %pRequiredBy&')')
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%CheckForOr,%pProduct1,%pProduct2,%pTemplate1,%pTemplate2,%pRequiredBy),Auto
+  #Declare(%found)
+  #FOR(%ApplicationTemplate),Where(upper(%ApplicationTemplate)=upper(%pTemplate1))
+    #Set(%found,1)
+  #ENDFOR
+  #IF(%found=0)
+    #FOR(%ApplicationTemplate),Where(upper(%ApplicationTemplate)=upper(%pTemplate2))
+      #Set(%found,1)
+    #ENDFOR
+  #ENDIF
+  #Assert(%found=1,'Add the ' & %pProduct1 & ' or ' & %pProduct2 & ' Global extension to this app ('&%Application&'). (Required by '& %pRequiredBy&')')
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#Group(%Defines,%pWhere,%pLinkMode,%pDllMode,%pMultiDLL,%pRootDll),Auto
+  #IF(%pwhere=1)  #! inside App
+   #IF(%pMultiDLL=0 or %pRootDll=1)
+     #PDEFINE(%plinkMode,1)
+     #PDEFINE(%pDllMode,0)
+   #ELSE
+     #PDEFINE(%plinkMode,0)
+     #PDEFINE(%pDllMode,1)
+   #ENDIF
+  #ELSIF(%pwhere=2) #! Clarion <=6 PRJ file
+    #IF(%pMultiDLL=0 or %pRootDll=1)
+%#pragma define(%plinkMode=>1)
+%#pragma define(%pDllMode=>0)
+    #ELSE
+%#pragma define(%plinkMode=>0)
+%#pragma define(%pDllMode=>1)
+    #ENDIF
+  #ELSIF(%pwhere=3) #! Clarion >= 7 cwproj file
+    #IF(%pMultiDLL=0 or %pRootDll=1)
+%%3b%plinkMode=&gt;1%%3b%pDllMode=&gt;0
+  #ELSE
+%%3b%plinkMode=&gt;0%%3b%pDllMode=&gt;1
+  #ENDIF
+#ENDIF
+#!=============================== end of method declaration section ==================================
+#GROUP(%CSOOPPrompts)
+    #BOXED('Class Definition'),SECTION
+      #PROMPT(' &Derive? (unhides embed points when checked)',CHECK),%DeriveFromBaseClass,DEFAULT(1),AT(10,2)
+      #ENABLE(%DeriveFromBaseClass),CLEAR
+        #BOXED,SECTION
+            #BOXED('Derive Existing Class Methods '),SECTION,where(%ActiveTemplateInstance <> ''),at(10,0)
+              #Prompt('&Data Embeds...',EMBEDBUTTON(%dMethodDataSection,%ActiveTemplate&%ActiveTemplateInstance)),AT(41,2,100,15)
+              #Prompt('&Code Embeds...',EMBEDBUTTON(%dMethodCodeSection,%ActiveTemplate&%ActiveTemplateInstance)),AT(41,20,100,15)
+              #display('These embeds are also available in your embeditor')
+              #display('and in the embed tree.')
+            #ENDBOXED
+            #BOXED('Derive Existing Class Methods '),SECTION,where(%ActiveTemplateInstance = ''),at(10,0)
+              #display('Access the embed points for deriving code')
+              #display('through the global embeds, in the embed tree.')
+            #ENDBOXED
+            #BUTTON('New &Class Methods'),AT(47,,100,15),MULTI(%ClassMethods,%ClassMethodName&' '&%ClassMethodPrototype)
+              #PROMPT('&Method Name:',@S64),%ClassMethodName,REQ
+              #PROMPT('Method &Prototype:',@s255),%ClassMethodPrototype
+            #ENDBUTTON
+            #BUTTON('New Class &Properties'),AT(47,,100,15),MULTI(%ClassPropertyItems,%ClassProperty&' - '&%ClassDataType)
+              #PROMPT('&Property Name:',@S64),%ClassProperty,REQ
+              #PROMPT('Property &Type:',DROP('BYTE|SHORT|USHORT|LONG|ULONG|REAL|SREAL|STRING|CSTRING|PSTRING|Other')),%ClassDataType
+              #ENABLE(%ClassDataType='Other')
+                #PROMPT('&Other Data Type:',@S64),%ClassOtherType
+              #ENDENABLE
+              #PROMPT('Is a &Reference?',CHECK),%ClassDataIsRef
+              #ENABLE(~%ClassDataIsRef AND(%ClassDataType='STRING' OR %ClassDataType='PSTRING' OR %ClassDataType='CSTRING'))
+                #PROMPT('&Size:',SPIN(@N5,1,65535)),%ClassDataSize,AT(,,30),REQ
+              #ENDENABLE
+              #Prompt('Auto',Check),%ClassDataAuto
+              #BOXED,SECTION
+                #PROMPT('&Dimensions:',SPIN(@N3,0,255)),%ClassDataDim1,AT(,0,30)
+                #ENABLE(%ClassDataDim1)
+                  #PROMPT('',SPIN(@N3,0,255)),%ClassDataDim2,AT(135,0,30)
+                #ENDENABLE
+                #ENABLE(%ClassDataDim1 AND %ClassDataDim2)
+                  #PROMPT('',SPIN(@N3,0,255)),%ClassDataDim3,AT(170,0,30)
+                #ENDENABLE
+                #ENABLE(%ClassDataDim1 AND %ClassDataDim2 AND %ClassDataDim3)
+                  #PROMPT('',SPIN(@N3,0,255)),%ClassDataDim4,AT(205,0,30)
+                #ENDENABLE
+              #ENDBOXED
+            #ENDBUTTON
+        #ENDBOXED
+      #ENDENABLE
+    #ENDBOXED
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#! can't auto-detect order for global objects, so use known information
+#GROUP(%GlobalMethods)
+  #! generate methods as if classes have already been generated - ie generate all methods.
+  #SET(%HasGeneratedMethods,0)
+  #SET(%HasGeneratedClasses,1)
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+#GROUP(%GlobalDeclaration)
+  #! generate classes as if methods have not yet been generated. - ie generate whole class.
+  #SET(%HasGeneratedMethods,0)
+  #SET(%HasGeneratedClasses,0)
+#!-  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
