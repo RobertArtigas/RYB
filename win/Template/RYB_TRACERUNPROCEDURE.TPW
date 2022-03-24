@@ -1,0 +1,84 @@
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%CopyrightTRACERUN) 
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightTextTRACERUN))
+    #DECLARE(%CopyrightTextTRACERUN)
+  #ENDIF
+  #SET(%CopyrightTextTRACERUN, 'Trace RUN procedure (UD Version)')
+  #SET(%CopyrightTextTRACERUN, %CopyrightTextTRACERUN & '<13,10>Copyright © 2018-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightTextTRACERUN, %CopyrightTextTRACERUN & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightTextTRACERUN, %CopyrightTextTRACERUN & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#BOXED('Version ' & %tplVersionTRACERUN & ' [ ' & %tplReleaseTRACERUN & ' ]'),AT(,,454),PROP(PROP:FontStyle,700)
+  #!DISPLAY(%CopyrightTextTRACERUN),AT(,,260,34)
+  #DISPLAY(%CopyrightTextTRACERUN),AT(,,436,24)
+#ENDBOXED
+#!
+#GROUP(%ExplainTRACERUN)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainTextTRACERUN))
+    #DECLARE(%ExplainTextTRACERUN)
+  #ENDIF
+  #SET(%ExplainTextTRACERUN, '')
+  #SET(%ExplainTextTRACERUN, %ExplainTextTRACERUN & 'This template is used to trace ENTER and EXITS to a PROCEDURE giving you')
+  #SET(%ExplainTextTRACERUN, %ExplainTextTRACERUN & ' the "(Thread): Application / Module / Procedure / Template" that is located when it')
+  #SET(%ExplainTextTRACERUN, %ExplainTextTRACERUN & ' enters and exits the procedure. It tells you where you are and how you got there.')
+  #SET(%ExplainTextTRACERUN, %ExplainTextTRACERUN & '<13,10><13,10>')
+  #SET(%ExplainTextTRACERUN, %ExplainTextTRACERUN & 'This template has been tested with the ABC template chain.')
+  #SET(%ExplainTextTRACERUN, %ExplainTextTRACERUN & '')
+#ENDPREPARE
+#!
+#GROUP(%MITLicenseTRACERUN)
+#TAB('TRACERUN'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightTRACERUN) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#EXTENSION(RYB_TraceRunProcedure, 'RA.2019.12.31: Trace RUN Procedure.'),DESCRIPTION('RYB | Trace RUN Procedure. Version: ' & %tplVersionTRACERUN & ', Release: ' & %tplReleaseTRACERUN),APPLICATION(HotKeyCtrlAltF9(RYB_RAYS))
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------
+#! RA.2019.12.31.SUN    Roberto Artigas
+#!  *    Created this template (original was destroyed)
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!-----------------------------------------------------------------------------
+#!SHEET,AT(,,288),HSCROLL
+#SHEET,AT(,,464),HSCROLL
+#INSERT(%MITLicenseTRACERUN)
+#INSERT(%ExplainTRACERUN)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #BOXED(''),AT(,,454)
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%ExplainTextTRACERUN),AT(,,260,44)
+    #DISPLAY(%ExplainTextTRACERUN),AT(,,436,34)
+  #ENDBOXED
+  #BOXED('Options'),AT(,,454)
+    #DISPLAY(''),AT(,,,1)
+    #PROMPT(' Do NOT generate TRACE code',CHECK),%NoGenerate,DEFAULT(%False),AT(10)
+  #ENDBOXED
+#ENDTAB
+#ENDSHEET
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#AT(%WindowManagerMethodCodeSection,'Run','(),BYTE'),PRIORITY(4998)
+  #IF(NOT %NoGenerate)
+UD.Debug('ENTER(' & THREAD() & '): %Application/%Module/%Procedure/%ProcedureTemplate')
+  #ENDIF
+#ENDAT
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#AT(%WindowManagerMethodCodeSection,'Run','(),BYTE'),PRIORITY(5002)
+  #IF(NOT %NoGenerate)
+UD.Debug('EXITS(' & THREAD() & '): %Application/%Module/%Procedure/%ProcedureTemplate')
+  #ENDIF
+#ENDAT
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------

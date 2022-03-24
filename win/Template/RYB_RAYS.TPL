@@ -59,6 +59,8 @@
 #EQUATE(%tplReleaseGENRECORDS               , '1999.01.31' )    #! TEMPORARY
 #EQUATE(%tplVersionGROUPS                   , '1.00' )
 #EQUATE(%tplReleaseGROUPS                   , '1999.01.31' )
+#EQUATE(%tplVersionTRACERUN                 , '1.00' )
+#EQUATE(%tplReleaseTRACERUN                 , '2019.12.31' )
 #EQUATE(%tplVersionNOGLOBALDATA             , '1.00' )
 #EQUATE(%tplReleaseNOGLOBALDATA             , '2000.01.29' )
 #EQUATE(%tplVersionTRYANDEXPIRE             , '1.00' )
@@ -257,6 +259,7 @@
 #INCLUDE('RYB_THREADME.TPW')                #! RA.2019.12.31: Thread number on title bar
 #INCLUDE('RYB_SQLRECONNECT.TPW')            #! RA.2020.06.26: SQL Handling Reconnect
 #INCLUDE('RYB_GENERATEGROUPS.TPW')          #! RA.1999.01.31: Generate Record Groups
+#INCLUDE('RYB_TRACERUNPROCEDURE.TPW')       #! RA.2019.12.31: Trace RUN procedure (UD Version)
 #INCLUDE('RYB_NOGLOBALDATA.TPW')            #! RA.2000.01.29: Suppress Global Data Exports
 #INCLUDE('RYB_TRYOUTANDEXPIRE.TPW')         #! RA.2000.08.02: Expire application on a date
 #INCLUDE('RYB_CTABLES.TPW')                 #! RA.2021.03.14: Equates for system wide tables
