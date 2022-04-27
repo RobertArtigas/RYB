@@ -73,6 +73,8 @@
 #EQUATE(%tplReleaseGRPFLD                   , '2021.11.18' )
 #EQUATE(%tplVersionLISTBOX                  , '1.00' )
 #EQUATE(%tplReleaseLISTBOX                  , '2021.11.26' )
+#EQUATE(%tplVersionGRPREC                   , '1.00' )
+#EQUATE(%tplReleaseGRPREC                   , '2022.04.26' )
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
@@ -266,6 +268,7 @@
 #INCLUDE('RYB_TEMPLATEINSTANCES.TPW')       #! EL.2021.05.06: Show template instances
 #INCLUDE('RYB_GROUPSFIELDS.TPW')            #! RA.2021.11.20: Groups with name attributes
 #INCLUDE('RYB_CREATELISTBOX.TPW')           #! RA.2021.11.26: Create List Box for Clarion
+#INCLUDE('RYB_GROUPSTRUCTURE.TPW')          #! RA.2022.04.26: Generate Record Groups
 #!
 #!INCLUDE('RYB_TESTING.TPW')                 #! RA.2019.04.21: TESTING STRAP - TEMPORARY
 #!-----------------------------------------------------------------------------------------------------
