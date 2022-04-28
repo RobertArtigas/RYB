@@ -577,8 +577,11 @@
 #OROF('DOUBLE')
 #OROF('FLOAT8')
 #!
+#OROF('BYTE')
 #OROF('SHORT')
 #OROF('LONG')
+#OROF('USHORT')
+#OROF('ULONG')
   #CALL(%ReplaceSubString,%zLenDec,'-','')
   #CALL(%ReplaceSubString,%zLenDec,'_','')
   #CALL(%ReplaceSubString,%zLenDec,'$','')
@@ -597,6 +600,8 @@
   #ENDIF
 #OF  ('STRING')
 #OROF('CSTRING')
+#OROF('PSTRING')
+#OROF('USTRING')
   #CALL(%ReplaceSubString,%zLenDec,'@','')
   #CALL(%ReplaceSubString,%zLenDec,'S','')
   #SET(%zLength,%zLenDec)
@@ -624,8 +629,7 @@
     #SET(%zDigits,0)  
 #! -02- %%pFieldType=%@S10@(%pFieldType) %%pFieldPicture=%@S20@(%pFieldPicture) %%zLenDec=%@S20@(%zLenDec), %%zLength=%@N04@(%zLength), %%zDigits=%@N02@(%zDigits) %%pFieldType=%@S10@(%pFieldType)
   #ELSE
-! ---- MASK TYPE UNKNOWN ----  
-! ---- %%pFieldType=%@S10@(%pFieldType) %%pFieldPicture=%@S20@(%pFieldPicture) %%zLenDec=%@S20@(%zLenDec), %%zLength=%@N04@(%zLength), %%zDigits=%@N02@(%zDigits) %%pFieldType=%@S10@(%pFieldType)
+#! ---- %%pFieldType=%@S10@(%pFieldType) %%pFieldPicture=%@S20@(%pFieldPicture) %%zLenDec=%@S20@(%zLenDec), %%zLength=%@N04@(%zLength), %%zDigits=%@N02@(%zDigits) %%pFieldType=%@S10@(%pFieldType)
   #ENDCASE
 #ENDIF
 #!
