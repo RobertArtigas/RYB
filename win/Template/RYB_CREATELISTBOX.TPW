@@ -16,7 +16,7 @@
 #INSERT(%PrepareFilesLISTBOX)
 #!
 #SHEET
-  #TAB ('Generate Records Groups')
+  #TAB ('Generate List Box Definitions')
     #DISPLAY ('This wizard will generate group definitions of the contents of your current dictionary.'), AT(90, 8, 235, 24)
     #DISPLAY ('To specify how you want the report constructed, click on the Next button.'), AT(90)
   #ENDTAB
@@ -75,7 +75,7 @@
 #FOR (%ReportedFilesLISTBOX)
   #FIX (%File, %ReportedFilesLISTBOX)
   #SET (%OutputFile, %FILE & '.inc')
-  #MESSAGE('File Group Definition: ' & %OutputFile, 2)
+  #MESSAGE('File List Box Definition: ' & %OutputFile, 2)
   #CREATE (%OutputFile)
 #INSERT(%GiveMeSomeStuffLISTBOX)
   #CLOSE (%OutputFile)
@@ -159,13 +159,13 @@
   #IF(NOT VAREXISTS(%CopyrightLISTBOX01))
     #DECLARE(%CopyrightLISTBOX01)
   #ENDIF
-  #SET(%CopyrightLISTBOX01, 'Generate GROUPS for this dictionary.')
+  #SET(%CopyrightLISTBOX01, 'Generate List Box definitions for this dictionary.')
   #SET(%CopyrightLISTBOX01, %CopyrightLISTBOX01 & '<13,10>Copyright © 1999-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
   #SET(%CopyrightLISTBOX01, %CopyrightLISTBOX01 & '<13,10>All copyrights reserved world wide.')
   #SET(%CopyrightLISTBOX01, %CopyrightLISTBOX01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
 #ENDPREPARE
 #!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
-#BOXED('Version '& %tplVersionGROUPS & ' [ ' & %tplReleaseGROUPS & ' ]'),AT(,,454),PROP(PROP:FontStyle,700) 
+#BOXED('Version '& %tplVersionLISTBOX & ' [ ' & %tplReleaseLISTBOX & ' ]'),AT(,,454),PROP(PROP:FontStyle,700) 
   #DISPLAY(''),AT(,,,1)
   #DISPLAY(%CopyrightLISTBOX01),AT(,,436,34)
 #ENDBOXED
@@ -400,7 +400,7 @@
   #FIX (%File, %ReportedFilesLISTBOX)
   #!SET (%OutputFile, %IncludeDirectoryLISTBOX & %FILE & '.inc')
   #SET (%OutputFile, %IncludeDirectoryLISTBOX & %SourcePrefixLISTBOX & %FILE & '.inc')
-  #MESSAGE('File Group Definition: ' & %OutputFile, 2)
+  #MESSAGE('File List Box Definition: ' & %OutputFile, 2)
   #!ERROR('File Group Definition: ' & %OutputFile)
   #CREATE (%OutputFile)
   #INSERT(%GiveMeSomeStuffLISTBOX)
