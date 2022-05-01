@@ -394,17 +394,30 @@
       #CALL(%BuildFieldTypeGRPREC,%zFldType)
       #CALL(%BuildAttributesFieldNameGRPREC,%zTheName)
       #CALL(%BuildFldStmtGRPREC,%zFldStmt)
-#! %FieldStruct || %FieldStatement || %zFldStmt
-      #IF(UPPER(%FieldType)='END')
+#! %FieldStruct || %FieldStatement || %%zFldStmt = %zFldStmt || %%zFldType = %zFldType
+      #!IF(UPPER(%FieldType)='END')
+      #IF(%zFldType='END')
         #SET(%zGroups,%zGroups-1)
       #ENDIF
+      #! RA.2022.05.01.SUN: Double check for 'unusual' attributes and fix logic [???]
       #! RA.2022.04.27.WED: 'END' -> No name, no name attributes
-      #IF(UPPER(%FieldType)<>'END')
-%[%zNames]FieldID %[%zItems-%zNames + (%zGroups*2)]NULL %zFldStmt%zTheName #<! %zFldRange %FieldDescription
+      #!IF(UPPER(%FieldType)<>'END')
+      #IF(%zFldType<>'END')
+        #SET(%nLoc1, INSTRING(',',%zFldStmt,1,1))
+#! %%nLoc1 = %nLoc1 || %%zFldStmt = %zFldStmt
+        #IF(%nLoc1)
+          #! RA.2022.05.01.SUN: You will get to this piece when you have dimensions and/or over fields
+          #! The TYPE field will be the first one. Then come the DIM and OVER keywords.
+          #SET(%zFldStmt,SUB(%zFldStmt,%nLoc1+0,LEN(%nLoc1)-%nLoc1+0))
+%[%zNames]FieldID %[%zItems-%zNames + (%zGroups*2)]NULL %zFldType%zFldStmt%zTheName #<! %zFldRange %FieldDescription
+        #ELSE
+%[%zNames]FieldID %[%zItems-%zNames + (%zGroups*2)]NULL %zFldType%zTheName #<! %zFldRange %FieldDescription
+       #ENDIF
       #ELSE
-%[%zNames]FieldID %[%zItems-%zNames + (%zGroups*2)]NULL %zFldStmt #<! %zFldRange %FieldDescription
+%[%zNames]FieldID %[%zItems-%zNames + (%zGroups*2)]NULL %zFldType #<! %zFldRange %FieldDescription
       #ENDIF
-      #IF(UPPER(%FieldType)='GROUP')
+      #!IF(UPPER(%FieldType)='GROUP')
+      #IF(%zFldType='GROUP')
         #SET(%zGroups,%zGroups+1)
       #ENDIF
     #ENDFOR
@@ -534,11 +547,33 @@
 #DECLARE(%zFldTo)
 #SET(%zFldFrom, 0)
 #SET(%zFldTo  , 0)
-#!
+#!                                        #! RA.2022.04.30.SAT: Added
 #DECLARE(%zA,LONG)
 #DECLARE(%zB,LONG)
 #DECLARE(%zFldStmt)
 #DECLARE(%zGroups)
+#!                                        #! RA.2022.05.01.SUN: Added
+#IF(NOT VAREXISTS(%nLoc1))
+  #DECLARE(%nLoc1)
+#ENDIF
+#IF(NOT VAREXISTS(%nLoc2))
+  #DECLARE(%nLoc2)
+#ENDIF
+#IF(NOT VAREXISTS(%NFieldUser))           #! Field user options [REFVAR(,,,)]
+  #DECLARE(%NFieldUser)`
+#ENDIF
+#IF(NOT VAREXISTS(%NFieldOpt1))           #! Field option 1 [NO]                  #! Ignore this field
+  #DECLARE(%NFieldOpt1)
+#ENDIF
+#IF(NOT VAREXISTS(%NFieldOpt2))           #! Field option 2 [<FieldType>]         #! Dictionary type override 
+  #DECLARE(%NFieldOpt2)
+#ENDIF
+#IF(NOT VAREXISTS(%NFieldOpt3))           #! Field option 3 [<Default>]           #! Dictionary default override
+  #DECLARE(%NFieldOpt3)
+#ENDIF
+#IF(NOT VAREXISTS(%NFieldOpt4))           #! Field option 4 [Not used yet]        #! Not used yet
+  #DECLARE(%NFieldOpt4)
+#ENDIF
 #!
 #IF (%ReportUseAllFilesGRPREC)
   #FOR (%SelectFromFilesGRPREC)
@@ -590,6 +625,12 @@
 #ELSE
   #SET(%pTheField , %FieldType)
 #ENDCASE
+#! RA.2022.05.01: Let's see about reference type field override
+#INSERT(%GetFieldOptions)                                                             #! REFVAR(,,,) for Fields
+#IF((SUB(%NFieldOpt1,1,1) <> 'N') AND (%NFieldOpt2 <> ''))
+  #SET(%pTheField,%NFieldOpt2)
+#ENDIF
+#!
 #SET(%pTheField, UPPER(%pTheField))
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
@@ -603,7 +644,6 @@
 #IF(NOT VAREXISTS(%TheFieldName))
   #DECLARE(%TheFieldName)
 #ENDIF
-#!
 #! RA.2022.04.10: Remove sorounding spaces on both sides of the vertical bar 
   #SET(%TheName     , '')
   #SET(%TheName     , %TheName & ',NAME(<39>')
@@ -714,6 +754,9 @@
 #! #OF  ('CSTRING')
 #!   #SET(%FldSize, %pFieldMemoSize - 1)
 #! #ENDCASE
+#IF((SUB(%pFieldType,1,1) = '&') OR (%pFieldType = 'ANY'))
+  #SET(%FldSize, 4)                           #! RA.2022.05.01.SUN: It's a REFERENCE of 4 bytes
+#ENDIF
 #CASE(%pFieldType)
 #OF  ('GROUP')
 #OROF('END')
@@ -741,6 +784,22 @@
 #ELSE
   #SET(%zFldStmt,%FieldStatement)
 #END
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%GetFieldOptions)                                                        #! REFVAR(,,,) for Fields
+#SET(%nLoc1,INSTRING('REFVAR(',UPPER(%FieldUserOptions),1,1))
+#SET(%nLoc2,INSTRING(')',%FieldUserOptions,1,%nLoc1))
+#SET(%NFieldUser,UPPER(SUB(%FieldUserOptions,%nLoc1,%nLoc2)))
+#!SET(%NFieldUser,UPPER(EXTRACT(%FieldUserOptions,'REFVAR')))
+#SET(%NFieldOpt1,EXTRACT(%NFieldUser,'REFVAR',1))
+#SET(%NFieldOpt2,EXTRACT(%NFieldUser,'REFVAR',2))
+#SET(%NFieldOpt3,EXTRACT(%NFieldUser,'REFVAR',3))
+#SET(%NFieldOpt4,EXTRACT(%NFieldUser,'REFVAR',4))
+#IF(%FALSE)
+  #IF(%NFieldUser)
+---- %%GetFieldOptions: [%FieldID] 0"%NFieldUser", 1"%NFieldOpt1", 2"%NFieldOpt2", 3"%NFieldOpt3", 4"%NFieldOpt4"
+  #ENDIF
+#ENDIF
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
