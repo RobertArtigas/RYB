@@ -271,5 +271,6 @@
 #INCLUDE('RYB_GROUPSTRUCTURE.TPW')          #! RA.2022.04.26: Generate Record Groups
 #!
 #!INCLUDE('RYB_TESTING.TPW')                 #! RA.2019.04.21: TESTING STRAP - TEMPORARY
+#INCLUDE('RYB_GLOBAL_TEST.TPW')             #! RA.2022.05.01: TESTING STRAP - TEMPORARY
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
