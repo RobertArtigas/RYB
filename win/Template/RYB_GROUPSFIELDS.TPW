@@ -232,6 +232,7 @@
 #GROUP(%GiveMeSomeStuffGRPFLD)
 !BOF
 !
+! Dictionary:   %DictionaryFile
 ! File:         %OutputFile
 ! Date-Time:    %@D010@(%BegDate) - %@T06@(%BegTime)
 ! Purpose:      Generated File Records as Groups

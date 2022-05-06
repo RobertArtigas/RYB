@@ -39,6 +39,8 @@
 #! Author:      Copyright © 1999-2999 by Roberto Artigas y Soler
 #!              All rights reserved world wide.
 #! Changes:
+#! 2022.05.06.FRI:  Roberto Artigas y Soler
+#!    *   Options for this template use REFVAR keword as listeral.
 #! 2021.11.26.FRI:  Roberto Artigas y Soler
 #!    *   Changed 'group_' to 'grpfld_' for default prefix.
 #! 2021.11.21.SUN:  Roberto Artigas y Soler
@@ -173,14 +175,14 @@
     #DECLARE(%NFileOpt4)
   #ENDIF
   #!
-  #SET(%nLoc1,INSTRING('RASQL(',%FileUserOptions,1,1))
+  #SET(%nLoc1,INSTRING('REFVAR(',%FileUserOptions,1,1))
   #SET(%nLoc2,INSTRING(')',%FileUserOptions,1,%nLoc1))
   #SET(%NFileUser,UPPER(SUB(%FileUserOptions,%nLoc1,%nLoc2)))
-  #!SET(%NFileUser,UPPER(EXTRACT(%FileUserOptions,'RASQL')))
-  #SET(%NFileOpt1,EXTRACT(%NFileUser,'RASQL',1))
-  #SET(%NFileOpt2,EXTRACT(%NFileUser,'RASQL',2))
-  #SET(%NFileOpt3,EXTRACT(%NFileUser,'RASQL',3))
-  #SET(%NFileOpt4,EXTRACT(%NFileUser,'RASQL',4))
+  #!SET(%NFileUser,UPPER(EXTRACT(%FileUserOptions,'REFVAR')))
+  #SET(%NFileOpt1,EXTRACT(%NFileUser,'REFVAR',1))
+  #SET(%NFileOpt2,EXTRACT(%NFileUser,'REFVAR',2))
+  #SET(%NFileOpt3,EXTRACT(%NFileUser,'REFVAR',3))
+  #SET(%NFileOpt4,EXTRACT(%NFileUser,'REFVAR',4))
   #!
   #IF(SUB(%NFileOpt1,1,1)='N')                                                  #! Ignore this file
     #CYCLE
@@ -261,6 +263,7 @@
 #GROUP(%GiveMeSomeStuffGRPREC)
 !BOF
 !
+! Dictionary:   %DictionaryFile
 ! File:         %OutputFileRec
 ! Date-Time:    %@D010@(%BegDate) - %@T06@(%BegTime)
 ! Purpose:      Generated File Records as Groups
