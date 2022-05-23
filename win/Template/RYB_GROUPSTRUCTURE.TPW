@@ -111,15 +111,15 @@
   #ENDFOR
 #ENDIF
 #!
-#DECLARE (%OutputFileRec)
+#DECLARE (%OutputFile)
 #FOR (%ReportedFilesGRPREC)
   #FIX (%File, %ReportedFilesGRPREC)
-  #SET (%OutputFileRec, %FILE & '.inc')
-  #MESSAGE('File Group Definition: ' & %OutputFileRec, 2)
-  #CREATE (%OutputFileRec)
+  #SET (%OutputFile, %FILE & '.inc')
+  #MESSAGE('File Group Definition: ' & %OutputFile, 2)
+  #CREATE (%OutputFile)
 #INSERT(%GiveMeSomeStuffGRPREC)
 #INSERT(%GiveMeSomeStuffGRPREC)
-  #CLOSE (%OutputFileRec)
+  #CLOSE (%OutputFile)
 #ENDFOR
 #!---------------------------------------------------------------------
 #!---------------------------------------------------------------------
@@ -263,8 +263,10 @@
 #GROUP(%GiveMeSomeStuffGRPREC)
 !BOF
 !
+!Region Generate
+!
 ! Dictionary:   %DictionaryFile
-! File:         %OutputFileRec
+! File:         %OutputFile
 ! Date-Time:    %@D010@(%BegDate) - %@T06@(%BegTime)
 ! Purpose:      Generated File Records as Groups
 ! Author:       GenerateGroups Template
@@ -273,7 +275,8 @@
 !               are not shared. Since file definitions are not
 !               available, data has to be passed in areas.
 !
-!Region
+!EndRegion
+!Region Header
   #IF (%FileType = 'ALIAS')
 ! Name:         %File (An alias for %AliasFile)
   #ELSE
@@ -288,10 +291,10 @@
   #ENDIF
 !EndRegion
   #IF(ITEMS(%Key))
+!Region KeyDocs
 !
-!-Keys-
+!-Keys Docs-
 !
-!Region
   #SUSPEND
     #FOR (%Key)
       #IF(%KeyIndex <> 'KEY')
@@ -312,10 +315,10 @@
     #ENDFOR
   #RESUME
 !EndRegion
+!Region KeyDefinitions
 !
 !-Keys-
 !
-!Region
   #SUSPEND
     #SET(%TheKeyNo,1)
     #FOR (%Key)
@@ -357,10 +360,10 @@
   #RESUME
 !EndRegion
   #ENDIF
+!Region RecordDefinition
 !
 !-Record-
 !
-!Region
 #!   #SUSPEND
 #!   #SET(%LineWork, UPPER(%FilePrefix) & '_tRec')
 #!   #SET(%LineNext, 'GROUP,TYPE,BINDABLE,PRE(r' & UPPER(%FilePrefix) & ')')
@@ -429,10 +432,10 @@
 #!
   #RESUME
 !EndRegion
+!Region QueueDefinition
 !
 !-Queue-
 !
-!Region
   #SUSPEND
 #SET(%LineWork, UPPER(%FilePrefix) & '_qRec')
 #SET(%LineNext, 'QUEUE(' & UPPER(%FilePrefix) & '_tRec' & '),TYPE,BINDABLE,PRE(q' & UPPER(%FilePrefix) & ')')
@@ -440,10 +443,10 @@
 %[%zNames]NULL %[%zGroup-%zNames]NULL END
   #RESUME
 !EndRegion
+!Region FieldEquates
 !
 !-Equates-
 !
-!Region
   #SUSPEND
 #!!! %[%zNames]NULL %[%zGroup-%zNames]NULL ITEMIZE(1)
     #SET(%CountEquate, 0)
@@ -462,7 +465,9 @@
     #ENDFOR
 #!!! %[%zNames]NULL %[%zGroup-%zNames]NULL END
   #RESUME
+!
 !EndRegion
+#CALL(%GiveMeSomeStuffLISTBOX, %FALSE)
 !
 !EOF
 #GROUP(%GiveMeSomeStuffEndGRPREC)
@@ -476,6 +481,8 @@
 #! Created By:          Roberto Artigas y Soler
 #! Author:              2021.11.20 - Roberto Artigas y Soler
 #! Changes:
+#! 2022.05.19.THU:  Roberto Artigas y Soler
+#!    *   #CALL(%GiveMeSomeStuffLISTBOX, %FALSE) in another template to generate list box definitions.
 #! 2021.11.26.FRI:  Roberto Artigas y Soler
 #!    *   Changed 'group_' to 'grpfld_' for default prefix.
 #! 2021.11.21.SUN:  Roberto Artigas y Soler
@@ -590,16 +597,19 @@
 #!
 #COMMENT(180)
 #!
-#DECLARE (%OutputFileRec)
+#IF(NOT VAREXISTS(%OutputFile))
+  #DECLARE(%OutputFile)
+#ENDIF
+#!
 #FOR (%ReportedFilesGRPREC)
   #FIX (%File, %ReportedFilesGRPREC)
-  #!SET (%OutputFileRec, %IncludeDirectoryGRPREC & %FILE & '.inc')
-  #SET (%OutputFileRec, %IncludeDirectoryGRPREC & %SourcePrefixGRPREC & %FILE & '.inc')
-  #MESSAGE('File Group Definition: ' & %OutputFileRec, 2)
-  #!ERROR('File Group Definition: ' & %OutputFileRec)
-  #CREATE (%OutputFileRec)
+  #!SET (%OutputFile, %IncludeDirectoryGRPREC & %FILE & '.inc')
+  #SET (%OutputFile, %IncludeDirectoryGRPREC & %SourcePrefixGRPREC & %FILE & '.inc')
+  #MESSAGE('File Group Definition: ' & %OutputFile, 2)
+  #!ERROR('File Group Definition: ' & %OutputFile)
+  #CREATE (%OutputFile)
 #INSERT(%GiveMeSomeStuffGRPREC)
-  #CLOSE (%OutputFileRec)
+  #CLOSE (%OutputFile)
 #ENDFOR
 #!
 #ENDAT

@@ -9,6 +9,9 @@
 #! Author:      Copyright © 1999-2999 by Roberto Artigas y Soler
 #!              All rights reserved world wide.
 #! Changes:
+#! 2022.05.19:      Roberto Artigas y Soler
+#!    * Fixed incorrect generation when containing groups in the structure
+#!    * Cleaned up generation so I could generate the LISTBOX from the group structures
 #! 2021.12.05:      Roberto Artigas y Soler
 #!    *   Implementation of the DCT2SQL #GROUPS that have been there for a while
 #!        into an new template.  
@@ -77,7 +80,7 @@
   #SET (%OutputFile, %FILE & '.inc')
   #MESSAGE('File List Box Definition: ' & %OutputFile, 2)
   #CREATE (%OutputFile)
-#INSERT(%GiveMeSomeStuffLISTBOX)
+#INSERT(%GiveMeSomeStuffLISTBOX, %TRUE)
   #CLOSE (%OutputFile)
 #ENDFOR
 #!---------------------------------------------------------------------
@@ -215,10 +218,77 @@
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
-#GROUP(%GiveMeSomeStuffLISTBOX)
+#GROUP(%GiveMeSomeStuffLISTBOX, %SetPrefixSuffix)
+#!
+#IF(NOT VAREXISTS(%d2c2aTabsFields))
+#DECLARE(%d2c2aWork)
+#DECLARE(%d2c2aTabsFields),MULTI,UNIQUE
+#DECLARE(%d2c2aTab       ,%d2c2aTabsFields)     #! TAB name where this field is
+#DECLARE(%d2c2aNum       ,%d2c2aTabsFields)     #! Number of the field (in the GROUP structure)
+#DECLARE(%d2c2aSeq       ,%d2c2aTabsFields)     #! Display #??# of the field (recall style byte)
+#DECLARE(%d2c2aFld       ,%d2c2aTabsFields)     #! Field name with prefix
+#DECLARE(%d2c2aDSP       ,%d2c2aTabsFields)     #! Clarion DCT value
+#DECLARE(%d2c2aType      ,%d2c2aTabsFields)     #! Field Type
+#DECLARE(%d2c2aFMS       ,%d2c2aTabsFields)     #! Field Memo Size (DCT)
+#DECLARE(%d2c2aDHL       ,%d2c2aTabsFields)     #! Length of the column header
+#DECLARE(%d2c2aFDP       ,%d2c2aTabsFields)     #! Field display picture
+#DECLARE(%d2c2aLen       ,%d2c2aTabsFields)     #! Length of display picture
+#DECLARE(%d2c2aDig       ,%d2c2aTabsFields)     #! Digits of display picture
+#!DECLARE(%d2c2aDSL1     ,%d2c2aTabsFields)     #! Length of the sort header (RA.2021.09.07.MON: Added Clarion)
+#!DECLARE(%d2c2aDSL2     ,%d2c2aTabsFields)     #! Length of the sort header (RA.2021.09.07.MON: Added Noyantis)
+#DECLARE(%d2c2aCalc1     ,%d2c2aTabsFields)     #! Calculation 1: Clarion
+#DECLARE(%d2c2aCalc2     ,%d2c2aTabsFields)     #! Calculation 2: Noyantis
+#!                                              #! Calculation 3: <next list field width calculation>
+#END
+#!
+#IF(NOT VAREXISTS(%NextLine))
+  #DECLARE(%NextLine)                                  #! pScreenID
+#ENDIF
+#IF(NOT VAREXISTS(%WorkLine))
+  #DECLARE(%WorkLine)                                  #! pObjectID
+#ENDIF
+#IF(NOT VAREXISTS(%MoreLine))
+  #DECLARE(%MoreLine)                                  #! pQueueID
+#ENDIF
+#IF(NOT VAREXISTS(%NextWork))
+  #DECLARE(%NextWork)
+#ENDIF
+#!
+#IF(NOT VAREXISTS(%NumberFields))
+  #DECLARE(%NumberFields)
+#ENDIF
+#IF(NOT VAREXISTS(%CountFields))
+  #DECLARE(%CountFields)
+#ENDIF
+#IF(NOT VAREXISTS(%BuildPart1))
+  #DECLARE(%BuildPart1)
+#ENDIF
+#IF(NOT VAREXISTS(%BuildPart2))
+  #DECLARE(%BuildPart2)
+#ENDIF
+#IF(NOT VAREXISTS(%IndexFields))
+  #DECLARE(%IndexFields)
+#ENDIF
+#IF(NOT VAREXISTS(%TotalFields))
+  #DECLARE(%TotalFields)
+#ENDIF
+#!
+#IF(NOT VAREXISTS(%ListFeqLISTBOX))
+  #DECLARE(%ListFeqLISTBOX)
+  #SET(%ListFeqLISTBOX          , '_ListQ')
+#ENDIF
+#IF(NOT VAREXISTS(%QueueNameLISTBOX))
+  #DECLARE(%QueueNameLISTBOX)
+  #SET(%QueueNameLISTBOX        , 'ListQ')
+#ENDIF
+#IF(NOT VAREXISTS(%QueueSuffixLISTBOX))
+  #DECLARE(%QueueSuffixLISTBOX)
+  #SET(%QueueSuffixLISTBOX      , '_oListClass')
+#ENDIF
 #!
 #CALL(%Utzd2c2aTabsFields)
 #!
+#IF(%SetPrefixSuffix)
 !BOF
 !
 ! Dictionary:   %DictionaryFile
@@ -230,17 +300,18 @@
 ! Narative:     This template is used to create list box formats
 !               from dictionary entries.
 !
+#ENDIF
 !Region Class_YES
 #SET(%NextLine, '?' & %FilePrefix & %ListFeqLISTBOX)                    #! pScreenID
 #SET(%WorkLine, %FilePrefix & %QueueSuffixLISTBOX)                      #! pObjectID 
 #SET(%MoreLine, %QueueNameLISTBOX)                                      #! pQueueID
 !-------------------------------------------------------------------------------------------------!
 ! Control:      %[81]NextLine !
-! Class Name:   %[81]WorkLine !
+! Object Name:  %[81]WorkLine !
 ! Queue List:   %[81]MoreLine !
 #CALL(%UtzScreenListForClarion,%NextLine,%WorkLine,%MoreLine)
-!EndRegion
 !
+!EndRegion
 !Region Class_NO
 #SET(%NextLine, '?' & %FilePrefix & %ListFeqLISTBOX)                    #! pScreenID
 #SET(%WorkLine, %FilePrefix & %QueueSuffixLISTBOX)                      #! pObjectID 
@@ -250,6 +321,7 @@
 ! Control:      %[81]NextLine !
 ! Queue List:   %[81]MoreLine !
 #CALL(%UtzScreenListForClarion,%NextLine,%WorkLine,%MoreLine)
+!
 !EndRegion
 #!
 #!Region
@@ -263,8 +335,10 @@
 #!
 #!Region
 #!EndRegion
+#IF(%SetPrefixSuffix)
 !
 !EOF
+#ENDIF
 #GROUP(%GiveMeSomeStuffEndLISTBOX)
 #!---------------------------------------------------------------------
 #!---------------------------------------------------------------------
@@ -381,6 +455,7 @@
 #DECLARE (%MoreLine)                                  #! pQueueID
 #DECLARE (%NextWork)
 #DECLARE (%IndexFields)
+#DECLARE (%TotalFields)
 #DECLARE (%BuildPart1)
 #DECLARE (%BuildPart2)
 #!
@@ -404,7 +479,7 @@
   #MESSAGE('File List Box Definition: ' & %OutputFile, 2)
   #!ERROR('File Group Definition: ' & %OutputFile)
   #CREATE (%OutputFile)
-  #INSERT(%GiveMeSomeStuffLISTBOX)
+  #INSERT(%GiveMeSomeStuffLISTBOX, %TRUE)
   #CLOSE (%OutputFile)
 #ENDFOR
 #RUN('NOTEPAD.EXE "' & %OutputFile & '"')
@@ -1112,6 +1187,8 @@
 #GROUP(%UtzScreenListForClarion,%pScreenID,%pObjectID,%pQueueuID)
 #SET(%IndexFields,0)
 #SET(%CountFields,1)
+#SET(%TotalFields,ITEMS(%d2c2aTabsFields))
+#!----- %%TotalFields = %TotalFields
 #FOR(%d2c2aTabsFields)
   #FIX(%Field, %d2c2aFld)
   #CASE(%FieldType)
@@ -1146,7 +1223,8 @@
   #SET(%BuildPart2, %d2c2aCalc1 & %FieldJustType & '(' & %FieldJustIndent & ')|M~' & %FieldHeader & '~' & %FieldPicture & '@#' & %d2c2aSeq & '#')   
   #!SET(%BuildPart2, %FieldFormatWidth & %FieldJustType & '(' & %FieldJustIndent & ')|MY~' & %FieldHeader & '~' & %FieldPicture & '@#' & %CountFields & '#')   
   #SET(%BuildPart1, %BuildPart1 & '''' & %BuildPart2 & '''')
-  #IF(%IndexFields=ITEMS(%Field))
+  #!IF(%IndexFields=ITEMS(%Field))
+  #IF(%IndexFields=ITEMS(%d2c2aTabsFields))
     #!SET(%NextWork, %FilePrefix & '_oListClass.ListQ')
     #!SET(%NextWork, %pObjectID & '.' & %pQueueuID)
     #IF(%pObjectID)
@@ -1193,7 +1271,8 @@
     #SET(%NextWork,                    %pQueueuID)
   #ENDIF
   #SET(%BuildPart1, %BuildPart1 & %NextWork & '.' & %FieldID)
-  #IF(%IndexFields=ITEMS(%Field))
+  #!IF(%IndexFields=ITEMS(%Field))
+  #IF(%IndexFields=ITEMS(%d2c2aTabsFields))
     #SET(%BuildPart1, %BuildPart1 & ')')
   #ELSE
     #SET(%BuildPart1, %BuildPart1 & ', |')
