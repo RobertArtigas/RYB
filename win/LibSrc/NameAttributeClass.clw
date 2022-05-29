@@ -9,16 +9,41 @@
 
   INCLUDE('NameAttributeClass.inc'),ONCE
 
+<<<<<<< HEAD
+=======
+!Region
+! ================================================================================
+! gtC102base          GROUP,TYPE                                                           ! DB001: + Calendar
+! timestamp              REAL,NAME('ts | REAL | @N15.0B | PROMPT(''TS:'') | COLUMN(''TS'')')
+! servertimestamp        REAL,NAME('sts | REAL | @N15.0B | PROMPT(''STS:'') | COLUMN(''STS'')')
+! deletedtimestamp       REAL,NAME('dts | REAL | @N15.0B | PROMPT(''DTS:'') | COLUMN(''DTS'')')
+! encryptionversion      LONG,NAME('encryptionversion | LONG | @N-14 | PROMPT(''Encryption Version:'') | COLUMN(''EV'')')
+! date_update            DATE,NAME('date_update | DATE | @D010-B | PROMPT(''Date update:'') | COLUMN(''DateUp'')')
+! time_update            TIME,NAME('time_update | TIME | @T04B | PROMPT(''Time update:'') | COLUMN(''TimeUp'')')
+! user_update            STRING(20),NAME('user_update | STRING(20) | @S20 | PROMPT(''User Update:'') | COLUMN(''UserUp'')')
+! active_flag            STRING(1),NAME('active_flag | STRING(1) | @S1 | PROMPT(''Active flag:'') | COLUMN(''A'')')
+! guid                   STRING(16),NAME('guid | STRING(16) | @S16 | PROMPT(''C101 GUID:'') | COLUMN(''C101GUID'') | Salt')
+! p_order                SHORT,NAME('p_order | SHORT | @N-4 | PROMPT(''Order:'') | COLUMN(''Order'')')
+! calendar_code          STRING(9),NAME('calendar_code | STRING(9) | @S9 | PROMPT(''Code:'') | COLUMN(''Code'')')
+! calendar_name          STRING(240),NAME('calendar_name | STRING(240) | @S240 | PROMPT(''Calendar Name:'') | COLUMN(''Calendar'')')
+!                      END                                                                  ! gtC102base
+! ================================================================================
+!EndRegion
+
+>>>>>>> e07c749 (Commit stuff)
 !-------------------------------------------------------------------
 NameAttributeClass.Construct        PROCEDURE()
 !-------------------------------------------------------------------
   CODE
   SELF.Debug('CLASS(' & THREAD() & '): NameAttributeClass.Construct')
   SELF.ShowDebug  = FALSE
+<<<<<<< HEAD
   SELF.CntFields  = 0
   SELF.ValueClear()
   SELF.naQ &= NEW qtNameAttr
   FREE(SELF.naQ)
+=======
+>>>>>>> e07c749 (Commit stuff)
   RETURN
 
 !-------------------------------------------------------------------
@@ -27,6 +52,7 @@ NameAttributeClass.Destruct         PROCEDURE()
   CODE
   SELF.Debug('CLASS(' & THREAD() & '): NameAttributeClass.Destruct')
   SELF.ShowDebug  = FALSE
+<<<<<<< HEAD
   SELF.ValueClear()
   FREE(SELF.naQ)
   DISPOSE(SELF.naQ)
@@ -46,6 +72,24 @@ szMSG   &CSTRING
   CODE
   szMSG &= NEW CSTRING( SIZE(xMsg) + SIZE('<13,10,0>') )
   szMSG  =                   xMsg  &      '<13,10,0>'
+=======
+  RETURN
+
+!-------------------------------------------------------------------
+NameAttributeClass.SetDebug         PROCEDURE(Byte pShowDebug = False)
+!-------------------------------------------------------------------
+  CODE
+  SELF.ShowDebug  = pShowDebug
+  RETURN
+
+!-------------------------------------------------------------------
+NameAttributeClass.Debug            PROCEDURE(String pMsg)
+!-------------------------------------------------------------------
+szMSG   &CSTRING
+  CODE
+  szMSG &= NEW CSTRING( SIZE(pMsg) + SIZE('<13,10,0>') )
+  szMSG  =                   pMsg  &      '<13,10,0>'
+>>>>>>> e07c749 (Commit stuff)
   OutputDebugString(szMSG)
   DISPOSE(szMSG)
   RETURN
@@ -58,6 +102,7 @@ NameAttributeClass.WhatAmI          PROCEDURE() !,String
     SELF.Debug(SELF.WhatAmI)
   END
   RETURN SELF.WhatAmI
+<<<<<<< HEAD
   
 !-------------------------------------------------------------------
 NameAttributeClass.Init             PROCEDURE(*GROUP xGroup) !,BYTE,PROC
@@ -250,4 +295,6 @@ M       	SHORT(0)
   END
   SELF.Debug('CLASS(' & THREAD() & '): NameAttributeClass._CountFields(...): NumFields=[ ' & NumFields & ' ]')
   RETURN NumFields
+=======
+>>>>>>> e07c749 (Commit stuff)
 
