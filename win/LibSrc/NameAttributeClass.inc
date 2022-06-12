@@ -86,7 +86,7 @@ guid                        STRING(16),NAME('guid|STRING(16)|@S16|[0058-0073]|PR
 p_order                     SHORT,NAME('p_order|SHORT|@N-4|[0074-0075]|PR(''Order:'')|CO(''Order'')')                                                              ! [0074-0075] Presentation order.
 data_code                   STRING(9),NAME('data_code|STRING(9)|@S9|[0076-0084]|PR(''Code:'')|CO(''Code'')')                                                       ! [0076-0084] Data code.
 data_name                   STRING(240),NAME('data_name|STRING(240)|@S240|[0085-0324]|PR(''Name:'')|CO(''Name'')')                                                 ! [0085-0324] Data name.
-					      END                                                                  ! gtTestBase
+                          END                                                                  ! gtTestBase
 ! ================================================================================
 !EndRegion
 
