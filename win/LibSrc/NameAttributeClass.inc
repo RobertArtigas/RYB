@@ -23,10 +23,10 @@ FieldColumn                 CSTRING(129),NAME('FieldColumn|CSTRING(129)|@S128|[0
 FieldTypeSQL                CSTRING(129),NAME('FieldTypeSQL|CSTRING(129)|@S128|[0517-0645]|PR(''SQL Type:'')|CO(''SQLType'')')                                     ! [0517-0645] Field type SQL.
 FieldFormatSQL              CSTRING(129),NAME('FieldFormatSQL|CSTRING(129)|@S128|[0646-0774]|PR(''SQL Format:'')|CO(''SQLFormat'')')                               ! [0646-0774] Field format SQL.
 FieldTemp                   CSTRING(241),NAME('FieldTemp|CSTRING(241)|@S240|[0775-1015]|PR(''Field Temp:'')|CO(''Temp'')')                                         ! [0775-1015] Field attributes temporary.
-						  END
+                          END
 
-qtNameAttr           	  QUEUE(gtNameAttr),TYPE
-						  END
+qtNameAttr                QUEUE(gtNameAttr),TYPE
+                          END
 					 
 C_NAMEATTR_FIELDNUMBER      EQUATE(1)
 C_NAMEATTR_FIELDSALT        EQUATE(2)
