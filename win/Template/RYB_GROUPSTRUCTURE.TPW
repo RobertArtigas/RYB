@@ -740,6 +740,17 @@
     #SET(%TheName   , %TheName & '|Salt')
   #ENDCASE
 #!
+#! RA.2022.06.17.FRI: Added HASH definition for the extended name attributes
+#INSERT(%GetHashOptions)                                                              #! HASH(,,,) for Fields
+#IF((SUB(%NFieldOpt1,1,1) <> 'N') AND (%NFieldOpt2 <> ''))
+  #SET(%TheName     , %TheName & '|Hash(' & %NFieldOpt2 & ')')
+#ENDIF
+#! RA.2022.06.17.FRI: Added ENCRYPTED definition for the extended name attributes
+#INSERT(%GetEncryptedOptions)                                                         #! ENCRYPTED(,,,) for Fields
+#IF((SUB(%NFieldOpt1,1,1) <> 'N') AND (%NFieldOpt2 <> ''))
+  #SET(%TheName     , %TheName & '|Encrypted(' & %NFieldOpt2 & ')')
+#ENDIF
+#!
 #! RA.2022.04.10: TESTING: Let me know the length and what it is being generated
 #!#SET(%NextLine, '!-- LEN(%TheName) =[ ' & FORMAT(LEN(%TheName),@N04) & ' ], %TheName=[ "' & %TheName & '" ]')
 #!%NextLine
@@ -811,6 +822,40 @@
 #IF(%FALSE)
   #IF(%NFieldUser)
 ---- %%GetFieldOptions: [%FieldID] 0"%NFieldUser", 1"%NFieldOpt1", 2"%NFieldOpt2", 3"%NFieldOpt3", 4"%NFieldOpt4"
+  #ENDIF
+#ENDIF
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#! RA.2022.06.17.FRI: Added HASH definition for the extended name attributes
+#GROUP(%GetHashOptions)                                                         #! HASH(,,,) for Fields
+#SET(%nLoc1,INSTRING('HASH(',UPPER(%FieldUserOptions),1,1))
+#SET(%nLoc2,INSTRING(')',%FieldUserOptions,1,%nLoc1))
+#SET(%NFieldUser,UPPER(SUB(%FieldUserOptions,%nLoc1,%nLoc2)))
+#!SET(%NFieldUser,UPPER(EXTRACT(%FieldUserOptions,'HASH')))
+#SET(%NFieldOpt1,EXTRACT(%NFieldUser,'HASH',1))
+#SET(%NFieldOpt2,EXTRACT(%NFieldUser,'HASH',2))
+#SET(%NFieldOpt3,EXTRACT(%NFieldUser,'HASH',3))
+#SET(%NFieldOpt4,EXTRACT(%NFieldUser,'HASH',4))
+#IF(%FALSE)
+  #IF(%NFieldUser)
+---- %%GetHashOptions: [%FieldID] 0"%NFieldUser", 1"%NFieldOpt1", 2"%NFieldOpt2", 3"%NFieldOpt3", 4"%NFieldOpt4"
+  #ENDIF
+#ENDIF
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#! RA.2022.06.17.FRI: Added ENCRYPTED definition for the extended name attributes
+#GROUP(%GetEncryptedOptions)                                                    #! ENCRYPTED(,,,) for Fields
+#SET(%nLoc1,INSTRING('ENCRYPTED(',UPPER(%FieldUserOptions),1,1))
+#SET(%nLoc2,INSTRING(')',%FieldUserOptions,1,%nLoc1))
+#SET(%NFieldUser,UPPER(SUB(%FieldUserOptions,%nLoc1,%nLoc2)))
+#!SET(%NFieldUser,UPPER(EXTRACT(%FieldUserOptions,'ENCRYPTED')))
+#SET(%NFieldOpt1,EXTRACT(%NFieldUser,'ENCRYPTED',1))
+#SET(%NFieldOpt2,EXTRACT(%NFieldUser,'ENCRYPTED',2))
+#SET(%NFieldOpt3,EXTRACT(%NFieldUser,'ENCRYPTED',3))
+#SET(%NFieldOpt4,EXTRACT(%NFieldUser,'ENCRYPTED',4))
+#IF(%FALSE)
+  #IF(%NFieldUser)
+---- %%GetEncryptedOptions: [%FieldID] 0"%NFieldUser", 1"%NFieldOpt1", 2"%NFieldOpt2", 3"%NFieldOpt3", 4"%NFieldOpt4"
   #ENDIF
 #ENDIF
 #!-----------------------------------------------------------------------------
