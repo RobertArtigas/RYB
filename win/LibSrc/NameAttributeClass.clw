@@ -42,7 +42,7 @@ NameAttributeClass.SetDebug         PROCEDURE(Byte xShowDebug = False)
 !-------------------------------------------------------------------
 NameAttributeClass.Debug            PROCEDURE(String xMsg)
 !-------------------------------------------------------------------
-szMSG   &CSTRING
+szMSG       &CSTRING
   CODE
   szMSG &= NEW CSTRING( SIZE(xMsg) + SIZE('<13,10,0>') )
   szMSG  =                   xMsg  &      '<13,10,0>'
@@ -63,14 +63,14 @@ NameAttributeClass.WhatAmI          PROCEDURE() !,String
 NameAttributeClass.Init             PROCEDURE(*GROUP xGroup) !,BYTE,PROC
 !-------------------------------------------------------------------
 ST          StringTheory
-X       	SHORT
+X           SHORT
   CODE
   IF NOT xGroup THEN RETURN FALSE END
   SELF.CntFields        	    = SELF._CountFields(xGroup)
   FREE(SELF.naQ)
   LOOP X = 1 TO SELF.CntFields
     CLEAR(SELF.naG)
-	SELF.naG.FieldNumber	    = X
+	SELF.naG.FieldNumber        = X
 	SELF.naG.FieldTemp          = WHO(xGroup, X)
 	SELF.Debug('CLASS(' & THREAD() & '): Init(...): FieldTemp[' & FORMAT(X,@n03) & '](' & FORMAT(LEN(CLIP(SELF.naG.FieldTemp)),@N05) & ')=[ "' & CLIP(SELF.naG.FieldTemp) & '" ]')
 	ST.Setvalue(SELF.naG.FieldTemp)                        
