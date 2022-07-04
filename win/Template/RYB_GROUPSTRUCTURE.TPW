@@ -737,9 +737,15 @@
 #!  
   #CASE(UPPER(%FieldID))
   #OF  ('GUID')
+  #OROF('ID')
     #SET(%TheName   , %TheName & '|Salt')
   #ENDCASE
 #!
+#! RA.2022.06.29.WED: Added IDENTITY definition for the extended name attributes
+#INSERT(%GetIdentityOptions)                                                          #! IDENTITY(,,,) for Fields
+#IF((SUB(%NFieldOpt1,1,1) <> 'N') AND (%NFieldOpt2 <> ''))
+  #SET(%TheName     , %TheName & '|Salt')
+#ENDIF
 #! RA.2022.06.17.FRI: Added HASH definition for the extended name attributes
 #INSERT(%GetHashOptions)                                                              #! HASH(,,,) for Fields
 #IF((SUB(%NFieldOpt1,1,1) <> 'N') AND (%NFieldOpt2 <> ''))
@@ -853,6 +859,23 @@
 #SET(%NFieldOpt2,EXTRACT(%NFieldUser,'ENCRYPTED',2))
 #SET(%NFieldOpt3,EXTRACT(%NFieldUser,'ENCRYPTED',3))
 #SET(%NFieldOpt4,EXTRACT(%NFieldUser,'ENCRYPTED',4))
+#IF(%FALSE)
+  #IF(%NFieldUser)
+---- %%GetEncryptedOptions: [%FieldID] 0"%NFieldUser", 1"%NFieldOpt1", 2"%NFieldOpt2", 3"%NFieldOpt3", 4"%NFieldOpt4"
+  #ENDIF
+#ENDIF
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#! RA.2022.06.29.WED: Added IDENTITY definition for the extended name attributes
+#GROUP(%GetIdentityOptions)                                                    #! IDENTITY(,,,) for Fields
+#SET(%nLoc1,INSTRING('IDENTITY(',UPPER(%FieldUserOptions),1,1))
+#SET(%nLoc2,INSTRING(')',%FieldUserOptions,1,%nLoc1))
+#SET(%NFieldUser,UPPER(SUB(%FieldUserOptions,%nLoc1,%nLoc2)))
+#!SET(%NFieldUser,UPPER(EXTRACT(%FieldUserOptions,'IDENTITY')))
+#SET(%NFieldOpt1,EXTRACT(%NFieldUser,'IDENTITY',1))
+#SET(%NFieldOpt2,EXTRACT(%NFieldUser,'IDENTITY',2))
+#SET(%NFieldOpt3,EXTRACT(%NFieldUser,'IDENTITY',3))
+#SET(%NFieldOpt4,EXTRACT(%NFieldUser,'IDENTITY',4))
 #IF(%FALSE)
   #IF(%NFieldUser)
 ---- %%GetEncryptedOptions: [%FieldID] 0"%NFieldUser", 1"%NFieldOpt1", 2"%NFieldOpt2", 3"%NFieldOpt3", 4"%NFieldOpt4"
