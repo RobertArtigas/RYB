@@ -30,11 +30,6 @@ Clarioneros : 161 : 2020-08-22 : https://clarionlive.com/clarioneros.htm (**OneD
 
 Clarioneros : 163 : 2020-09-05 : https://clarionlive.com/clarioneros.htm (**OneDrive** link)
 
-##
-###
-
-Criminals are never materially handicapped by such rules; the only effect is to disarm the peaceful citizen and put him fully at the mercy of the lawless. Such rules look very pretty on paper; in practice they are as foolish and footless as the attempt of the mice to bell the cat.<BR/>
-_Robert A. Heinlein_
 
 ##
 
@@ -43,3 +38,8 @@ _Robert A. Heinlein_
 [Main](https://github.com/RobertArtigas) 
 [Repositories](https://github.com/RobertArtigas?tab=repositories)
 
+##
+###
+
+Criminals are never materially handicapped by such rules; the only effect is to disarm the peaceful citizen and put him fully at the mercy of the lawless. Such rules look very pretty on paper; in practice they are as foolish and footless as the attempt of the mice to bell the cat.<BR/>
+_Robert A. Heinlein_
