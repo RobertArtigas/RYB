@@ -43,7 +43,7 @@
   #ENDTAB
   #TAB('Classes')
     #INSERT(%GlobalDeclareClassesPR)
-    #PROMPT('Object Name',@s100),%NameAttributeClassObjectName,DEFAULT('oGLO')
+    #PROMPT('Object Name',@s100),%NameAttributeClassObjectName,DEFAULT('oNameAttr')
     #PROMPT('Class Name',@s100),%NameAttributeClassName,DEFAULT('NameAttributeClass')
   #ENDTAB
 #ENDSHEET

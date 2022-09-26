@@ -14,10 +14,11 @@ NameAttributeClass.Construct        PROCEDURE()
 !-------------------------------------------------------------------
   CODE
   SELF.Debug('CLASS(' & THREAD() & '): NameAttributeClass.Construct')
+  STOP('CLASS(' & THREAD() & '): NameAttributeClass.Construct')
   SELF.ShowDebug  = FALSE
   SELF.CntFields  = 0
   SELF.ValueClear()
-  SELF.naQ &= NEW gtNameAttr_qRec
+  SELF.naQ &= NEW qtNameAttr
   FREE(SELF.naQ)
   RETURN
 
@@ -26,6 +27,7 @@ NameAttributeClass.Destruct         PROCEDURE()
 !-------------------------------------------------------------------
   CODE
   SELF.Debug('CLASS(' & THREAD() & '): NameAttributeClass.Destruct')
+  STOP('CLASS(' & THREAD() & '): NameAttributeClass.Destruct')
   SELF.ShowDebug  = FALSE
   SELF.ValueClear()
   FREE(SELF.naQ)
@@ -65,14 +67,20 @@ NameAttributeClass.Init             PROCEDURE(*GROUP xGroup) !,BYTE,PROC
 ST          StringTheory
 X           SHORT
   CODE
-  IF NOT xGroup THEN RETURN FALSE END
+  SELF.Debug('CLASS(' & THREAD() & '): NameAttributeClass.Init(...): ENTER ==========')
+  IF NOT xGroup THEN 
+    SELF.Debug('CLASS(' & THREAD() & '): NameAttributeClass.Init(...): No GROUP structure passed')
+    RETURN FALSE 
+  END
   SELF.CntFields        	      = SELF._CountFields(xGroup)
+  SELF.Debug('CLASS(' & THREAD() & '): NameAttributeClass.Init(...): SELF.CntFields=[ ' & SELF.CntFields & ' ]')
+  STOP('CLASS(' & THREAD() & '): NameAttributeClass.Init(...): SELF.CntFields=[ ' & SELF.CntFields & ' ]')
   FREE(SELF.naQ)
   LOOP X = 1 TO SELF.CntFields
     CLEAR(SELF.naG)
 	  SELF.naG.FieldNumber        = X
 	  SELF.naG.FieldTemp          = WHO(xGroup, X)
-	  SELF.Debug('CLASS(' & THREAD() & '): Init(...): FieldTemp[' & FORMAT(X,@n03) & '](' & FORMAT(LEN(CLIP(SELF.naG.FieldTemp)),@N05) & ')=[ "' & CLIP(SELF.naG.FieldTemp) & '" ]')
+    SELF.Debug('CLASS(' & THREAD() & '): Init(...): FieldTemp[' & FORMAT(X,@n03) & '](' & FORMAT(LEN(CLIP(SELF.naG.FieldTemp)),@N05) & ')=[ "' & CLIP(SELF.naG.FieldTemp) & '" ]')
 	  ST.Setvalue(SELF.naG.FieldTemp)                        
 	  ST.Split('|',,,,TRUE,TRUE)                     
 	  SELF.naG.FieldName          = ST.GetLine(1)
@@ -100,6 +108,7 @@ X           SHORT
   END
   !SELF.ShowDebug = TRUE         ! TESTING: Last Entry
   !SELF.ValueDebug()             ! TESTING: Last entry
+  SELF.Debug('CLASS(' & THREAD() & '): NameAttributeClass.Init(...): EXITS ==========')
   RETURN TRUE
 
 !-------------------------------------------------------------------
@@ -130,22 +139,22 @@ NameAttributeClass.ValueSetItem     PROCEDURE(BYTE xAttribute,STRING xData)
 !-------------------------------------------------------------------
   CODE
   CASE(xAttribute)
-    OF (C_GTNAMEATTR_FIELDNUMBER)     ; SELF.naG.FieldNumber      = xData
-    OF (C_GTNAMEATTR_FIELDSALT)       ; SELF.naG.FieldSalt        = xData
-    OF (C_GTNAMEATTR_FIELDHASH)       ; SELF.naG.FieldHash        = xData
-    OF (C_GTNAMEATTR_FIELDENCRYPT)    ; SELF.naG.FieldEncrypt     = xData
-    OF (C_GTNAMEATTR_FIELDFROM)       ; SELF.naG.FieldFrom        = xData
-    OF (C_GTNAMEATTR_FIELDTO)         ; SELF.naG.FieldTo          = xData
-    OF (C_GTNAMEATTR_FIELDNAME)       ; SELF.naG.FieldName        = xData
-    OF (C_GTNAMEATTR_FIELDWHOM)       ; SELF.naG.FieldWhom        = xData
-    OF (C_GTNAMEATTR_FIELDTYPE)       ; SELF.naG.FieldType        = xData
-    OF (C_GTNAMEATTR_FIELDFORMAT)     ; SELF.naG.FieldFormat      = xData
-    OF (C_GTNAMEATTR_FIELDRANGE)      ; SELF.naG.FieldRange       = xData
-    OF (C_GTNAMEATTR_FIELDPROMPT)     ; SELF.naG.FieldPrompt      = xData
-    OF (C_GTNAMEATTR_FIELDCOLUMN)     ; SELF.naG.FieldColumn      = xData
-    OF (C_GTNAMEATTR_FIELDTYPESQL)    ; SELF.naG.FieldTypeSQL     = xData
-    OF (C_GTNAMEATTR_FIELDFORMATSQL)  ; SELF.naG.FieldFormatSQL   = xData
-    OF (C_GTNAMEATTR_FIELDTEMP)       ; SELF.naG.FieldTemp        = xData
+    OF (C_NAMEATTR_FIELDNUMBER)     ; SELF.naG.FieldNumber      = xData
+    OF (C_NAMEATTR_FIELDSALT)       ; SELF.naG.FieldSalt        = xData
+    OF (C_NAMEATTR_FIELDHASH)       ; SELF.naG.FieldHash        = xData
+    OF (C_NAMEATTR_FIELDENCRYPT)    ; SELF.naG.FieldEncrypt     = xData
+    OF (C_NAMEATTR_FIELDFROM)       ; SELF.naG.FieldFrom        = xData
+    OF (C_NAMEATTR_FIELDTO)         ; SELF.naG.FieldTo          = xData
+    OF (C_NAMEATTR_FIELDNAME)       ; SELF.naG.FieldName        = xData
+    OF (C_NAMEATTR_FIELDWHOM)       ; SELF.naG.FieldWhom        = xData
+    OF (C_NAMEATTR_FIELDTYPE)       ; SELF.naG.FieldType        = xData
+    OF (C_NAMEATTR_FIELDFORMAT)     ; SELF.naG.FieldFormat      = xData
+    OF (C_NAMEATTR_FIELDRANGE)      ; SELF.naG.FieldRange       = xData
+    OF (C_NAMEATTR_FIELDPROMPT)     ; SELF.naG.FieldPrompt      = xData
+    OF (C_NAMEATTR_FIELDCOLUMN)     ; SELF.naG.FieldColumn      = xData
+    OF (C_NAMEATTR_FIELDTYPESQL)    ; SELF.naG.FieldTypeSQL     = xData
+    OF (C_NAMEATTR_FIELDFORMATSQL)  ; SELF.naG.FieldFormatSQL   = xData
+    OF (C_NAMEATTR_FIELDTEMP)       ; SELF.naG.FieldTemp        = xData
   END!CASE
   RETURN
 
@@ -154,22 +163,22 @@ NameAttributeClass.ValueGetItem     PROCEDURE(BYTE xAttribute)!,STRING
 !-------------------------------------------------------------------
   CODE
   CASE(xAttribute)
-    OF (C_GTNAMEATTR_FIELDNUMBER)     ; RETURN SELF.naG.FieldNumber
-    OF (C_GTNAMEATTR_FIELDSALT)       ; RETURN SELF.naG.FieldSalt
-    OF (C_GTNAMEATTR_FIELDHASH)       ; RETURN SELF.naG.FieldHash
-    OF (C_GTNAMEATTR_FIELDENCRYPT)    ; RETURN SELF.naG.FieldEncrypt
-    OF (C_GTNAMEATTR_FIELDFROM)       ; RETURN SELF.naG.FieldFrom
-    OF (C_GTNAMEATTR_FIELDTO)         ; RETURN SELF.naG.FieldTo
-    OF (C_GTNAMEATTR_FIELDNAME)       ; RETURN SELF.naG.FieldName
-    OF (C_GTNAMEATTR_FIELDWHOM)       ; RETURN SELF.naG.FieldWhom
-    OF (C_GTNAMEATTR_FIELDTYPE)       ; RETURN SELF.naG.FieldType
-    OF (C_GTNAMEATTR_FIELDFORMAT)     ; RETURN SELF.naG.FieldFormat
-    OF (C_GTNAMEATTR_FIELDRANGE)      ; RETURN SELF.naG.FieldRange
-    OF (C_GTNAMEATTR_FIELDPROMPT)     ; RETURN SELF.naG.FieldPrompt
-    OF (C_GTNAMEATTR_FIELDCOLUMN)     ; RETURN SELF.naG.FieldColumn
-    OF (C_GTNAMEATTR_FIELDTYPESQL)    ; RETURN SELF.naG.FieldTypeSQL
-    OF (C_GTNAMEATTR_FIELDFORMATSQL)  ; RETURN SELF.naG.FieldFormatSQL
-    OF (C_GTNAMEATTR_FIELDTEMP)       ; RETURN SELF.naG.FieldTemp
+    OF (C_NAMEATTR_FIELDNUMBER)     ; RETURN SELF.naG.FieldNumber
+    OF (C_NAMEATTR_FIELDSALT)       ; RETURN SELF.naG.FieldSalt
+    OF (C_NAMEATTR_FIELDHASH)       ; RETURN SELF.naG.FieldHash
+    OF (C_NAMEATTR_FIELDENCRYPT)    ; RETURN SELF.naG.FieldEncrypt
+    OF (C_NAMEATTR_FIELDFROM)       ; RETURN SELF.naG.FieldFrom
+    OF (C_NAMEATTR_FIELDTO)         ; RETURN SELF.naG.FieldTo
+    OF (C_NAMEATTR_FIELDNAME)       ; RETURN SELF.naG.FieldName
+    OF (C_NAMEATTR_FIELDWHOM)       ; RETURN SELF.naG.FieldWhom
+    OF (C_NAMEATTR_FIELDTYPE)       ; RETURN SELF.naG.FieldType
+    OF (C_NAMEATTR_FIELDFORMAT)     ; RETURN SELF.naG.FieldFormat
+    OF (C_NAMEATTR_FIELDRANGE)      ; RETURN SELF.naG.FieldRange
+    OF (C_NAMEATTR_FIELDPROMPT)     ; RETURN SELF.naG.FieldPrompt
+    OF (C_NAMEATTR_FIELDCOLUMN)     ; RETURN SELF.naG.FieldColumn
+    OF (C_NAMEATTR_FIELDTYPESQL)    ; RETURN SELF.naG.FieldTypeSQL
+    OF (C_NAMEATTR_FIELDFORMATSQL)  ; RETURN SELF.naG.FieldFormatSQL
+    OF (C_NAMEATTR_FIELDTEMP)       ; RETURN SELF.naG.FieldTemp
   END!CASE
   RETURN ''
 
@@ -188,22 +197,22 @@ NameAttributeClass.DataSetItem      PROCEDURE(LONG xFieldNumber,BYTE xAttribute,
   CODE
   GET(SELF.naQ, xFieldNumber)
   CASE(xAttribute)
-    OF (C_GTNAMEATTR_FIELDNUMBER)     ; SELF.naQ.FieldNumber      = xData
-    OF (C_GTNAMEATTR_FIELDSALT)       ; SELF.naQ.FieldSalt        = xData
-    OF (C_GTNAMEATTR_FIELDHASH)       ; SELF.naQ.FieldHash        = xData
-    OF (C_GTNAMEATTR_FIELDENCRYPT)    ; SELF.naQ.FieldEncrypt     = xData
-    OF (C_GTNAMEATTR_FIELDFROM)       ; SELF.naQ.FieldFrom        = xData
-    OF (C_GTNAMEATTR_FIELDTO)         ; SELF.naQ.FieldTo          = xData
-    OF (C_GTNAMEATTR_FIELDNAME)       ; SELF.naQ.FieldName        = xData
-    OF (C_GTNAMEATTR_FIELDWHOM)       ; SELF.naQ.FieldWhom        = xData
-    OF (C_GTNAMEATTR_FIELDTYPE)       ; SELF.naQ.FieldType        = xData
-    OF (C_GTNAMEATTR_FIELDFORMAT)     ; SELF.naQ.FieldFormat      = xData
-    OF (C_GTNAMEATTR_FIELDRANGE)      ; SELF.naQ.FieldRange       = xData
-    OF (C_GTNAMEATTR_FIELDPROMPT)     ; SELF.naQ.FieldPrompt      = xData
-    OF (C_GTNAMEATTR_FIELDCOLUMN)     ; SELF.naQ.FieldColumn      = xData
-    OF (C_GTNAMEATTR_FIELDTYPESQL)    ; SELF.naQ.FieldTypeSQL     = xData
-    OF (C_GTNAMEATTR_FIELDFORMATSQL)  ; SELF.naQ.FieldFormatSQL   = xData
-    OF (C_GTNAMEATTR_FIELDTEMP)       ; SELF.naQ.FieldTemp        = xData
+    OF (C_NAMEATTR_FIELDNUMBER)     ; SELF.naQ.FieldNumber      = xData
+    OF (C_NAMEATTR_FIELDSALT)       ; SELF.naQ.FieldSalt        = xData
+    OF (C_NAMEATTR_FIELDHASH)       ; SELF.naQ.FieldHash        = xData
+    OF (C_NAMEATTR_FIELDENCRYPT)    ; SELF.naQ.FieldEncrypt     = xData
+    OF (C_NAMEATTR_FIELDFROM)       ; SELF.naQ.FieldFrom        = xData
+    OF (C_NAMEATTR_FIELDTO)         ; SELF.naQ.FieldTo          = xData
+    OF (C_NAMEATTR_FIELDNAME)       ; SELF.naQ.FieldName        = xData
+    OF (C_NAMEATTR_FIELDWHOM)       ; SELF.naQ.FieldWhom        = xData
+    OF (C_NAMEATTR_FIELDTYPE)       ; SELF.naQ.FieldType        = xData
+    OF (C_NAMEATTR_FIELDFORMAT)     ; SELF.naQ.FieldFormat      = xData
+    OF (C_NAMEATTR_FIELDRANGE)      ; SELF.naQ.FieldRange       = xData
+    OF (C_NAMEATTR_FIELDPROMPT)     ; SELF.naQ.FieldPrompt      = xData
+    OF (C_NAMEATTR_FIELDCOLUMN)     ; SELF.naQ.FieldColumn      = xData
+    OF (C_NAMEATTR_FIELDTYPESQL)    ; SELF.naQ.FieldTypeSQL     = xData
+    OF (C_NAMEATTR_FIELDFORMATSQL)  ; SELF.naQ.FieldFormatSQL   = xData
+    OF (C_NAMEATTR_FIELDTEMP)       ; SELF.naQ.FieldTemp        = xData
   END!CASE
   RETURN
 
@@ -213,22 +222,22 @@ NameAttributeClass.DataGetItem      PROCEDURE(LONG xFieldNumber,BYTE xAttribute)
   CODE
   GET(SELF.naQ, xFieldNumber)
   CASE(xAttribute)
-    OF (C_GTNAMEATTR_FIELDNUMBER)     ; RETURN SELF.naQ.FieldNumber
-    OF (C_GTNAMEATTR_FIELDSALT)       ; RETURN SELF.naQ.FieldSalt
-    OF (C_GTNAMEATTR_FIELDHASH)       ; RETURN SELF.naQ.FieldHash
-    OF (C_GTNAMEATTR_FIELDENCRYPT)    ; RETURN SELF.naQ.FieldEncrypt
-    OF (C_GTNAMEATTR_FIELDFROM)       ; RETURN SELF.naQ.FieldFrom
-    OF (C_GTNAMEATTR_FIELDTO)         ; RETURN SELF.naQ.FieldTo
-    OF (C_GTNAMEATTR_FIELDNAME)       ; RETURN SELF.naQ.FieldName
-    OF (C_GTNAMEATTR_FIELDWHOM)       ; RETURN SELF.naQ.FieldWhom
-    OF (C_GTNAMEATTR_FIELDTYPE)       ; RETURN SELF.naQ.FieldType
-    OF (C_GTNAMEATTR_FIELDFORMAT)     ; RETURN SELF.naQ.FieldFormat
-    OF (C_GTNAMEATTR_FIELDRANGE)      ; RETURN SELF.naQ.FieldRange
-    OF (C_GTNAMEATTR_FIELDPROMPT)     ; RETURN SELF.naQ.FieldPrompt
-    OF (C_GTNAMEATTR_FIELDCOLUMN)     ; RETURN SELF.naQ.FieldColumn
-    OF (C_GTNAMEATTR_FIELDTYPESQL)    ; RETURN SELF.naQ.FieldTypeSQL
-    OF (C_GTNAMEATTR_FIELDFORMATSQL)  ; RETURN SELF.naQ.FieldFormatSQL
-    OF (C_GTNAMEATTR_FIELDTEMP)       ; RETURN SELF.naQ.FieldTemp
+    OF (C_NAMEATTR_FIELDNUMBER)     ; RETURN SELF.naQ.FieldNumber
+    OF (C_NAMEATTR_FIELDSALT)       ; RETURN SELF.naQ.FieldSalt
+    OF (C_NAMEATTR_FIELDHASH)       ; RETURN SELF.naQ.FieldHash
+    OF (C_NAMEATTR_FIELDENCRYPT)    ; RETURN SELF.naQ.FieldEncrypt
+    OF (C_NAMEATTR_FIELDFROM)       ; RETURN SELF.naQ.FieldFrom
+    OF (C_NAMEATTR_FIELDTO)         ; RETURN SELF.naQ.FieldTo
+    OF (C_NAMEATTR_FIELDNAME)       ; RETURN SELF.naQ.FieldName
+    OF (C_NAMEATTR_FIELDWHOM)       ; RETURN SELF.naQ.FieldWhom
+    OF (C_NAMEATTR_FIELDTYPE)       ; RETURN SELF.naQ.FieldType
+    OF (C_NAMEATTR_FIELDFORMAT)     ; RETURN SELF.naQ.FieldFormat
+    OF (C_NAMEATTR_FIELDRANGE)      ; RETURN SELF.naQ.FieldRange
+    OF (C_NAMEATTR_FIELDPROMPT)     ; RETURN SELF.naQ.FieldPrompt
+    OF (C_NAMEATTR_FIELDCOLUMN)     ; RETURN SELF.naQ.FieldColumn
+    OF (C_NAMEATTR_FIELDTYPESQL)    ; RETURN SELF.naQ.FieldTypeSQL
+    OF (C_NAMEATTR_FIELDFORMATSQL)  ; RETURN SELF.naQ.FieldFormatSQL
+    OF (C_NAMEATTR_FIELDTEMP)       ; RETURN SELF.naQ.FieldTemp
   END!CASE
   RETURN ''
 

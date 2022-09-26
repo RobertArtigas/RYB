@@ -45,6 +45,8 @@
 #EXTENSION(RYB_WhoAmI_ALL, 'RA.2018.12.02: Appplication, Module, Procedure (HotKey CtrlAltF9)'),DESCRIPTION('RYB | Appplication, Module, Procedure (HotKey CtrlAltF9). Version: ' & %tplVersionWHOAMI & ', Release: ' & %tplReleaseWHOAMI),APPLICATION(HotKeyCtrlAltF9(RYB_RAYS))
 #INSERT(%PreambleRYB)
 #!-----------------------------------------------------------------------------
+#! RA.2022.07.24.SUN    Roberto Artigas
+#!  *    Removed the dictionary changed date. Only procedure information.
 #! RA.2018.12.02.SUN    Roberto Artigas
 #!  *    Created this template
 #!-----------------------------------------------------------------------------
@@ -76,9 +78,18 @@ IF KEYCODE() = CtrlAltF9 THEN
     '|PROCEDURE NAME|%Procedure' & |
     '|PROCEDURE CREATED|' & FORMAT(%ProcedureDateCreated,@D010-) & |
     '|PROCEDURE UPDATED|' & FORMAT(%ProcedureDateChanged,@D010-) & |
-    '|DICTIONARY CHANGED|' & FORMAT(%DictionaryDateChanged,@D010-) & |
     '|','Procedure Information',Icon:Exclamation)
 END #<! IF KEYCODE() = CtrlAltF9
+#! RA.2022.07.24.SUN - Removed the dictionary changed date. Only procedure information.
+#! IF KEYCODE() = CtrlAltF9 THEN
+#!   MESSAGE('APPLICATION NAME|%Application' & |
+#!     '|MODULE NAME|%Module' & |
+#!     '|PROCEDURE NAME|%Procedure' & |
+#!     '|PROCEDURE CREATED|' & FORMAT(%ProcedureDateCreated,@D010-) & |
+#!     '|PROCEDURE UPDATED|' & FORMAT(%ProcedureDateChanged,@D010-) & |
+#!     '|DICTIONARY CHANGED|' & FORMAT(%DictionaryDateChanged,@D010-) & |
+#!     '|','Procedure Information',Icon:Exclamation)
+#! END #<! IF KEYCODE() = CtrlAltF9
 #ENDAT
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
