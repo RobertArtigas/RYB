@@ -71,10 +71,10 @@
 #EQUATE(%tplReleaseTPLINSTANCE              , '2021.05.06' )
 #EQUATE(%tplVersionGRPFLD                   , '1.00' )
 #EQUATE(%tplReleaseGRPFLD                   , '2021.11.18' )
-#EQUATE(%tplVersionLISTBOX                  , '1.00' )
+#EQUATE(%tplVersionLISTBOX                  , '1.01' )
 #EQUATE(%tplReleaseLISTBOX                  , '2021.11.26' )
-#EQUATE(%tplVersionGRPREC                   , '1.00' )
-#EQUATE(%tplReleaseGRPREC                   , '2022.04.26' )
+#EQUATE(%tplVersionGRPREC                   , '2.00' )
+#EQUATE(%tplReleaseGRPREC                   , '2022.11.05' )
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
