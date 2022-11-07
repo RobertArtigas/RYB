@@ -10,6 +10,8 @@
 #System
   #EQUATE(%NameAttributeClassTPLVersion,'1.00')
 #!------------------------------------------------------------------------------
+#! RA.2022.11.07: Start code changes log
+#!------------------------------------------------------------------------------
 #EXTENSION(NameAttributeClass,'RA.2020.06.13: GLOBAL: NameAttributeClass'),DESCRIPTION('RYB | GLOBAL: NameAttributeClass, Version: ' & %NameAttributeClassTPLVersion),APPLICATION
 #PREPARE
 #ENDPREPARE
