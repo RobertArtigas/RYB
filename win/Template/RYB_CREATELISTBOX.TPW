@@ -688,6 +688,11 @@
 #OF  ('TIME')
   #SET(%zLength,6)
   #SET(%zDigits,0)
+#! RA.2022.11.05: Additional check
+#OF  ('MEMO')
+#OROF('BLOB')
+  #SET(%zLength,%FieldMemoSize)
+  #SET(%zDigits,0)
 #ELSE
 ! ---- DATA TYPE UNKNOWN ----  
 ! ---- %%pFieldType=%@S10@(%pFieldType) %%pFieldPicture=%@S20@(%pFieldPicture) %%zLenDec=%@S20@(%zLenDec), %%zLength=%@N04@(%zLength), %%zDigits=%@N02@(%zDigits) %%pFieldType=%@S10@(%pFieldType)
