@@ -257,6 +257,29 @@
     #ENDENABLE
   #ENDBOXED
 #ENDTAB
+#!
+#! RA.2022.11.05: Added options for XML. Do general options?
+#GROUP(%TabOptionsGRPREC)
+#TAB('Options')  #!,PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+  #BOXED(''),AT(,,454),PROP(PROP:FontStyle,700)
+    #DISPLAY(''),AT(,,,1)
+    #BOXED('General'),AT(,,),PROP(PROP:FontStyle,700)
+      #DISPLAY(''),AT(,,,1)
+      #PROMPT ('Create RANGE item in the external NAME definition.', CHECK), %OptionUseRangeGRPREC, DEFAULT(1), AT(10)
+      #PROMPT ('Create PROMPT item in the external NAME definition.', CHECK), %OptionUsePromptGRPREC, DEFAULT(1), AT(10)
+      #PROMPT ('Create COLUMN item in the external NAME definition.', CHECK), %OptionUseColumnGRPREC, DEFAULT(1), AT(10)
+    #ENDBOXED
+    #DISPLAY(''),AT(,,,1)
+    #BOXED('XML'),AT(,,),PROP(PROP:FontStyle,700)
+      #DISPLAY(''),AT(,,,1)
+      #PROMPT ('Generate XML attibutes for xFiles', CHECK), %OptionUseXMLGRPREC, DEFAULT(1), AT(10)
+      #ENABLE(%OptionUseXMLGRPREC)
+        #PROMPT ('Generate BOOLEAN property.', CHECK), %OptionUseBooleanGRPREC, DEFAULT(1), AT(20)
+        #PROMPT ('Generate ATTRIBUTE property.', CHECK), %OptionUseAttributeGRPREC, DEFAULT(1), AT(20)
+      #ENDENABLE
+    #ENDBOXED
+  #ENDBOXED
+#ENDTAB
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
@@ -481,6 +504,9 @@
 #! Created By:          Roberto Artigas y Soler
 #! Author:              2021.11.20 - Roberto Artigas y Soler
 #! Changes:
+#! 2022.11.05.SAT:  Roberto Artigas y Soler
+#!    *   Create some template options to give choices on generation
+#!    *   Changes to #CALL(%GiveMeSomeStuffLISTBOX, %FALSE) to exclude MEMO, BLOBS.
 #! 2022.05.19.THU:  Roberto Artigas y Soler
 #!    *   #CALL(%GiveMeSomeStuffLISTBOX, %FALSE) in another template to generate list box definitions.
 #! 2021.11.26.FRI:  Roberto Artigas y Soler
@@ -520,6 +546,7 @@
   #ENDBOXED
 #ENDTAB
 #INSERT(%TabSelectionGRPREC)
+#INSERT(%TabOptionsGRPREC)
 #ENDSHEET
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
@@ -699,9 +726,13 @@
     #SET(%zFldFrom, %zFldTo)
   #ENDIF
   #SET(%zFldRange   , '[' & FORMAT(%zFldFrom,@N04) & '-' & FORMAT((%zFldTo),@N04) & ']')
-  #SET(%zFldFrom  , %zFldTo + 1)
-#!
-  #SET(%TheName     , %TheName & '|' & %zFldRange)
+  #SET(%zFldFrom    , %zFldTo + 1)
+#!---------------------------------------------------------------------!
+#! RA.2022.11.05: Created option to generate range in NAME attributes. !
+#!---------------------------------------------------------------------!
+  #IF(%OptionUseRangeGRPREC)
+    #SET(%TheName   , %TheName & '|' & %zFldRange)
+  #ENDIF
 #!
 #!  #SET(%TheName   , %TheName & '|' & EXTRACT(%FieldQuickOptions,'TAB'))
 #!
@@ -726,20 +757,41 @@
   #IF(%FieldType='END')
     #SET(%TheFieldName, '')
   #ENDIF
-  #SET(%TheName , %TheName & '|' & %TheFieldName)
+#!----------------------------------------------------------------------!
+#! RA.2022.11.05: Created option to generate prompt in NAME attributes. !
+#!----------------------------------------------------------------------!
+  #IF(%OptionUsePromptGRPREC)
+    #SET(%TheName , %TheName & '|' & %TheFieldName)
+  #ENDIF
 #! RA.2021.11.20.SAT: Add column header to the extended name attribute
   #!SET(%TheFieldName, 'COLUMN(''''' & %FieldHeader &  ''''')')
   #SET(%TheFieldName, 'CO(''''' & %FieldHeader &  ''''')')              #! RA.2022.04.10: COLUMN -> CO
   #IF(%FieldType='END')
     #SET(%TheFieldName, '')
   #ENDIF
-  #SET(%TheName , %TheName & '|' & %TheFieldName)
+#!----------------------------------------------------------------------!
+#! RA.2022.11.05: Created option to generate header in NAME attributes. !
+#!----------------------------------------------------------------------!
+  #IF(%OptionUseColumnGRPREC)
+    #SET(%TheName , %TheName & '|' & %TheFieldName)
+  #ENDIF
 #!  
   #CASE(UPPER(%FieldID))
   #OF  ('GUID')
   #OROF('ID')
     #SET(%TheName   , %TheName & '|Salt')
   #ENDCASE
+#!--------------------------------------------------------!
+#! RA.2022.11.05: Handle the Capesoft xFiles XML options. !
+#!--------------------------------------------------------!
+  #IF(%OptionUseXMLGRPREC)
+    #IF(%OptionUseBooleanGRPREC AND %FieldValidation = 'BOOLEAN')
+      #SET(%TheName , %TheName & '|BOOLEAN')
+    #ENDIF
+    #IF(%OptionUseAttributeGRPREC)
+      #SET(%TheName , %TheName & '|ATTRIBUTE')
+    #ENDIF
+  #ENDIF
 #!
 #! RA.2022.06.29.WED: Added IDENTITY definition for the extended name attributes
 #INSERT(%GetIdentityOptions)                                                          #! IDENTITY(,,,) for Fields
