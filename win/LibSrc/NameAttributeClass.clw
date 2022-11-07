@@ -1,4 +1,6 @@
   MEMBER
+
+! RA.2022.11.07: Start editing changes log
   
   MAP
     MODULE('kernel')

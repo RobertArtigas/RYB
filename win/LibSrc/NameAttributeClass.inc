@@ -2,6 +2,8 @@
 
 OMIT('_EndOfInclude_',_NameAttributeClass_)
 
+! RA.2022.11.07: Start editing changes log
+
 _NameAttributeClass_ EQUATE(1)
 
   INCLUDE('EQUATES.CLW'),ONCE
