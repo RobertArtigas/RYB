@@ -42,6 +42,9 @@
 #EXTENSION(RYB_TraceRunProcedure, 'RA.2019.12.31: Trace RUN Procedure.'),DESCRIPTION('RYB | Trace RUN Procedure. Version: ' & %tplVersionTRACERUN & ', Release: ' & %tplReleaseTRACERUN),APPLICATION(HotKeyCtrlAltF9(RYB_RAYS))
 #INSERT(%PreambleRYB)
 #!-----------------------------------------------------------------------------
+#! RA.2022.11.25.FRI    Roberto Artigas
+#!  *    Added options for all three (3) debuggers I occassionally used.
+#!  * Different individuals have different needs and legacy debugging.
 #! RA.2019.12.31.SUN    Roberto Artigas
 #!  *    Created this template (original was destroyed)
 #!-----------------------------------------------------------------------------
@@ -61,6 +64,7 @@
   #BOXED('Options'),AT(,,454)
     #DISPLAY(''),AT(,,,1)
     #PROMPT(' Do NOT generate TRACE code',CHECK),%NoGenerate,DEFAULT(%False),AT(10)
+    #PROMPT('TRACE Type:',DROP('Ultimate Debug|Debuger|Thread Debug|None')),%TraceDebugType,DEFAULT('None')
   #ENDBOXED
 #ENDTAB
 #ENDSHEET
@@ -69,14 +73,30 @@
 #!-----------------------------------------------------------------------------
 #AT(%WindowManagerMethodCodeSection,'Run','(),BYTE'),PRIORITY(4998)
   #IF(NOT %NoGenerate)
+    #CASE(%TraceDebugType)
+    #OF('Thread Debug')
+TD.Debug('ENTER(' & THREAD() & '): %Application/%Module/%Procedure/%ProcedureTemplate')
+    #OF('Ultimate Debug')
 UD.Debug('ENTER(' & THREAD() & '): %Application/%Module/%Procedure/%ProcedureTemplate')
+    #OF('Debuger')
+DB.DebugOut('ENTER(' & THREAD() & '): %Application/%Module/%Procedure/%ProcedureTemplate',,,TRUE)
+    #OF('None')
+    #ENDCASE
   #ENDIF
 #ENDAT
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
 #AT(%WindowManagerMethodCodeSection,'Run','(),BYTE'),PRIORITY(5002)
   #IF(NOT %NoGenerate)
+    #CASE(%TraceDebugType)
+    #OF('Thread Debug')
+TD.Debug('EXITS(' & THREAD() & '): %Application/%Module/%Procedure/%ProcedureTemplate')
+    #OF('Ultimate Debug')
 UD.Debug('EXITS(' & THREAD() & '): %Application/%Module/%Procedure/%ProcedureTemplate')
+    #OF('Debuger')
+DB.DebugOut('EXITS(' & THREAD() & '): %Application/%Module/%Procedure/%ProcedureTemplate',,,TRUE)
+    #OF('None')
+    #ENDCASE
   #ENDIF
 #ENDAT
 #!-----------------------------------------------------------------------------
