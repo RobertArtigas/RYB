@@ -75,6 +75,10 @@
 #EQUATE(%tplReleaseLISTBOX                  , '2021.11.26' )
 #EQUATE(%tplVersionGRPREC                   , '2.00' )
 #EQUATE(%tplReleaseGRPREC                   , '2022.11.05' )
+#EQUATE(%tplVersion001DCT                   , '1.00' )
+#EQUATE(%tplRelease001DCT                   , '2023.02.01' )
+#EQUATE(%tplVersion002APP                   , '1.00' )
+#EQUATE(%tplRelease002APP                   , '2023.02.02' )
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
@@ -248,6 +252,37 @@
 #ENDBOXED
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
+#GROUP(%rybVariablesCommon)                                                     #! Need a few simple variables
+#PREPARE
+#DECLARE(%TheDate             ,STRING)                                          #! Display current date
+#DECLARE(%TheTime             ,STRING)                                          #! Display current time
+#!---------------------------------------------------------------------
+#DECLARE(%DictPath            ,STRING)
+#DECLARE(%DictName            ,STRING)
+#DECLARE(%nLoc1               ,LONG)
+#DECLARE(%nLoc2               ,LONG)
+#ENDPREPARE
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#GROUP(%rybVariablesSetup)                                                      #! Setup output file names
+#PREPARE
+#SET(%TheDate                 ,FORMAT(TODAY(),@D010))                           #! Set current date
+#SET(%TheTime                 ,FORMAT(CLOCK(),@T06))                            #! Set current time
+#ENDPREPARE
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
+#GROUP(%rybDictionaryPath)                                                      #! Get dictionary path and names
+#PREPARE
+#SET(%nLoc1,INSTRING('\',%DictionaryFile,1,1))
+#LOOP,WHILE(%nLoc1)
+  #SET(%nLoc2,%nLoc1)
+  #SET(%nLoc1,INSTRING('\',%DictionaryFile,1,%nLoc1+1))
+#ENDLOOP
+#SET(%DictName,UPPER(SUB(%DictionaryFile,%nLoc2+1,LEN(%DictionaryFile)-%nLoc2-4)))
+#SET(%DictPath,UPPER(SUB(%DictionaryFile,1,%nLoc2)))
+#ENDPREPARE
+#!-----------------------------------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------------------------------
 #INCLUDE('RYB_DLLS.TPW')                    #! RA.2001.02.12: DLLs templates prototypes
 #INCLUDE('RYB_ICONS.TPW')                   #! RA.2010.11.09: Set some icons up
 #INCLUDE('RYB_WINPIECES.TPW')               #! RA.2018.03.11: Assorted window cosmetics
@@ -269,6 +304,8 @@
 #INCLUDE('RYB_GROUPSFIELDS.TPW')            #! RA.2021.11.20: Groups with name attributes
 #INCLUDE('RYB_CREATELISTBOX.TPW')           #! RA.2021.11.26: Create List Box for Clarion
 #INCLUDE('RYB_GROUPSTRUCTURE.TPW')          #! RA.2022.04.26: Generate Record Groups
+#INCLUDE('RYB_AUDIT001DCT.TPW')             #! RA.2023.01.31: Audit 001 DCT (NetTalk-Crossover)
+#INCLUDE('RYB_AUDIT002APP.TPW')             #! RA.2023.02.02: Audit 002 APP (NetTalk-Crossover)
 #!
 #!INCLUDE('RYB_TESTING.TPW')                #! RA.2019.04.21: TESTING STRAP - TEMPORARY
 #!INCLUDE('RYB_GLOBAL_TEST.TPW')            #! RA.2022.05.01: TESTING STRAP - TEMPORARY

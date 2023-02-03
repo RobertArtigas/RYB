@@ -48,7 +48,8 @@
 #!---------------------------------------------------------------------
 #!---------------------------------------------------------------------
 #! #EXTENSION(RAYS_Equates_Tables,'RA.2021.03.14: Equates for Tables'),DESCRIPTION('RAYS | Equate for Tables (EQU).'),APPLICATION
-#UTILITY(RYB_Equates_Tables,'RA.2021.03.14: Equates for Tables')
+#!UTILITY(RYB_Equates_Tables,'RA.2021.03.14: Equates for Tables')
+#UTILITY(RYB_Equates_Tables,'RYB | Equates for Tables')
 #!-----------------------------------------------------------------------------
 #INSERT(%PreambleRYB)
 #!-----------------------------------------------------------------------------

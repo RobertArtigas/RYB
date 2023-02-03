@@ -1,0 +1,243 @@
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!UTILITY (RYB_Audit002, '2010.11.11: Audit Help in Application for Procedures')
+#UTILITY(RYB_Audit002,'RYB | Audit Help in Application for Procedures.')
+#!--------------------------------------------------------------------
+#! Changes:
+#! 2023.02.02   Roberto Artigas y Soler
+#!  * Added to the RYB colection of templates. Created from RYB_AUDIT001
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#INSERT(%DefineVariables002)
+#INSERT(%BuildRawTableList002)
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!DISPLAY('')
+#SHEET,AT(,,464),HSCROLL
+#!--------------------------------------------------------------------
+#INSERT(%Explain002APP)
+#!--------------------------------------------------------------------
+#INSERT(%MITLicense002APP)
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #!
+  #!INSERT(%CopyrightRYBTABLES)                #! RA.2021.05.14: ADJUST
+  #!
+  #BOXED('AUDIT002 Options'),AT(,,456),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%Explain002APP02),AT(,,436,10),PROP(PROP:FontStyle,700) 
+    #BOXED(''),AT(,,446)
+      #DISPLAY('No options at this time'),PROP(PROP:FontStyle,700)
+      #!PROMPT ('Check HELP TOOL TIP existence?', CHECK), %OptCheckHelpTip, DEFAULT(1), AT(10)
+      #!PROMPT ('Check HELP MESSAGE existence?', CHECK), %OptCheckHelpMsg, DEFAULT(1), AT(10)
+      #!DISPLAY
+      #!PROMPT ('Check TAB existence?', CHECK), %OptCheckTabs, DEFAULT(0), AT(10)
+      #!PROMPT ('Show Choices, Values, and Initial Values?', CHECK), %OptShowINLIST, DEFAULT(0), AT(10)
+    #ENDBOXED
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY(%Explain002APP01),AT(,,436,94)
+  #ENDBOXED
+#ENDTAB
+#ENDSHEET
+#!
+#!
+#COMMENT(90)
+#SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+#CREATE (%OutputFile)
+#INSERT(%ReportDictionary002)
+#CLOSE (%OutputFile)
+#COMMENT(60)
+#RUN('NOTEPAD.EXE "' & %OutputFile & '"')
+#!--------------------------------------------------------------------
+#GROUP(%Audit002End)
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%DictionaryHeader002)
+
+ SEQ  %[40]HFilePrefix %[20]HFileName %[30]HFile %HFileDescription
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%DictionaryDetail002)
+ %@N03@(%CountFiles)  %[40]FileProc %[20]WinProc %[30]WinID %DescrProc
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%DefineVariables002)
+#!
+#DECLARE(%OutputFile)
+#DECLARE(%CountFiles)
+#DECLARE(%TabName)
+#DECLARE(%WorkString)
+#DECLARE(%RasFieldType)
+#DECLARE(%RasPrompt)
+#DECLARE(%RasHeader)
+#DECLARE(%RasHelp)
+#DECLARE(%RasMessage)
+#DECLARE(%RasTooltip)
+#DECLARE(%ChoiceLine)
+#DECLARE(%ChoiceComma)
+#DECLARE(%ValueLine)
+#DECLARE(%ValueComma)
+#!
+#EQUATE(%HFilePrefix,'PROCEDURE')
+#EQUATE(%HFileName,'WINDOW')
+#EQUATE(%HFile,'HELP ID')
+#EQUATE(%HFileDescription, 'WINDOW TITLE')
+#!
+#IF(NOT VAREXISTS(%OutputFile))
+  #DECLARE(%OutputFile)
+  #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+#ENDIF
+#IF(NOT VAREXISTS(%ProcTables))
+  #DECLARE(%ProcTables),UNIQUE
+  #DECLARE(%FileProc    , %ProcTables)
+  #DECLARE(%WinProc     , %ProcTables)
+  #DECLARE(%WinID       , %ProcTables)
+  #DECLARE(%DescrProc   , %ProcTables)
+#ENDIF
+#!
+#DECLARE(%ReportedFiles),UNIQUE
+#DECLARE(%DoTheseFiles),UNIQUE
+#DECLARE(%DoFilePrefix      ,%DoTheseFiles)
+#DECLARE(%DoFileName        ,%DoTheseFiles)
+#DECLARE(%DoFile            ,%DoTheseFiles)
+#DECLARE(%DoFileDescription ,%DoTheseFiles)          #! RAS.2003.07.22
+#!
+#DECLARE(%nLoc1       ,LONG)            #! Location 1
+#DECLARE(%nLoc2       ,LONG)            #! Location 2
+#DECLARE(%NFileUser)                    #! File user options [RAWEB]
+#DECLARE(%NFileOpt1)                    #! File option 1 [NO]
+#DECLARE(%NFileOpt2)                    #! File option 2
+#DECLARE(%NFileOpt3)                    #! File option 3
+#DECLARE(%NFileOpt4)                    #! File option 4
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%BuildRawTableList002)
+#PREPARE
+  #IF(NOT VAREXISTS(%OutputFile))
+    #DECLARE(%OutputFile)
+    #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+  #ENDIF
+  #!
+  #IF(NOT VAREXISTS(%ProcTables))
+    #DECLARE(%ProcTables),UNIQUE
+    #DECLARE(%FileProc , %ProcTables)
+    #DECLARE(%WinProc  , %ProcTables)
+    #DECLARE(%WinID    , %ProcTables)
+    #DECLARE(%DescrProc, %ProcTables)
+  #ENDIF
+  #!
+  #DECLARE(%nLoc1       ,LONG)            #! Location 1
+  #DECLARE(%nLoc2       ,LONG)            #! Location 2
+  #DECLARE(%NFileUser)                    #! File user options [RAWEB]
+  #DECLARE(%NFileOpt1)                    #! File option 1 [NO]
+  #DECLARE(%NFileOpt2)                    #! File option 2
+  #DECLARE(%NFileOpt3)                    #! File option 3
+  #DECLARE(%NFileOpt4)                    #! File option 4
+  #!
+  #FOR(%Procedure)
+    #!----------------------------------------------------------------!
+    #! RAS.2001.12.01 - Ignore procedure place marker definitions.    !
+    #!----------------------------------------------------------------!
+    #IF(UPPER(%ProcedureTemplate)='TODO')                                        
+      #CYCLE                                                     
+    #ENDIF
+    #IF(NOT %Window)                                                       
+      #CYCLE                                                     
+    #ENDIF
+#!
+    #!ERROR(%Procedure)
+    #ADD(%ProcTables  , %Procedure)
+    #SET(%FileProc    , %Procedure)
+    #SET(%WinProc     , %Window)
+    #SET(%WinID       , EXTRACT(%WindowStatement,'HLP',1))
+    #CALL(%ReplaceSubString,%WinID,'''','')
+    #SET(%DescrProc   , EXTRACT(%WindowStatement,'WINDOW',1))
+    #CALL(%ReplaceSubString,%DescrProc,'''','')
+  #ENDFOR
+#ENDPREPARE
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%ReportDictionary002)
+#SET(%WorkString,'AUDIT002: Procedures missing help items')
+%[75]WorkString    Date: %@D010@(TODAY())
+%[75]DictionaryFile    Time: %@T04@(CLOCK())
+#SET(%WorkString,LONGPATH(PATH()) & '\' & %Application & '.app')
+%[75]WorkString
+#SET(%CountFiles,0)
+#FOR(%ProcTables)
+  #IF((%CountFiles % 20) = 0)
+    #CALL(%DictionaryHeader002)
+  #ENDIF
+  #SET(%CountFiles,%CountFiles + 1)
+  #CALL(%DictionaryDetail002)
+#ENDFOR
+#INSERT(%DictionaryHeader002)
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%Copyright002APP)
+#PREPARE
+  #IF(NOT VAREXISTS(%Copyright002APP01))
+    #DECLARE(%Copyright002APP01)
+  #ENDIF
+  #SET(%Copyright002APP01, 'AUDIT002: Procedures missing help items.')
+  #SET(%Copyright002APP01, %Copyright002APP01 & '<13,10>Copyright © 1999-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%Copyright002APP01, %Copyright002APP01 & '<13,10>All copyrights reserved world wide.')
+  #SET(%Copyright002APP01, %Copyright002APP01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#BOXED('Version '& %tplVersion002APP & ' [ ' & %tplRelease002APP & ' ]'),AT(,,454),PROP(PROP:FontStyle,700) 
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%Copyright002APP01),AT(,,436,34)
+#ENDBOXED
+#!
+#GROUP(%MITLicense002APP)
+#TAB('AUDIT002'),PROP(PROP:FontStyle,700)
+  #INSERT(%Copyright002APP) 
+  #INSERT(%MITLicense)
+  #!INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#GROUP(%Explain002APP)
+#PREPARE
+  #IF(NOT VAREXISTS(%Explain002APP01))
+    #DECLARE(%Explain002APP01)
+  #ENDIF
+  #SET(%Explain002APP01, '')
+  #SET(%Explain002APP01, %Explain002APP01 & 'This audit template is used to verify that procedures have a HELP id')
+  #SET(%Explain002APP01, %Explain002APP01 & ' when the procedure has a window.')
+  #SET(%Explain002APP01, %Explain002APP01 & ' This refers to the Browse, Form, Frame, or Process windows.')
+  #SET(%Explain002APP01, %Explain002APP01 & ' This will allow the help id in the application to be matched to the')
+  #SET(%Explain002APP01, %Explain002APP01 & ' help id in the documentation to validate the help id exists on both.')
+  #SET(%Explain002APP01, %Explain002APP01 & '<13,10><13,10>')
+  #SET(%Explain002APP01, %Explain002APP01 & 'There will be a procedures list produced showing the procedure, window name,')
+  #SET(%Explain002APP01, %Explain002APP01 & ' help id for that window, and the window title as a description.')
+  #SET(%Explain002APP01, %Explain002APP01 & ' If a help id is missing, it will be blank.')
+  #SET(%Explain002APP01, %Explain002APP01 & '<13,10><13,10>')
+  #SET(%Explain002APP01, %Explain002APP01 & 'This template has been tested with the ABC template chains.')
+  #SET(%Explain002APP01, %Explain002APP01 & '')
+  #!
+  #IF(NOT VAREXISTS(%Explain002APP02))
+    #DECLARE(%Explain002APP02)
+  #ENDIF
+  #!
+  #SET(%Explain002APP02, '')
+  #SET(%Explain002APP02, %Explain002APP02 & 'NOTE: Make sure the COMPLETE DIRECTORY PATH exists on your machine.')
+#ENDPREPARE
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------

@@ -1,0 +1,591 @@
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!UTILITY (RYB_Audit001, '2010.11.11: Audit Help in Dictionary for Files-Fields')
+#UTILITY(RYB_Audit001,'RYB | Audit Help in Dictionary for Fields.')
+#!--------------------------------------------------------------------
+#! Changes:
+#! 2023.01.31   Roberto Artigas y Soler
+#!  * Added to the RYB colection of templates (NetTalk Crossover)
+#! 2010.11.11   Roberto Artigas
+#!  * Added check in BOOLEAN for empty TRUE/FALSE values.
+#! 2007.04.19   Roberto Artigas
+#!  * Added RAWEB(NO) option so certain files can be ignore by this utility.
+#! 2007.04.04   Roberto Artigas
+#!  * Check for single quotes in hell tooltip and help message
+#!  * Do not process ALIAS'es
+#! 2007.03.23   Roberto Artigas
+#!  * Added checking for missing HELP stuff.
+#!  * Make checking of HELP stuff optional.
+#! 2007.03.20   Roberto Artigas
+#!  * Make checking of TABs optional
+#! 2007.03.10   Roberto Artigas
+#!  *   Added #PREPARE section to sort the tables when being selected
+#! 2002.06.02   Roberto Artigas
+#!  *   Now the utility pops up a wordpad text file rather than printing
+#!      directly to the printer. Much nicer to preview before you print.
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#INSERT(%DefineVariables001)
+#SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+#CREATE (%OutputFile)
+#INSERT(%BuildRawTableList001)
+#INSERT(%BuildTheTableList001)
+#INSERT(%AdjustTableDescription001)
+#!--------------------------------------------------------------------
+#INSERT(%DoTheBubbleSort001)
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!DISPLAY('')
+#SHEET,AT(,,464),HSCROLL
+#!--------------------------------------------------------------------
+#INSERT(%Explain001DCT)
+#!--------------------------------------------------------------------
+#INSERT(%MITLicense001DCT)
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#! #TAB('HIDDEN TABLES'),PROP(PROP:FontStyle,700)
+#!   #BOXED('AppTables'),AT(,,456),HIDE
+#!     #BUTTON('AppTables'),MULTI(%appTables,%FileProc),INLINE
+#!     #PROMPT('File Name: ',@s30),%FileProc #!,REQ
+#!     #ENDBUTTON  
+#!   #ENDBOXED
+#!   #BOXED('DoTheseFiles'),AT(,,456),HIDE
+#!     #BUTTON('Processed Files'),MULTI(%DoTheseFiles, %DoFilePrefix & ' ' & %DoFileName & ' ' & %DoFile),INLINE
+#!       #PROMPT('File Prefix: ',@s10),%DoFilePrefix,UNIQUE,REQ
+#!       #PROMPT('Global Name Area: ',@s20),%DoFileName,REQ
+#!       #PROMPT('File Name: ',@s30),%DoFile,REQ
+#!     #ENDBUTTON
+#!   #ENDBOXED
+#! #ENDTAB
+#! #TAB('HIDDEN VARIABLES'),PROP(PROP:FontStyle,700)
+#!   #BOXED('GLOBALS'),AT(,,456),HIDE
+#!     #PROMPT('CountFiles: '    ,@n4)       ,%CountFiles
+#!     #PROMPT('OutputFile: '    ,@s100)     ,%OutputFile
+#!     #PROMPT('TabName: '       ,@s100)     ,%TabName
+#!     #PROMPT('WorkString: '    ,@s100)     ,%WorkString
+#!     #PROMPT('RasFieldType: '  ,@s100)     ,%RasFieldType
+#!     #PROMPT('RasPrompt: '     ,@s100)     ,%RasPrompt
+#!     #PROMPT('RasHeader: '     ,@s100)     ,%RasHeader
+#!     #PROMPT('RasHelp: '       ,@s100)     ,%RasHelp
+#!     #PROMPT('RasMessage: '    ,@s100)     ,%RasMessage
+#!     #PROMPT('RasTooltip: '    ,@s100)     ,%RasTooltip
+#!     #PROMPT('ChoiceLine: '    ,@s100)     ,%ChoiceLine
+#!     #PROMPT('ChoiceComma: '   ,@s100)     ,%ChoiceComma
+#!     #PROMPT('ValueLine: '     ,@s100)     ,%ValueLine
+#!     #PROMPT('ValueComma: '    ,@s100)     ,%ValueComma
+#!   #ENDBOXED
+#! #ENDTAB
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #!
+  #!INSERT(%CopyrightRYBTABLES)                #! RA.2021.05.14: ADJUST
+  #!
+  #BOXED('AUDIT001 Options'),AT(,,456),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #!DISPLAY(%Explain001DCT02),AT(,,436,10),PROP(PROP:FontStyle,700) 
+    #BOXED(''),AT(,,446)
+    #PROMPT ('Check HELP ID existence?', CHECK), %OptCheckHelpID, DEFAULT(1), AT(10)
+    #PROMPT ('Check HELP TOOL TIP existence?', CHECK), %OptCheckHelpTip, DEFAULT(1), AT(10)
+    #PROMPT ('Check HELP MESSAGE existence?', CHECK), %OptCheckHelpMsg, DEFAULT(1), AT(10)
+    #DISPLAY
+    #PROMPT ('Check TAB existence?', CHECK), %OptCheckTabs, DEFAULT(0), AT(10)
+    #PROMPT ('Show Choices, Values, and Initial Values?', CHECK), %OptShowINLIST, DEFAULT(0), AT(10)
+    #ENDBOXED
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY(%Explain001DCT01),AT(,,436,94)
+  #ENDBOXED
+#ENDTAB
+#ENDSHEET
+#!
+#!
+#COMMENT(90)
+#!SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+#!CREATE (%OutputFile)
+#INSERT(%ReportDictionary001)
+#CLOSE (%OutputFile)
+#COMMENT(60)
+#RUN('NOTEPAD.EXE "' & %OutputFile & '"')
+#!--------------------------------------------------------------------
+#GROUP(%Audit001End)
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#INSERT(%DefineVariables001)
+#!--------------------------------------------------------------------
+#INSERT(%BuildTheTableList001)
+#!--------------------------------------------------------------------
+#INSERT(%AdjustTableDescription001)
+#!--------------------------------------------------------------------
+#INSERT(%DoTheBubbleSort001)
+#!--------------------------------------------------------------------
+#SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+#CREATE (%OutputFile)
+#!ERROR (%OutputFile)
+#!--------------------------------------------------------------------
+#SET(%WorkString,'Dictionary Files Report')
+%[54]WorkString    Date: %@D010@(TODAY())
+%[54]DictionaryFile    Time: %@T04@(CLOCK())
+#!#INSERT(%DictionaryFilesHeader)
+#!--------------------------------------------------------------------
+#INSERT(%ReportDictionary001)
+#!--------------------------------------------------------------------
+#CLOSE (%OutputFile)
+#!--------------------------------------------------------------------
+#IF (~%DoNotPrint)
+  #RUN('NOTEPAD.EXE "' & %OutputFile & '"')
+#ENDIF
+#IF (%RetainFile = 'I don''t want it. Remove the file after printing.')
+  #REMOVE (%OutputFile)
+#ENDIF
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%DictionaryHeader001)
+#!EQUATE(%HFilePrefix,'PREFIX')
+#!EQUATE(%HFileName,'GLOBAL AREA')
+#!EQUATE(%HFile,'FILE NAME')
+#!EQUATE(%HFileDescription, 'DESCRIPTION')
+
+ SEQ  %[10]HFilePrefix %[30]HFileName %[30]HFile %HFileDescription
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%DictionaryDetail001)
+ %@N03@(%CountFiles)  %[10]DoFilePrefix %[30]DoFileName %[30]DoFile %DoFileDescription
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%DefineVariables001)
+#!
+#DECLARE(%OutputFile)
+#DECLARE(%CountFiles)
+#DECLARE(%TabName)
+#DECLARE(%WorkString)
+#DECLARE(%RasFieldType)
+#DECLARE(%RasPrompt)
+#DECLARE(%RasHeader)
+#DECLARE(%RasHelp)
+#DECLARE(%RasMessage)
+#DECLARE(%RasTooltip)
+#DECLARE(%ChoiceLine)
+#DECLARE(%ChoiceComma)
+#DECLARE(%ValueLine)
+#DECLARE(%ValueComma)
+#!
+#EQUATE(%HFilePrefix,'PREFIX')
+#EQUATE(%HFileName,'GLOBAL AREA')
+#EQUATE(%HFile,'FILE NAME')
+#EQUATE(%HFileDescription, 'DESCRIPTION')
+#!
+#IF(NOT VAREXISTS(%OutputFile))
+  #DECLARE(%OutputFile)
+  #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+#ENDIF
+#IF(NOT VAREXISTS(%appTables))
+  #DECLARE(%AppTables),UNIQUE
+  #DECLARE(%FileProc, %AppTables)
+#ENDIF
+#!
+#DECLARE(%ReportedFiles),UNIQUE
+#DECLARE(%DoTheseFiles),UNIQUE
+#DECLARE(%DoFilePrefix      ,%DoTheseFiles)
+#DECLARE(%DoFileName        ,%DoTheseFiles)
+#DECLARE(%DoFile            ,%DoTheseFiles)
+#DECLARE(%DoFileDescription ,%DoTheseFiles)          #! RAS.2003.07.22
+#!
+#DECLARE(%nLoc1       ,LONG)            #! Location 1
+#DECLARE(%nLoc2       ,LONG)            #! Location 2
+#DECLARE(%NFileUser)                    #! File user options [RAWEB]
+#DECLARE(%NFileOpt1)                    #! File option 1 [NO]
+#DECLARE(%NFileOpt2)                    #! File option 2
+#DECLARE(%NFileOpt3)                    #! File option 3
+#DECLARE(%NFileOpt4)                    #! File option 4
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%BuildRawTableList001)
+#PREPARE
+  #IF(NOT VAREXISTS(%OutputFile))
+    #DECLARE(%OutputFile)
+    #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+  #ENDIF
+  #!
+  #IF(NOT VAREXISTS(%appTables))
+    #DECLARE(%AppTables),UNIQUE
+    #DECLARE(%FileProc, %AppTables)
+  #ENDIF
+  #!
+  #DECLARE(%nLoc1       ,LONG)            #! Location 1
+  #DECLARE(%nLoc2       ,LONG)            #! Location 2
+  #DECLARE(%NFileUser)                    #! File user options [RAWEB]
+  #DECLARE(%NFileOpt1)                    #! File option 1 [NO]
+  #DECLARE(%NFileOpt2)                    #! File option 2
+  #DECLARE(%NFileOpt3)                    #! File option 3
+  #DECLARE(%NFileOpt4)                    #! File option 4
+  #!
+  #FOR(%File)
+    #!----------------------------------------------------------------!
+    #! RAS.2001.12.01 - Ignore file place marker definitions.         !
+    #! These are files that are defined but that contain no fields.   !
+    #!----------------------------------------------------------------!
+    #IF(NOT ITEMS(%Field))                                        
+      #CYCLE                                                     
+    #ENDIF                                                       
+    #SET(%nLoc1,INSTRING('RAWEB(',%FileUserOptions,1,1))
+    #SET(%nLoc2,INSTRING(')',%FileUserOptions,1,%nLoc1))
+    #SET(%nFileUser,UPPER(SUB(%FileUserOptions,%nLoc1,%nLoc2)))
+    #SET(%NFileOpt1,EXTRACT(%NFileUser,'RAWEB',1))
+    #SET(%NFileOpt2,EXTRACT(%NFileUser,'RAWEB',2))
+    #SET(%NFileOpt3,EXTRACT(%NFileUser,'RAWEB',3))
+    #SET(%NFileOpt4,EXTRACT(%NFileUser,'RAWEB',4))
+    #!-------------------------------------------------------------!
+    #! The first option RAWEB(NO) controls if a file is processed. !
+    #!-------------------------------------------------------------!
+    #IF(SUB(%NFileOpt1,1,1)='N')
+      #CYCLE
+    #ENDIF
+#!
+    #CASE(%FileType)
+    #OF  ('VIEW')
+    #OROF('ALIAS')
+        #CYCLE
+    #ENDCASE
+#!
+    #CASE(%FileDriver)
+      #OF('ASCII')
+    #OROF('BASIC')
+    #OROF('DOS')
+        #CYCLE
+    #ENDCASE
+#!
+    #!ERROR(%File)
+    #ADD(%appTables, %File)
+    #SET(%FileProc, %File)
+  #ENDFOR
+#ENDPREPARE
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%BuildTheTableList001)
+#!IF (%DictionaryReportUseAllFiles)
+  #FOR (%File)
+    #!----------------------------------------------------------------!
+    #! RAS.2001.12.01 - Ignore file place marker definitions.         !
+    #! These are files that are defined but that contain no fields.   !
+    #!----------------------------------------------------------------!
+    #IF(NOT ITEMS(%Field))                                        
+      #CYCLE                                                     
+    #ENDIF
+    #!
+    #SET(%nLoc1,INSTRING('RAWEB(',%FileUserOptions,1,1))
+    #SET(%nLoc2,INSTRING(')',%FileUserOptions,1,%nLoc1))
+    #SET(%nFileUser,UPPER(SUB(%FileUserOptions,%nLoc1,%nLoc2)))
+    #SET(%NFileOpt1,EXTRACT(%NFileUser,'RAWEB',1))
+    #SET(%NFileOpt2,EXTRACT(%NFileUser,'RAWEB',2))
+    #SET(%NFileOpt3,EXTRACT(%NFileUser,'RAWEB',3))
+    #SET(%NFileOpt4,EXTRACT(%NFileUser,'RAWEB',4))
+    #!-------------------------------------------------------------!
+    #! The first option RAWEB(NO) controls if a file is processed. !
+    #!-------------------------------------------------------------!
+    #IF(SUB(%NFileOpt1,1,1)='N')
+      #CYCLE
+    #ENDIF
+#!
+    #CASE(%FileType)
+    #OF  ('VIEW')
+    #OROF('ALIAS')
+        #CYCLE
+    #ENDCASE
+#!
+    #CASE(%FileDriver)
+      #OF('ASCII')
+    #OROF('BASIC')
+    #OROF('DOS')
+        #CYCLE
+    #ENDCASE
+#!
+    #ADD (%ReportedFiles, %File)
+  #ENDFOR
+#!ELSE
+  #!FOR (%DictionaryReportFileSelection)
+    #!ADD (%ReportedFiles, %DictionaryReportFileSelection)
+  #!ENDFOR
+#!ENDIF
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%AdjustTableDescription001)
+#SET(%CountFiles,0)
+#FOR (%ReportedFiles)
+  #FIX(%File,%ReportedFiles)
+  #SET(%CountFiles,%CountFiles + 1)
+  #ADD(%DoTheseFiles, %CountFiles)
+  #SET(%DoFilePrefix, %FilePrefix)
+  #SET(%DoFileName, %FileName)
+  #SET(%DoFile, %File)
+  #SET(%DoFileDescription, FORMAT(ITEMS(%Field),@n03) & ' - ' & %FileDescription)        #! RAS.2003.07.22
+#ENDFOR
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%DoTheBubbleSort001)
+#IF(NOT VAREXISTS(%DoSort))
+  #EQUATE (%DoSort,1)
+  #EQUATE (%I,0)
+  #EQUATE (%W1FilePrefix,'')
+  #EQUATE (%W1FileName,'')
+  #EQUATE (%W1File,'')
+  #EQUATE (%W1FileDescription,'')                   #! RAS.2003.07.22
+  #EQUATE (%W2FilePrefix,'')
+  #EQUATE (%W2FileName,'')
+  #EQUATE (%W2File,'')
+  #EQUATE (%W2FileDescription,'')                   #! RAS.2003.07.22
+#ENDIF
+#LOOP,WHILE(%DoSort)
+  #SET(%DoSort,0)
+  #LOOP,FOR(%I,2,ITEMS(%DoTheseFiles))
+    #SELECT(%DoTheseFiles,%I-1)
+    #SET(%W1FilePrefix,%DoFilePrefix)
+    #SET(%W1FileName,%DoFileName)
+    #SET(%W1File,%DoFile)
+    #SET(%W1FileDescription,%DoFileDescription)     #! RAS.2003.07.22
+    #SELECT(%DoTheseFiles,%I)
+    #SET(%W2FilePrefix,%DoFilePrefix)
+    #SET(%W2FileName,%DoFileName)
+    #SET(%W2File,%DoFile)
+    #SET(%W2FileDescription,%DoFileDescription)     #! RAS.2003.07.22
+    #IF(%W1FilePrefix > %W2FilePrefix)
+      #SET(%DoSort,1)
+      #SET(%DoFilePrefix,%W1FilePrefix)
+      #SET(%DoFileName,%W1FileName)
+      #SET(%DoFile,%W1File)
+      #SET(%DoFileDescription,%W1FileDescription)   #! RAS.2003.07.22
+      #SELECT(%DoTheseFiles,%I-1)
+      #SET(%DoFilePrefix,%W2FilePrefix)
+      #SET(%DoFileName,%W2FileName)
+      #SET(%DoFile,%W2File)
+      #SET(%DoFileDescription,%W2FileDescription)   #! RAS.2003.07.22
+    #ENDIF
+  #ENDLOOP
+#ENDLOOP
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%ReportDictionary001)
+#SET(%WorkString,'AUDIT001: Dictionary fields missing help items')
+%[75]WorkString    Date: %@D010@(TODAY())
+%[75]DictionaryFile    Time: %@T04@(CLOCK())
+#SET(%CountFiles,0)
+#FOR(%DoTheseFiles)
+#!   #IF((%CountFiles % 20) = 0)
+#! #CALL(%DictionaryHeader001)
+#!   #ENDIF
+  #SET(%CountFiles,%CountFiles + 1)
+#CALL(%DictionaryHeader001)
+#CALL(%DictionaryDetail001)
+#! %@N3@(%CountFiles)  %[8]DoFilePrefix %[20]DoFileName %[30]DoFile %DoFileDescription
+  #FIX(%File,%DoFile)
+  #FOR(%Field)
+    #IF(%FieldType='GROUP')
+      #CYCLE
+    #ENDIF
+    #IF(%FieldType='END')
+      #CYCLE
+    #ENDIF
+    #IF(%FieldDimension1 > 0)
+      #CYCLE
+    #ENDIF
+    #IF(INSTRING('NOPOPULATE',%FieldQuickOptions,1,1)<>0)
+      #CYCLE
+    #ENDIF
+    #IF(%OptCheckTabs)
+      #SET(%TabName,EXTRACT(%FieldQuickOptions,'TAB',1))
+      #IF(~%TabName)
+      %[24]Field - Field has ---NO--- form tab description
+      #ENDIF
+    #ENDIF
+    #CASE(%FieldValidation)
+    #OF  ('NONZERO')
+    #OF  ('INRANGE')
+    #OF  ('BOOLEAN')
+      #!------------------------------------------!
+      #! RA.2010.11.11 - Check for blank choices. !
+      #!------------------------------------------!
+      #IF(%FieldTrueValue = '')
+      %[34]Field - BOOLEAN choices exist, but there is no value for TRUE
+      #ENDIF
+      #IF(%FieldFalseValue = '')
+      %[34]Field - BOOLEAN choices exist, but there is no value for FALSE
+      #ENDIF
+    #OF  ('INLIST')
+      #IF(ITEMS(%FieldChoices) AND ~ITEMS(%FieldValues))
+      %[34]Field - Validation field choices exist, but there are no field values
+      #ENDIF
+      #IF(ITEMS(%FieldChoices) AND ~%FieldInitial)
+      %[34]Field - Validation field choices exist, but there is no initial default value
+      #ENDIF
+      #IF(ITEMS(%FieldChoices) AND %OptShowINLIST)
+        #SET(%ChoiceLine, '')
+        #SET(%ChoiceComma,ITEMS(%FieldChoices) - 1)
+        #FOR(%FieldChoices)
+          #SET(%ChoiceLine,%ChoiceLine & '' & %FieldChoices & '')
+          #IF(%ChoiceComma > 0)
+            #SET(%ChoiceLine,%ChoiceLine & '|')
+            #SET(%ChoiceComma,%ChoiceComma - 1)
+          #ENDIF
+        #ENDFOR
+        #SET(%ValueLine, '')
+        #SET(%ValueComma,ITEMS(%FieldValues) - 1)
+        #FOR(%FieldValues)
+          #SET(%ValueLine,%ValueLine & '' & %FieldValues & '')
+          #IF(%ValueComma > 0)
+            #SET(%ValueLine,%ValueLine & '|')
+            #SET(%ValueComma,%ValueComma - 1)
+          #ENDIF
+        #ENDFOR
+      %[34]Field - CHOICES: %ChoiceLine
+      %[34]Field - VALUES : %ValueLine
+      %[34]Field - INITIAL: %FieldInitial
+      #ENDIF
+#!      #IF(ITEMS(%FieldChoices))
+#!        #FOR(%FieldChoices)
+#!          #IF(%FieldChoices='')
+#!      %[24]Field - Field Choices incorrect (double vertical bar) structure
+#!          #ENDIF
+#!        #ENDFOR
+#!      #ENDIF
+    #OF  ('INFILE')
+    #ENDCASE
+    #!===============================================!
+    #! RA.2007.03.23 - Check for missing help stuff. !
+    #!===============================================!
+    #SET(%RasPrompt,'')
+    #SET(%RasMessage,'')
+    #SET(%RasTooltip,'')
+    #SET(%RasFieldType,UPPER(%FieldType))
+#! FieldType='%RasFieldType'
+    #FOR(%FieldScreenControl)
+      #IF(INSTRING('CHECK',%FieldScreenControl,1,1))
+        #SET(%RasFieldType,'CHECK')
+#! FieldType='%RasFieldType'
+      #ENDIF
+      #IF(INSTRING('OPTION',%FieldScreenControl,1,1))
+        #SET(%RasFieldType,'OPTION')
+#! FieldType='%RasFieldType'
+      #ENDIF
+#! FieldScreenControl='%FieldScreenControl'
+      #IF(NOT %RasPrompt)
+        #CASE(%RasFieldType)
+        #OF('CHECK')
+          #SET(%RasPrompt,EXTRACT(%FieldScreenControl,'CHECK',1))
+        #OF('OPTION')
+          #SET(%RasPrompt,EXTRACT(%FieldScreenControl,'OPTION',1))
+        #ELSE
+          #SET(%RasPrompt,EXTRACT(%FieldScreenControl,'PROMPT',1))
+        #END
+      #ENDIF
+      #IF(NOT %RasMessage)
+        #SET(%RasMessage,EXTRACT(%FieldScreenControl,'MSG',1))
+      #ENDIF
+      #IF(NOT %RasTooltip)
+        #SET(%RasTooltip,EXTRACT(%FieldScreenControl,'TIP',1))
+      #ENDIF
+    #ENDFOR
+    #SET(%RasHeader,%FieldHeader)
+    #SET(%RasHelp,%FieldHelpID)
+#!    %[29]FieldID %FieldQuickOptions
+#!        HELP ID: '%RasHelp'
+#!         HEADER: '%RasHeader'
+#!         PROMPT: %RasPrompt
+#!        MESSAGE: %RasMessage
+#!        TOOLTIP: %RasToolTip
+    #IF(%OptCheckHelpID)
+      #IF(NOT %RasHelp)
+      %[34]Field - Field has ---NO HELP--- Identification
+      #ENDIF
+    #ENDIF
+    #IF(%OptCheckHelpTip)
+      #IF(NOT %RasToolTip)
+      %[34]Field - Field has ---NO HELP--- Tool Tip Message
+      #ENDIF
+    #ENDIF
+    #IF(%RasToolTip)
+      #SET(%RasToolTip,SUB(%RasToolTip,2,LEN(%RasToolTip)-2))
+#!%RasTooltip
+      #IF(INSTRING('''',%RasToolTip,1,1)>0)
+      %[34]Field - Please remove ---SINGLE QUOTES--- in Tool Tip Message
+      #ENDIF
+    #ENDIF
+    #IF(%OptCheckHelpMsg)
+      #IF(NOT %RasMessage)
+      %[34]Field - Field has ---NO HELP--- Text Message
+      #ENDIF
+    #ENDIF
+    #IF(%RasMessage)
+      #SET(%RasMessage,SUB(%RasMessage,2,LEN(%RasMessage)-2))
+#!%RasMessage
+      #IF(INSTRING('''',%RasMessage,1,1)>0)
+      %[34]Field - Please remove ---SINGLE QUOTES--- in Text Message
+      #ENDIF
+    #ENDIF
+  #ENDFOR
+#ENDFOR
+#INSERT(%DictionaryHeader001)
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%Copyright001DCT)
+#PREPARE
+  #IF(NOT VAREXISTS(%Copyright001DCT01))
+    #DECLARE(%Copyright001DCT01)
+  #ENDIF
+  #SET(%Copyright001DCT01, 'AUDIT001: Dictionary fields missing help items.')
+  #SET(%Copyright001DCT01, %Copyright001DCT01 & '<13,10>Copyright © 1999-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%Copyright001DCT01, %Copyright001DCT01 & '<13,10>All copyrights reserved world wide.')
+  #SET(%Copyright001DCT01, %Copyright001DCT01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#BOXED('Version '& %tplVersion001DCT & ' [ ' & %tplRelease001DCT & ' ]'),AT(,,454),PROP(PROP:FontStyle,700) 
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%Copyright001DCT01),AT(,,436,34)
+#ENDBOXED
+#!
+#GROUP(%MITLicense001DCT)
+#TAB('AUDIT001'),PROP(PROP:FontStyle,700)
+  #INSERT(%Copyright001DCT) 
+  #INSERT(%MITLicense)
+  #!INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#GROUP(%Explain001DCT)
+#PREPARE
+  #IF(NOT VAREXISTS(%Explain001DCT01))
+    #DECLARE(%Explain001DCT01)
+  #ENDIF
+  #SET(%Explain001DCT01, '')
+  #SET(%Explain001DCT01, %Explain001DCT01 & 'This audit template is used to verify that fields have a HELP id,')
+  #SET(%Explain001DCT01, %Explain001DCT01 & ' tool tip, and message.')
+  #SET(%Explain001DCT01, %Explain001DCT01 & ' There is also checks to make sure that the tabs for each field have been assigned.')
+  #SET(%Explain001DCT01, %Explain001DCT01 & '<13,10><13,10>')
+  #SET(%Explain001DCT01, %Explain001DCT01 & 'This will show the validation items for those fields')
+  #SET(%Explain001DCT01, %Explain001DCT01 & ' that have choices plus values, and the initial default value.')
+  #SET(%Explain001DCT01, %Explain001DCT01 & '<13,10><13,10>')
+  #SET(%Explain001DCT01, %Explain001DCT01 & 'It will report errors on the fields that it detects to')
+  #SET(%Explain001DCT01, %Explain001DCT01 & ' have missing items automatically.')
+  #SET(%Explain001DCT01, %Explain001DCT01 & '<13,10><13,10>')
+  #SET(%Explain001DCT01, %Explain001DCT01 & 'This template has been tested with the ABC template chains.')
+  #SET(%Explain001DCT01, %Explain001DCT01 & '')
+  #!
+  #IF(NOT VAREXISTS(%Explain001DCT02))
+    #DECLARE(%Explain001DCT02)
+  #ENDIF
+  #!
+  #SET(%Explain001DCT02, '')
+  #SET(%Explain001DCT02, %Explain001DCT02 & 'NOTE: Make sure the COMPLETE DIRECTORY PATH exists on your machine.')
+#ENDPREPARE
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
