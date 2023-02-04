@@ -30,7 +30,7 @@
 #!--------------------------------------------------------------------
 #!--------------------------------------------------------------------
 #INSERT(%DefineVariables001)
-#SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+#SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
 #CREATE (%OutputFile)
 #INSERT(%BuildRawTableList001)
 #INSERT(%BuildTheTableList001)
@@ -105,7 +105,7 @@
 #!
 #!
 #COMMENT(90)
-#!SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+#!SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
 #!CREATE (%OutputFile)
 #INSERT(%ReportDictionary001)
 #CLOSE (%OutputFile)
@@ -127,7 +127,7 @@
 #!--------------------------------------------------------------------
 #INSERT(%DoTheBubbleSort001)
 #!--------------------------------------------------------------------
-#SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+#SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
 #CREATE (%OutputFile)
 #!ERROR (%OutputFile)
 #!--------------------------------------------------------------------
@@ -185,7 +185,7 @@
 #!
 #IF(NOT VAREXISTS(%OutputFile))
   #DECLARE(%OutputFile)
-  #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+  #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
 #ENDIF
 #IF(NOT VAREXISTS(%appTables))
   #DECLARE(%AppTables),UNIQUE
@@ -212,7 +212,7 @@
 #PREPARE
   #IF(NOT VAREXISTS(%OutputFile))
     #DECLARE(%OutputFile)
-    #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+    #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
   #ENDIF
   #!
   #IF(NOT VAREXISTS(%appTables))
@@ -376,6 +376,7 @@
 #SET(%WorkString,'AUDIT001: Dictionary fields missing help items')
 %[75]WorkString    Date: %@D010@(TODAY())
 %[75]DictionaryFile    Time: %@T04@(CLOCK())
+%[75]OutputFile
 #SET(%CountFiles,0)
 #FOR(%DoTheseFiles)
 #!   #IF((%CountFiles % 20) = 0)

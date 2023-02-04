@@ -48,7 +48,7 @@
 #!
 #!
 #COMMENT(90)
-#SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+#SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
 #CREATE (%OutputFile)
 #INSERT(%ReportDictionary002)
 #CLOSE (%OutputFile)
@@ -97,7 +97,7 @@
 #!
 #IF(NOT VAREXISTS(%OutputFile))
   #DECLARE(%OutputFile)
-  #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+  #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
 #ENDIF
 #IF(NOT VAREXISTS(%ProcTables))
   #DECLARE(%ProcTables),UNIQUE
@@ -127,7 +127,7 @@
 #PREPARE
   #IF(NOT VAREXISTS(%OutputFile))
     #DECLARE(%OutputFile)
-    #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'TXT')
+    #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
   #ENDIF
   #!
   #IF(NOT VAREXISTS(%ProcTables))
@@ -175,6 +175,7 @@
 %[75]DictionaryFile    Time: %@T04@(CLOCK())
 #SET(%WorkString,LONGPATH(PATH()) & '\' & %Application & '.app')
 %[75]WorkString
+%[75]OutputFile
 #SET(%CountFiles,0)
 #FOR(%ProcTables)
   #IF((%CountFiles % 20) = 0)
