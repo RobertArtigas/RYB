@@ -5,7 +5,19 @@ _build_
 .gitignore
 .gitattributes
 
-setup
+# Directories generated during compile
+Working
+source
+lib
+
+#setup
+SetupRYB.sb~
+SetupRYB.csv
+SetupRYB.htm
+
+# Examples executables will have to be recompiled
+NameAttributes.exe
+
 
 RybProg.Tpl
 TemplateMaker.Tpl
@@ -20,7 +32,7 @@ README.md
 ############
 *.FileList.xml
 *.MAP
-*.exe
+#*.exe
 **/Cla*.dll
 *.ini
 *.cache
