@@ -48,7 +48,8 @@
 #!
 #!
 #COMMENT(90)
-#SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
+#!SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
+#SET (%OutputFile, LONGPATH(PATH()) & '\' & %Application & '_app.txt')
 #CREATE (%OutputFile)
 #INSERT(%ReportDictionary002)
 #CLOSE (%OutputFile)
@@ -97,7 +98,8 @@
 #!
 #IF(NOT VAREXISTS(%OutputFile))
   #DECLARE(%OutputFile)
-  #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
+  #!SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
+  #SET (%OutputFile, LONGPATH(PATH()) & '\' & %Application & '_app.txt')
 #ENDIF
 #IF(NOT VAREXISTS(%ProcTables))
   #DECLARE(%ProcTables),UNIQUE
@@ -127,7 +129,8 @@
 #PREPARE
   #IF(NOT VAREXISTS(%OutputFile))
     #DECLARE(%OutputFile)
-    #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
+    #!SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
+    #SET (%OutputFile, LONGPATH(PATH()) & '\' & %Application & '_app.txt')
   #ENDIF
   #!
   #IF(NOT VAREXISTS(%ProcTables))

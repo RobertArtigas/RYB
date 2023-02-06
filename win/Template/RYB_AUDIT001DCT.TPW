@@ -20,7 +20,7 @@
 #!  * Make checking of HELP stuff optional.
 #! 2007.03.20   Roberto Artigas
 #!  * Make checking of TABs optional
-#! 2007.03.10   Roberto Artigas
+#! 2007.03.10   Roberto Artigas_app.txt
 #!  *   Added #PREPARE section to sort the tables when being selected
 #! 2002.06.02   Roberto Artigas
 #!  *   Now the utility pops up a wordpad text file rather than printing
@@ -30,7 +30,7 @@
 #!--------------------------------------------------------------------
 #!--------------------------------------------------------------------
 #INSERT(%DefineVariables001)
-#SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
+#SET(%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 4) & '_dct.txt')
 #CREATE (%OutputFile)
 #INSERT(%BuildRawTableList001)
 #INSERT(%BuildTheTableList001)
@@ -185,7 +185,7 @@
 #!
 #IF(NOT VAREXISTS(%OutputFile))
   #DECLARE(%OutputFile)
-  #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
+  #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 4) & '_dct.txt')
 #ENDIF
 #IF(NOT VAREXISTS(%appTables))
   #DECLARE(%AppTables),UNIQUE
@@ -212,7 +212,7 @@
 #PREPARE
   #IF(NOT VAREXISTS(%OutputFile))
     #DECLARE(%OutputFile)
-    #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 3) & 'txt')
+    #SET (%OutputFile, SUB(%DictionaryFile, 1, LEN(%DictionaryFile) - 4) & 'txt')
   #ENDIF
   #!
   #IF(NOT VAREXISTS(%appTables))
