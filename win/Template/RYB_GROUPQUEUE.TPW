@@ -79,7 +79,7 @@
     #DECLARE(%CopyrightGRPQUE01)
   #ENDIF
   #SET(%CopyrightGRPQUE01, 'Generate GROUPS and QUEUES with extended FIELD names for this dictionary.')
-  #SET(%CopyrightGRPQUE01, %CopyrightGRPQUE01 & '<13,10>Copyright © 1999-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightGRPQUE01, %CopyrightGRPQUE01 & '<13,10>Copyright Â© 1999-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
   #SET(%CopyrightGRPQUE01, %CopyrightGRPQUE01 & '<13,10>All copyrights reserved world wide.')
   #SET(%CopyrightGRPQUE01, %CopyrightGRPQUE01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
 #ENDPREPARE
@@ -213,7 +213,7 @@
   #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & '<13,10>')
   #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'REFVAR(,&&Type' & %QueueSuffixGRPQUE &  ',QUEUE,Type) tested extensively.')
   #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & '<13,10>')
-  #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'REFERENCE(,&&Type,REFERENCE,).')
+  #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'REFVAR(,&&Type,REFERENCE,).')
   #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & '<13,10>')
 #ENDPREPARE
 #!
@@ -274,7 +274,7 @@
 ! Date-Time:    %@D010-@(%BegDate) - %@T06@(%BegTime)
 ! Purpose:      Generated File Records as Groups
 ! Created:      Generate GROUP and QUEUE Template
-! Author:       Copyright © 1999-2999 by Roberto Artigas y Soler
+! Author:       Copyright Â© 1999-2999 by Roberto Artigas y Soler
 !               All rights reserved world wide.
 ! Narative:     This template is used to pass records structures
 !               back and forth between DLL's when the tables
@@ -681,7 +681,7 @@
     #SET(%pTheField,%NFieldOpt2 & %QueueSuffixGRPQUE)
   #ELSIF(UPPER(%NFieldOpt3)='REFERENCE')                                              #! REFVAR(,,REFERENCE,) for Fields
     #SET(%pTheField,%NFieldOpt2)
-  #ELSE
+  #ELSE                                                                               #! REFVAR(,,???,) for Fields
     #ERROR('Error: ' & %File & '.' & %FieldID & ': REFVAR(,' & %NFieldOpt2 & ',' & %NFieldOpt3 & ',' & %NFieldOpt4 & ')')
   #ENDIF
 #ENDIF
