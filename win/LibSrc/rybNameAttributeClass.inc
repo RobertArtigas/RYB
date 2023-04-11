@@ -15,18 +15,19 @@ FieldNumber                   SHORT,NAME('FieldNumber|SHORT|@N4B|[0001-0002]|PR(
 FieldSalt                     BYTE,NAME('FieldSalt|BYTE|@N1B|[0003-0003]|PR(''Field Salt:'')|CO(''Salt'')')                                                          ! [0003-0003] Is a SALT encryption?
 FieldHash                     BYTE,NAME('FieldHash|BYTE|@N1B|[0004-0004]|PR(''Field Hash'')|CO(''Hash'')')                                                           ! [0004-0004] Is a HASH encryption?
 FieldEncrypt                  BYTE,NAME('FieldEncrypt|BYTE|@N1B|[0005-0005]|PR(''Field Encrypt'')|CO(''Encrypt'')')                                                  ! [0005-0005] Is a FIELD encryption?
-FieldFrom                     LONG,NAME('FieldFrom|LONG|@N04|[0006-0009]|PR(''Field From:'')|CO(''From'')')                                                          ! [0006-0009] Field starting location.
-FieldTo                       LONG,NAME('FieldTo|LONG|@N04|[0010-0013]|PR(''Field To:'')|CO(''To'')')                                                                ! [0010-0013] Field ending location.
-FieldName                     CSTRING(49),NAME('FieldName|CSTRING(49)|@S48|[0014-0062]|PR(''Field Name:'')|CO(''Name'')')                                            ! [0014-0062] Field name.
-FieldWhom                     CSTRING(49),NAME('FieldWhom|CSTRING(49)|@S48|[0063-0111]|PR(''Field Whom:'')|CO(''Whom'')')                                            ! [0063-0111] Field whom it is.
-FieldType                     CSTRING(49),NAME('FieldType|CSTRING(49)|@S48|[0112-0160]|PR(''Field Type:'')|CO(''Type'')')                                            ! [0112-0160] Field type clarion.
-FieldFormat                   CSTRING(49),NAME('FieldFormat|CSTRING(49)|@S48|[0161-0209]|PR(''Field Format:'')|CO(''Format'')')                                      ! [0161-0209] Field format clarion.
-FieldRange                    CSTRING(49),NAME('FieldRange|CSTRING(49)|@S48|[0210-0258]|PR(''Field Range:'')|CO(''Range'')')                                         ! [0210-0258] Field range location.
-FieldPrompt                   CSTRING(129),NAME('FieldPrompt|CSTRING(129)|@S128|[0259-0387]|PR(''Field Prompt:'')|CO(''Prompt'')')                                   ! [0259-0387] Field prompt literal.
-FieldColumn                   CSTRING(129),NAME('FieldColumn|CSTRING(129)|@S128|[0388-0516]|PR(''Field Column:'')|CO(''Column'')')                                   ! [0388-0516] Field column literal.
-FieldTypeSQL                  CSTRING(129),NAME('FieldTypeSQL|CSTRING(129)|@S128|[0517-0645]|PR(''SQL Type:'')|CO(''SQLType'')')                                     ! [0517-0645] Field type SQL.
-FieldFormatSQL                CSTRING(129),NAME('FieldFormatSQL|CSTRING(129)|@S128|[0646-0774]|PR(''SQL Format:'')|CO(''SQLFormat'')')                               ! [0646-0774] Field format SQL.
-FieldTemp                     CSTRING(241),NAME('FieldTemp|CSTRING(241)|@S240|[0775-1015]|PR(''Field Temp:'')|CO(''Temp'')')                                         ! [0775-1015] Field attributes temporary.
+FieldFrom                     CSTRING(5),NAME('FieldFrom|CSTRING(5)|@S4|[0006-0010]|PR(''Field From:'')|CO(''From'')|ATTRIBUTE')                                     ! [0006-0010] Field starting location.
+FieldTo                       CSTRING(5),NAME('FieldTo|CSTRING(5)|@S4|[0011-0015]|PR(''Field To:'')|CO(''To'')|ATTRIBUTE')                                           ! [0011-0015] Field ending location.
+FieldName                     CSTRING(49),NAME('FieldName|CSTRING(49)|@S48|[0016-0064]|PR(''Field Name:'')|CO(''Name'')|ATTRIBUTE')                                  ! [0016-0064] Field name.
+FieldWhom                     CSTRING(49),NAME('FieldWhom|CSTRING(49)|@S48|[0065-0113]|PR(''Field Whom:'')|CO(''Whom'')|ATTRIBUTE')                                  ! [0065-0113] Field whom it is.
+FieldType                     CSTRING(49),NAME('FieldType|CSTRING(49)|@S48|[0114-0162]|PR(''Field Type:'')|CO(''Type'')|ATTRIBUTE')                                  ! [0114-0162] Field type clarion.
+FieldFormat                   CSTRING(49),NAME('FieldFormat|CSTRING(49)|@S48|[0163-0211]|PR(''Field Format:'')|CO(''Format'')|ATTRIBUTE')                            ! [0163-0211] Field format clarion.
+FieldRange                    CSTRING(49),NAME('FieldRange|CSTRING(49)|@S48|[0212-0260]|PR(''Field Range:'')|CO(''Range'')|ATTRIBUTE')                               ! [0212-0260] Field range location.
+FieldPrompt                   CSTRING(129),NAME('FieldPrompt|CSTRING(129)|@S128|[0261-0389]|PR(''Field Prompt:'')|CO(''Prompt'')|ATTRIBUTE')                         ! [0261-0389] Field prompt literal.
+FieldColumn                   CSTRING(129),NAME('FieldColumn|CSTRING(129)|@S128|[0390-0518]|PR(''Field Column:'')|CO(''Column'')|ATTRIBUTE')                         ! [0390-0518] Field column literal.
+FieldTypeSQL                  CSTRING(129),NAME('FieldTypeSQL|CSTRING(129)|@S128|[0519-0647]|PR(''SQL Type:'')|CO(''SQLType'')|ATTRIBUTE')                           ! [0519-0647] Field type SQL.
+FieldFormatSQL                CSTRING(129),NAME('FieldFormatSQL|CSTRING(129)|@S128|[0648-0776]|PR(''SQL Format:'')|CO(''SQLFormat'')|ATTRIBUTE')                     ! [0648-0776] Field format SQL.
+FieldLength                   LONG,NAME('FieldLength|LONG|@N-4|[0777-0780]|PR(''Field Length:'')|CO(''Field Length'')|ATTRIBUTE')                                    ! [0777-0780] Name attribute string length.
+FieldTemp                     CSTRING(241),NAME('FieldTemp|CSTRING(241)|@S240|[0781-1021]|PR(''Field Temp:'')|CO(''Temp'')|ATTRIBUTE')                               ! [0781-1021] Field attributes temporary.
                             END
 !
 QTNAMEATTR                  QUEUE(GTNAMEATTR),TYPE

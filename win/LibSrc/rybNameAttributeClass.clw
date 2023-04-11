@@ -83,7 +83,7 @@ X           SHORT
 	  SELF.naG.FieldNumber        = X
 	  SELF.naG.FieldTemp          = WHO(xGroup, X)
     SELF.Debug('CLASS(' & THREAD() & '): Init(...): FieldTemp[' & FORMAT(X,@n03) & '](' & FORMAT(LEN(CLIP(SELF.naG.FieldTemp)),@N05) & ')=[ "' & CLIP(SELF.naG.FieldTemp) & '" ]')
-	  ST.Setvalue(SELF.naG.FieldTemp)                        
+	  ST.Setvalue(SELF.naG.FieldTemp)
 	  ST.Split('|',,,,TRUE,TRUE)                     
 	  SELF.naG.FieldName          = ST.GetLine(1)
 	  SELF.naG.FieldWhom          = UPPER(ST.GetLine(1))
@@ -100,8 +100,15 @@ X           SHORT
 	  SELF.naG.FieldColumn        = ST.Between('(''',''')')
 	  ST.Setvalue(SELF.naG.FieldRange)
 	  SELF.naG.FieldFrom          = ST.Between('[','-')
+	  IF SELF.naG.FieldFrom       = '0' THEN
+	    SELF.naG.FieldFrom        = ''
+	  END
 	  SELF.naG.FieldTo            = ST.Between('-',']')
-    SELF.naG.FieldTemp          = UPPER(SELF.naG.FieldTemp)
+	  IF SELF.naG.FieldTo         = '0' THEN
+	    SELF.naG.FieldTo          = ''
+	  END
+      SELF.naG.FieldTemp          = UPPER(SELF.naG.FieldTemp)
+      SELF.naG.FieldLength        = LEN(CLIP(SELF.naG.FieldTemp))	  
     SELF.naG.FieldSalt          = CHOOSE(INSTRING('|SALT'       ,SELF.naG.FieldTemp,1,1))
     SELF.naG.FieldHash          = CHOOSE(INSTRING('|HASH('      ,SELF.naG.FieldTemp,1,1))
     SELF.naG.FieldEncrypt       = CHOOSE(INSTRING('|ENCRYPTED(' ,SELF.naG.FieldTemp,1,1))
