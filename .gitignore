@@ -17,7 +17,7 @@ SetupRYB.htm
 
 # Examples executables will have to be recompiled
 NameAttributes.exe
-
+rybGTQT.exe
 
 RybProg.Tpl
 TemplateMaker.Tpl
@@ -30,6 +30,12 @@ README.md
 ############
 ## Clarion
 ############
+*.txt
+*.bct
+*.json
+*.xml
+*.txa
+*.exp
 *.FileList.xml
 *.MAP
 #*.exe
