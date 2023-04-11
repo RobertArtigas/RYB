@@ -1,0 +1,109 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{CB6064F4-8B07-4C7C-8706-3AFA40ADD6D2}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Win32</Platform>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>rybGTQT</RootNamespace>
+    <AssemblyName>rybGTQT</AssemblyName>
+    <OutputName>rybGTQT</OutputName>
+    <CWOutputType>Exe</CWOutputType>
+    <DefineConstants>StringTheoryLinkMode=&gt;0%3bStringTheoryDllMode=&gt;1%3bxFilesLinkMode=&gt;0%3bxFilesDllMode=&gt;1%3b_XFILES_=&gt;1%3b_XFILES4_=&gt;1%3bReflectionLM=&gt;0%3bReflectionDM=&gt;1%3bjFilesLinkMode=&gt;0%3bjFilesDllMode=&gt;1%3b_JFILES_=&gt;1%3b_ABCDllMode_=&gt;1%3b_ABCLinkMode_=&gt;0</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <vid>full</vid>
+    <check_stack>True</check_stack>
+    <check_index>True</check_index>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <vid>off</vid>
+    <check_stack>False</check_stack>
+    <check_index>False</check_index>
+  </PropertyGroup>
+  <ItemGroup>
+    <FileDriver Include="TOPSPEED" />
+    <Compile Include="rybGTQT.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT001.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT002.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT003.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT004.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT005.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT006.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT007.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT008.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT009.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT010.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT011.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT012.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT013.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT014.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT015.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT016.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT017.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT018.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT019.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT020.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT021.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT022.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="rybGTQT023.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Library Include="RYBGTQTDEFINE.LIB" />
+    <None Include="zlibwapi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+  </ItemGroup>
+  <Import Project="$(ClarionBinPath)\SoftVelocity.Build.Clarion.targets" />
+</Project>
