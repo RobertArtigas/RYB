@@ -102,11 +102,11 @@
   #! #FOR (%File)
   #!   #ADD (%ReportedFilesGRPREC, %File)
   #! #ENDFOR
-  #FOR (%SelectFromFilesGRPREC)
+  #FOR (%SelectFromFilesGRPREC),WHERE(%SelectFromFilesGRPREC<>'')
     #ADD (%ReportedFilesGRPREC, %SelectFromFilesGRPREC)
   #ENDFOR
 #ELSE
-  #FOR (%ReportFileSelectionGRPREC)
+  #FOR (%ReportFileSelectionGRPREC),WHERE(%ReportFileSelectionGRPREC<>'')
     #ADD (%ReportedFilesGRPREC, %ReportFileSelectionGRPREC)
   #ENDFOR
 #ENDIF
@@ -263,16 +263,16 @@
 #TAB('Options')  #!,PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
   #BOXED(''),AT(,,454),PROP(PROP:FontStyle,700)
     #DISPLAY(''),AT(,,,1)
-    #BOXED('General'),AT(,,),PROP(PROP:FontStyle,700)
+    #BOXED('Additional attributes (To generate XML turn these attributes off)'),AT(,,),PROP(PROP:FontStyle,700)
       #DISPLAY(''),AT(,,,1)
-      #PROMPT ('Create RANGE item in the external NAME definition.', CHECK), %OptionUseRangeGRPREC, DEFAULT(1), AT(10)
-      #PROMPT ('Create PROMPT item in the external NAME definition.', CHECK), %OptionUsePromptGRPREC, DEFAULT(1), AT(10)
-      #PROMPT ('Create COLUMN item in the external NAME definition.', CHECK), %OptionUseColumnGRPREC, DEFAULT(1), AT(10)
+      #PROMPT ('Create RANGE item in the external NAME definition.', CHECK), %OptionUseRangeGRPREC, DEFAULT(0), AT(10)
+      #PROMPT ('Create PROMPT item in the external NAME definition.', CHECK), %OptionUsePromptGRPREC, DEFAULT(0), AT(10)
+      #PROMPT ('Create COLUMN item in the external NAME definition.', CHECK), %OptionUseColumnGRPREC, DEFAULT(0), AT(10)
     #ENDBOXED
     #DISPLAY(''),AT(,,,1)
-    #BOXED('XML'),AT(,,),PROP(PROP:FontStyle,700)
+    #BOXED('Generate XML for xFiles'),AT(,,),PROP(PROP:FontStyle,700)
       #DISPLAY(''),AT(,,,1)
-      #PROMPT ('Generate XML attibutes for xFiles', CHECK), %OptionUseXMLGRPREC, DEFAULT(1), AT(10)
+      #PROMPT ('Generate XML properties in the external NAME definition.', CHECK), %OptionUseXMLGRPREC, DEFAULT(1), AT(10)
       #ENABLE(%OptionUseXMLGRPREC)
         #PROMPT ('Generate BOOLEAN property.', CHECK), %OptionUseBooleanGRPREC, DEFAULT(1), AT(20)
         #PROMPT ('Generate ATTRIBUTE property.', CHECK), %OptionUseAttributeGRPREC, DEFAULT(1), AT(20)
@@ -628,7 +628,7 @@
   #DECLARE(%OutputFile)
 #ENDIF
 #!
-#FOR (%ReportedFilesGRPREC)
+#FOR (%ReportedFilesGRPREC),WHERE(%ReportedFilesGRPREC<>'')
   #FIX (%File, %ReportedFilesGRPREC)
   #!SET (%OutputFile, %IncludeDirectoryGRPREC & %FILE & '.inc')
   #SET (%OutputFile, %IncludeDirectoryGRPREC & %SourcePrefixGRPREC & %FILE & '.inc')

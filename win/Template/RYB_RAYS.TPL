@@ -79,6 +79,8 @@
 #EQUATE(%tplRelease001DCT                   , '2023.02.01' )
 #EQUATE(%tplVersion002APP                   , '1.00' )
 #EQUATE(%tplRelease002APP                   , '2023.02.03' )
+#EQUATE(%tplVersionGRPQUE                   , '3.00' )
+#EQUATE(%tplReleaseGRPQUE                   , '2023.03.25' )
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
@@ -306,6 +308,7 @@
 #INCLUDE('RYB_GROUPSTRUCTURE.TPW')          #! RA.2022.04.26: Generate Record Groups
 #INCLUDE('RYB_AUDIT001DCT.TPW')             #! RA.2023.01.31: Audit 001 DCT (NetTalk-Crossover)
 #INCLUDE('RYB_AUDIT002APP.TPW')             #! RA.2023.02.02: Audit 002 APP (NetTalk-Crossover)
+#INCLUDE('RYB_GROUPQUEUE.TPW')              #! RA.2023.03.25: Generate Groups and Queues (DCT Editor 3)
 #!
 #!INCLUDE('RYB_TESTING.TPW')                #! RA.2019.04.21: TESTING STRAP - TEMPORARY
 #!INCLUDE('RYB_GLOBAL_TEST.TPW')            #! RA.2022.05.01: TESTING STRAP - TEMPORARY

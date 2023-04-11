@@ -1,0 +1,1206 @@
+#!---------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#!--------------------------------------------------------------------
+#GROUP(%PrepareFilesGRPQUE)
+#PREPARE
+#DECLARE(%SelectFromFilesGRPQUE),MULTI,UNIQUE
+#FOR (%File)
+  #!----------------------------------!
+  #! Ignore certain file DRIVER types !
+  #!----------------------------------!
+  #CASE(%FileDriver)
+    #OF('ASCII')
+  #OROF('BASIC')
+  #OROF('DOS')
+  #OROF('MEMORY')                                                               #! RA.2018.04.12 - Ignored
+      #CYCLE
+  #ENDCASE
+  #!---------------------------!
+  #! Ignore certain FILE types !
+  #!---------------------------!
+  #CASE(%FileType)
+  #OF  ('VIEW')
+  #OROF('ALIAS')
+      #CYCLE
+  #ENDCASE
+  #!-------------------------------------!
+  #! Ignore FILES with NO FIELDS in them !
+  #!-------------------------------------!
+  #IF(NOT ITEMS(%Field))                                                        #! RA.2001.12.01
+    #CYCLE                                                                      #! RA.2001.12.01
+  #ENDIF                                                                        #! RA.2001.12.01
+  #!
+  #IF(NOT VAREXISTS(%nLoc1))
+    #DECLARE(%nLoc1)
+  #ENDIF
+  #IF(NOT VAREXISTS(%nLoc2))
+    #DECLARE(%nLoc2)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileUser))
+    #DECLARE(%NFileUser)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt1))
+    #DECLARE(%NFileOpt1)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt2))
+    #DECLARE(%NFileOpt2)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt3))
+    #DECLARE(%NFileOpt3)
+  #ENDIF
+  #IF(NOT VAREXISTS(%NFileOpt4))
+    #DECLARE(%NFileOpt4)
+  #ENDIF
+  #!
+  #SET(%nLoc1,INSTRING('REFVAR(',%FileUserOptions,1,1))
+  #SET(%nLoc2,INSTRING(')',%FileUserOptions,1,%nLoc1))
+  #SET(%NFileUser,UPPER(SUB(%FileUserOptions,%nLoc1,%nLoc2)))
+  #!SET(%NFileUser,UPPER(EXTRACT(%FileUserOptions,'REFVAR')))
+  #SET(%NFileOpt1,EXTRACT(%NFileUser,'REFVAR',1))
+  #SET(%NFileOpt2,EXTRACT(%NFileUser,'REFVAR',2))
+  #SET(%NFileOpt3,EXTRACT(%NFileUser,'REFVAR',3))
+  #SET(%NFileOpt4,EXTRACT(%NFileUser,'REFVAR',4))
+  #!
+  #IF(SUB(%NFileOpt1,1,1)='N')                                                  #! Ignore this file
+    #CYCLE
+  #ENDIF
+  #!
+  #ADD (%SelectFromFilesGRPQUE, %File)
+#ENDFOR
+#ENDPREPARE
+#GROUP(%PrepareFilesEndGRPQUE)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%CopyrightGRPQUE)
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightGRPQUE01))
+    #DECLARE(%CopyrightGRPQUE01)
+  #ENDIF
+  #SET(%CopyrightGRPQUE01, 'Generate GROUPS and QUEUES with extended FIELD names for this dictionary.')
+  #SET(%CopyrightGRPQUE01, %CopyrightGRPQUE01 & '<13,10>Copyright © 1999-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightGRPQUE01, %CopyrightGRPQUE01 & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightGRPQUE01, %CopyrightGRPQUE01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#BOXED('Version '& %tplVersionGRPQUE & ' [ ' & %tplReleaseGRPQUE & ' ]'),AT(,,454),PROP(PROP:FontStyle,700) 
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%CopyrightGRPQUE01),AT(,,436,34)
+#ENDBOXED
+#!
+#GROUP(%MITLicenseGRPQUE)
+#TAB('GRPQUE'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightGRPQUE) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#GROUP(%ExplainGRPQUE)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainGRPQUE01))
+    #DECLARE(%ExplainGRPQUE01)
+  #ENDIF
+  #SET(%ExplainGRPQUE01, '')
+  #SET(%ExplainGRPQUE01, %ExplainGRPQUE01 & 'This template is used to make an include file defining a GROUP and QUEUE for')
+  #SET(%ExplainGRPQUE01, %ExplainGRPQUE01 & ' each table in your dictionary with field extended names. You might want to include this extension')
+  #SET(%ExplainGRPQUE01, %ExplainGRPQUE01 & ' on one application only. Preferably in your DATA application.')
+  #SET(%ExplainGRPQUE01, %ExplainGRPQUE01 & '<13,10><13,10>')
+  #SET(%ExplainGRPQUE01, %ExplainGRPQUE01 & 'These field extended name attributes will allow to create generic programming code when appropriate.')
+  #SET(%ExplainGRPQUE01, %ExplainGRPQUE01 & ' This is posible since some of the dictionary attributes are available at program run time.')
+  #SET(%ExplainGRPQUE01, %ExplainGRPQUE01 & '<13,10><13,10>')
+  #SET(%ExplainGRPQUE01, %ExplainGRPQUE01 & 'You can select the tables that you just need or can select all the tables by choice.')
+  #SET(%ExplainGRPQUE01, %ExplainGRPQUE01 & ' It will not allow you to default all the tables since this can generate a lot of files.')
+  #SET(%ExplainGRPQUE01, %ExplainGRPQUE01 & '<13,10><13,10>')
+  #SET(%ExplainGRPQUE01, %ExplainGRPQUE01 & 'This template has been tested with the ABC template chains.')
+  #SET(%ExplainGRPQUE01, %ExplainGRPQUE01 & '')
+  #!
+  #IF(NOT VAREXISTS(%ExplainGRPQUE02))
+    #DECLARE(%ExplainGRPQUE02)
+  #ENDIF
+  #!
+  #SET(%ExplainGRPQUE02, '')
+  #SET(%ExplainGRPQUE02, %ExplainGRPQUE02 & 'NOTE: Make sure the COMPLETE DIRECTORY PATH exists on your machine.')
+#ENDPREPARE
+#!
+#GROUP(%TabSelectionGRPQUE)
+#TAB('Selection')  #!,PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+  #BOXED(''),AT(,,454),PROP(PROP:FontStyle,700)
+    #!DISPLAY(''),AT(,,,1)
+    #!PROMPT ('Generate all files in my dictionary. (Cannot change this option)', CHECK), %ReportUseAllFilesGRPQUE, DEFAULT(0), AT(10) #!, PROP(PROP:READONLY,1), PROP(PROP:FontStyle,700), PROP(PROP:FontColor,0C79A3H)
+    #PROMPT ('Generate all files in my dictionary.', CHECK), %ReportUseAllFilesGRPQUE, DEFAULT(0), AT(10)
+    #DISPLAY(''),AT(,,,1)
+    #ENABLE(~%ReportUseAllFilesGRPQUE)
+      #PROMPT ('File Selection', FROM(%SelectFromFilesGRPQUE)), %ReportFileSelectionGRPQUE, INLINE, SELECTION('File Selection'), AT(,,,198)
+    #ENDENABLE
+  #ENDBOXED
+#ENDTAB
+#!
+#! RA.2022.11.05: Added options for XML. Do general options?
+#GROUP(%TabOptionsGRPQUE)
+#TAB('Options')  #!,PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+  #BOXED(''),AT(,,454),PROP(PROP:FontStyle,700)
+    #DISPLAY(''),AT(,,,1)
+    #BOXED('Additional attributes (To generate XML turn these attributes off)'),AT(,,),PROP(PROP:FontStyle,700)
+      #DISPLAY(''),AT(,,,1)
+      #PROMPT ('Create RANGE item in the external NAME definition.', CHECK), %OptionUseRangeGRPQUE, DEFAULT(0), AT(10)
+      #PROMPT ('Create PROMPT item in the external NAME definition.', CHECK), %OptionUsePromptGRPQUE, DEFAULT(0), AT(10)
+      #PROMPT ('Create COLUMN item in the external NAME definition.', CHECK), %OptionUseColumnGRPQUE, DEFAULT(0), AT(10)
+    #ENDBOXED
+    #DISPLAY(''),AT(,,,1)
+    #BOXED('Generate XML for xFiles'),AT(,,),PROP(PROP:FontStyle,700)
+      #DISPLAY(''),AT(,,,1)
+      #PROMPT ('Generate XML properties in the external NAME definition.', CHECK), %OptionUseXMLGRPQUE, DEFAULT(1), AT(10)
+      #ENABLE(%OptionUseXMLGRPQUE)
+        #PROMPT ('Generate BOOLEAN property.', CHECK), %OptionUseBooleanGRPQUE, DEFAULT(1), AT(20)
+        #PROMPT ('Generate ATTRIBUTE property.', CHECK), %OptionUseAttributeGRPQUE, DEFAULT(1), AT(20)
+      #ENDENABLE
+    #ENDBOXED
+  #ENDBOXED
+#ENDTAB
+#!
+#! RA.2023.03.25.SAT: Explain the field attributes
+#GROUP(%TabAttributesGRPQUE)
+#TAB('Attributes')  #!,PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+  #BOXED('Dictionary Field Options'),AT(,,454),PROP(PROP:FontStyle,700)
+    #!DISPLAY(''),AT(,,,1)
+#INSERT(%SheetAttributesGRPQUE)
+#ENDBOXED
+#ENDTAB
+#!
+#GROUP(%SheetAttributesGRPQUE)
+#SHEET,AT(9,,444),HSCROLL
+#TAB('REFVAR')
+#INSERT(%RefvarGRPQUE)
+#BOXED('REFVAR(1,2,3,4)'),PROP(PROP:FontColor,0C79A3H),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%RefvarGRPQUE01),AT(,,429,174)
+#ENDBOXED
+#ENDTAB
+#TAB('HASH')
+#INSERT(%HashGRPQUE)
+#BOXED('HASH(1,2,3,4)'),PROP(PROP:FontColor,0C79A3H),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%HashGRPQUE01),AT(,,429,174)
+#ENDBOXED
+#ENDTAB
+#TAB('ENCRYPTED')
+#INSERT(%EncryptedGRPQUE)
+#BOXED('ENCRYPTED(1,2,3,4)'),PROP(PROP:FontColor,0C79A3H),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%EncryptedGRPQUE01),AT(,,429,174)
+#ENDBOXED
+#ENDTAB
+#TAB('IDENTITY')
+#INSERT(%IdentityGRPQUE)
+#BOXED('IDENTITY(1,2,3,4)'),PROP(PROP:FontColor,0C79A3H),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #DISPLAY(%IdentityGRPQUE01),AT(,,429,174)
+#ENDBOXED
+#ENDTAB
+#ENDSHEET
+#!
+#GROUP(%RefvarGRPQUE)
+#PREPARE
+  #IF(NOT VAREXISTS(%RefvarGRPQUE01))
+    #DECLARE(%RefvarGRPQUE01)
+  #ENDIF
+  #SET(%RefvarGRPQUE01, '')
+  #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'Option 1:<9,9><<NO|><9,9,9>Use this field<13,10>')
+  #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'Option 2:<9,9>&&Font' & %QueueSuffixGRPQUE & '<9,9,9>Type override (%NFieldOpt2)<13,10>')
+  #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'Option 3:<9,9><<REFERENCE|QUEUE|><9>Initialization override<13,10>')
+  #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'Option 4:<9,9>Font<9,9,9>ROWNAME(%NFieldOpt4)<13,10>')
+  #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & '<13,10>')
+  #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'REFVAR(,&&Type' & %QueueSuffixGRPQUE &  ',QUEUE,Type) tested extensively.')
+  #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & '<13,10>')
+  #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'REFERENCE(,&&Type,REFERENCE,).')
+  #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & '<13,10>')
+#ENDPREPARE
+#!
+#GROUP(%HashGRPQUE)
+#PREPARE
+  #IF(NOT VAREXISTS(%HashGRPQUE01))
+    #DECLARE(%HashGRPQUE01)
+  #ENDIF
+  #SET(%HashGRPQUE01, '')
+  #SET(%HashGRPQUE01, %HashGRPQUE01 & 'Option 1:<9,9><<NO|><9,9,9>Use this field<13,10>')
+  #SET(%HashGRPQUE01, %HashGRPQUE01 & 'Option 2:<9,9><<HashField><9,9>Type override |HASH(%NFieldOpt2)<13,10>')
+  #SET(%HashGRPQUE01, %HashGRPQUE01 & 'Option 3:<9,9>[Not used]<9,9>Not used yet<13,10>')
+  #SET(%HashGRPQUE01, %HashGRPQUE01 & 'Option 4:<9,9>[Not used]<9,9>Not used yet<13,10>')
+  #SET(%HashGRPQUE01, %HashGRPQUE01 & '<13,10>')
+  #SET(%HashGRPQUE01, %HashGRPQUE01 & 'HASH(,<<%NFieldOpt2>).')
+  #SET(%HashGRPQUE01, %HashGRPQUE01 & '<13,10>')
+#ENDPREPARE
+#!
+#GROUP(%EncryptedGRPQUE)
+#PREPARE
+  #IF(NOT VAREXISTS(%EncryptedGRPQUE01))
+    #DECLARE(%EncryptedGRPQUE01)
+  #ENDIF
+  #SET(%EncryptedGRPQUE01, '')
+  #SET(%EncryptedGRPQUE01, %EncryptedGRPQUE01 & 'Option 1:<9,9><<NO|><9,9,9>Use this field<13,10>')
+  #SET(%EncryptedGRPQUE01, %EncryptedGRPQUE01 & 'Option 2:<9,9>MyTable<9,9,9>Type override |ENCRYPTED(%NFieldOpt2)<13,10>')
+  #SET(%EncryptedGRPQUE01, %EncryptedGRPQUE01 & 'Option 3:<9,9>[Not used]<9,9>Not used yet<13,10>')
+  #SET(%EncryptedGRPQUE01, %EncryptedGRPQUE01 & 'Option 4:<9,9>[Not used]<9,9>Not used yet<13,10>')
+  #SET(%EncryptedGRPQUE01, %EncryptedGRPQUE01 & '<13,10>')
+  #SET(%EncryptedGRPQUE01, %EncryptedGRPQUE01 & 'ENCRYPTED(,<<%NFieldOpt2>).')
+  #SET(%EncryptedGRPQUE01, %EncryptedGRPQUE01 & '<13,10>')
+#ENDPREPARE
+#!
+#GROUP(%IdentityGRPQUE)
+#PREPARE
+  #IF(NOT VAREXISTS(%IdentityGRPQUE01))
+    #DECLARE(%IdentityGRPQUE01)
+  #ENDIF
+  #SET(%IdentityGRPQUE01, '')
+  #SET(%IdentityGRPQUE01, %IdentityGRPQUE01 & 'Option 1:<9,9><<NO|><9,9,9>Use this field<13,10>')
+  #SET(%IdentityGRPQUE01, %IdentityGRPQUE01 & 'Option 2:<9,9>Salt<9,9,9>|%NFieldOpt2<13,10>')
+  #SET(%IdentityGRPQUE01, %IdentityGRPQUE01 & 'Option 3:<9,9>[Not used]<9,9>Not used yet<13,10>')
+  #SET(%IdentityGRPQUE01, %IdentityGRPQUE01 & 'Option 4:<9,9>[Not used]<9,9>Not used yet<13,10>')
+  #SET(%IdentityGRPQUE01, %IdentityGRPQUE01 & '<13,10>')
+  #SET(%IdentityGRPQUE01, %IdentityGRPQUE01 & 'IDENTITY(,).')
+  #SET(%IdentityGRPQUE01, %IdentityGRPQUE01 & '<13,10>')
+#ENDPREPARE
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%GiveMeSomeStuffGRPQUE)
+!BOF
+!
+!Region Generate
+!
+! Dictionary:   %DictionaryFile
+! File:         %OutputFile
+! Date-Time:    %@D010-@(%BegDate) - %@T06@(%BegTime)
+! Purpose:      Generated File Records as Groups
+! Created:      Generate GROUP and QUEUE Template
+! Author:       Copyright © 1999-2999 by Roberto Artigas y Soler
+!               All rights reserved world wide.
+! Narative:     This template is used to pass records structures
+!               back and forth between DLL's when the tables
+!               might not be shared. Since table definitions are not
+!               available, data has to be passed in areas.
+!
+!EndRegion
+!Region Header
+  #IF (%FileType = 'ALIAS')
+! Name:         %File (An alias for %AliasFile)
+  #ELSE
+! Name:         %File
+  #ENDIF
+! Prefix:       %FilePrefix
+  #IF (%FileDescription)
+! Description:  %FileDescription
+  #ENDIF
+  #IF (%FileName)
+! Filename:     %FileName
+  #ENDIF
+!EndRegion
+  #IF(ITEMS(%Key))
+!Region KeyDocs
+!
+!-Keys Docs-
+!
+  #SUSPEND
+    #FOR (%Key)
+      #IF(%KeyIndex <> 'KEY')
+        #CYCLE
+      #ENDIF
+      #IF(~ITEMS(%KeyField))
+        #CYCLE
+      #ENDIF
+! %[%zNames-1]KeyID %|
+      #FOR (%KeyField)
+        #FIX (%Field, %KeyField)
+        #IF (INSTANCE(%KeyField) = 1)
+%FieldID(%KeyFieldSequence)
+        #ELSE
+!%[%zGroup+1]Null%FieldID(%KeyFieldSequence)
+        #ENDIF
+      #ENDFOR
+    #ENDFOR
+  #RESUME
+!EndRegion
+!Region KeyDefinitions
+!
+!-Keys-
+!
+  #SUSPEND
+    #SET(%TheKeyNo,1)
+    #FOR (%Key)
+      #SET(%zFldFrom,0)     #! RA.2021.11.20.SAT: Added
+      #IF(%KeyIndex <> 'KEY')
+        #CYCLE
+      #ENDIF
+      #IF(~ITEMS(%KeyField))
+        #CYCLE
+      #ENDIF
+      #FOR (%KeyField)
+        #FIX (%Field, %KeyField)
+        #CALL(%BuildFieldTypeGRPQUE,%zFldType)
+        #CALL(%BuildAttributesFieldNameGRPQUE,%zTheName)
+        #IF (INSTANCE(%KeyField) = 1)
+          #!SET(%TheKeyId,SUB(%KeyID,1,INSTRING('_',%KeyID,1,1)-1))
+          #SET(%TheKeyId, 'Key' & FORMAT(%TheKeyNo,@N02))
+          #SET(%LineWork, %FilePrefix & '_' & %KeyID & '')
+          #SET(%LineNext, 'GROUP,TYPE,NAME(''' & %FilePrefix & '_' & %KeyID & ''')')
+%[%zNames]LineWork %[%zGroup-%zNames]NULL %LineNext
+#!%FilePrefix:tKey:%KeyID GROUP,TYPE,BINDABLE,PRE(t%FilePrefix:%TheKeyId)
+#!%FieldStruct #<! %FieldDescription
+#!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
+#!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName
+#!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName #<! %zFldRange %FieldDescription
+%[%zNames]FieldID %[%zItems-%zNames]NULL %zFldType%zTheName #<! %zFldRange %FieldDescription
+          #SET(%TheKeyNo, %TheKeyNo + 1)
+        #ELSE
+#!%FieldStruct #<! %FieldDescription
+#!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
+#!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName
+#!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName #<! %zFldRange %FieldDescription
+%[%zNames]FieldID %[%zItems-%zNames]NULL %zFldType%zTheName #<! %zFldRange %FieldDescription
+        #ENDIF
+      #ENDFOR
+#!  END
+%[%zNames]NULL %[%zGroup-%zNames]NULL END 
+    #ENDFOR
+  #RESUME
+!EndRegion
+  #ENDIF
+!Region GroupDefinition
+!
+!-Group-
+!
+#!   #SUSPEND
+#!   #SET(%LineWork, UPPER(%FilePrefix) & '_tRec')
+#!   #SET(%LineNext, 'GROUP,TYPE,BINDABLE,PRE(r' & UPPER(%FilePrefix) & ')')
+#! #!%FilePrefix:mRec GROUP,TYPE,BINDABLE,PRE(m%FilePrefix)
+#! %[%zNames]LineWork %[%zGroup-%zNames]NULL %LineNext
+#!     #SET(%zFldFrom,0)     #! RA.2021.11.20.SAT: Added
+#!     #FOR(%Field)
+#!       #CASE(UPPER(%FieldType))
+#!       #OF  ('BLOB')
+#!       #OROF('MEMO')
+#!       #!OROF('GROUP')
+#!       #!OROF('END')
+#!         #CYCLE
+#!       #ENDCASE
+#!       #CALL(%BuildFieldTypeGRPQUE,%zFldType)
+#!       #CALL(%BuildAttributesFieldNameGRPQUE,%zTheName)
+#! #! ! %FieldStruct%zTheName
+#! #! %[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement #<! %FieldDescription
+#! #!%[%zNames]FieldID %[%zItems-%zNames]NULL %FieldStatement%zTheName #<! %zFldRange %FieldDescription
+#! %[%zNames]FieldID %[%zItems-%zNames]NULL %zFldType%zTheName #<! %zFldRange %FieldDescription
+#!     #ENDFOR
+#! %[%zNames]NULL %[%zGroup-%zNames]NULL END
+#!   #!RESUME
+  #SUSPEND
+#!
+#!%FileStructRec
+  #SET(%LineWork, %FilePrefix & %GroupSuffixGRPQUE)
+  #SET(%LineNext, 'GROUP,TYPE,NAME(''' & %FilePrefix & %GroupSuffixGRPQUE & ''')')
+%[%zNames]LineWork %[%zGroup-%zNames]NULL %LineNext
+    #SET(%zFldFrom,0)
+    #SET(%zFldTo  ,0)
+    #SET(%zGroups ,0)
+    #FOR(%Field),WHERE(UPPER(%FieldType) <> 'MEMO' AND UPPER(%FieldType) <> 'BLOB')
+      #CALL(%BuildFieldTypeGRPQUE,%zFldType)
+      #CALL(%BuildAttributesFieldNameGRPQUE,%zTheName)
+      #CALL(%BuildFldStmtGRPQUE,%zFldStmt)
+#! %FieldStruct || %FieldStatement || %%zFldStmt = %zFldStmt || %%zFldType = %zFldType
+      #!IF(UPPER(%FieldType)='END')
+      #IF(%zFldType='END')
+        #SET(%zGroups,%zGroups-1)
+      #ENDIF
+      #! RA.2022.05.01.SUN: Double check for 'unusual' attributes and fix logic [???]
+      #! RA.2022.04.27.WED: 'END' -> No name, no name attributes
+      #!IF(UPPER(%FieldType)<>'END')
+      #IF(%zFldType<>'END')
+        #SET(%nLoc1, INSTRING(',',%zFldStmt,1,1))
+#! %%nLoc1 = %nLoc1 || %%zFldStmt = %zFldStmt
+        #IF(%nLoc1)
+          #! RA.2022.05.01.SUN: You will get to this piece when you have dimensions and/or over fields
+          #! The TYPE field will be the first one. Then come the DIM and OVER keywords.
+          #SET(%zFldStmt,SUB(%zFldStmt,%nLoc1+0,LEN(%nLoc1)-%nLoc1+0))
+%[%zNames]FieldID %[%zItems-%zNames + (%zGroups*2)]NULL %zFldType%zFldStmt%zTheName #<! %zFldRange %FieldDescription
+        #ELSE
+%[%zNames]FieldID %[%zItems-%zNames + (%zGroups*2)]NULL %zFldType%zTheName #<! %zFldRange %FieldDescription
+       #ENDIF
+      #ELSE
+%[%zNames]FieldID %[%zItems-%zNames + (%zGroups*2)]NULL %zFldType #<! %zFldRange %FieldDescription
+      #ENDIF
+      #!IF(UPPER(%FieldType)='GROUP')
+      #IF(%zFldType='GROUP')
+        #SET(%zGroups,%zGroups+1)
+      #ENDIF
+    #ENDFOR
+%[%zNames]NULL %[%zGroup-%zNames]NULL END
+#!%FileStructRecEnd
+#!
+  #RESUME
+!EndRegion
+!Region QueueDefinition
+!
+!-Queue-
+!
+  #SUSPEND
+#SET(%LineWork, %FilePrefix & %QueueSuffixGRPQUE)
+#SET(%LineNext, 'QUEUE(' & %FilePrefix & %GroupSuffixGRPQUE & '),TYPE,NAME(''' & %FilePrefix & %QueueSuffixGRPQUE & ''')')
+%[%zNames]LineWork %[%zGroup-%zNames]NULL %LineNext
+%[%zNames]NULL %[%zGroup-%zNames]NULL END
+  #RESUME
+!EndRegion
+!Region FieldEquates
+!
+!-Equates-
+!
+  #SUSPEND
+#!!! %[%zNames]NULL %[%zGroup-%zNames]NULL ITEMIZE(1)
+    #SET(%CountEquate, 0)
+    #FOR (%Field)
+      #CASE(%FieldType)
+      #OF  ('BLOB')
+      #OROF('MEMO')
+      #OROF('GROUP')
+      #OROF('END')
+        #CYCLE
+      #ENDCASE
+      #SET(%CountEquate, %CountEquate + 1)
+#SET(%LineWork, 'C_' & UPPER(%FilePrefix) & '_' & UPPER(%FieldID))
+#SET(%LineNext, 'EQUATE(' & %CountEquate & ')')
+%[%zNames]LineWork %[%zItems-%zNames]NULL %LineNext
+    #ENDFOR
+#!!! %[%zNames]NULL %[%zGroup-%zNames]NULL END
+  #RESUME
+!
+!EndRegion
+#CALL(%GiveMeSomeStuffLISTBOX, %FALSE)
+!
+!EOF
+#GROUP(%GiveMeSomeStuffEndGRPQUE)
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#EXTENSION(RYB_GroupQueue,'RA.2023.03.25: GROUPS and QUEUES with extended field names'),Description('RYB | Generate GROUPS and QUEUES with extended FIELD names in include files. Version: ' & %tplVersionGRPQUE & ', Release: ' & %tplReleaseGRPQUE),APPLICATION
+#!-----------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!-----------------------------------------------------------------------------
+#! Created By:          Roberto Artigas y Soler
+#! Author:              2021.11.20 - Roberto Artigas y Soler
+#! Changes:
+#! 2023.03.25.SAT:  Roberto Artigas y Soler
+#!    *   New version so I can align closer to Capesoft attributes (Dictionary generation)
+#!    *   The SV dictionary editor has some limitiations that have to be overcome with field options.
+#!    *   Changed 'grpfld_' to 'grpque_' for default prefix.
+#! 2022.11.05.SAT:  Roberto Artigas y Soler
+#!    *   Create some template options to give choices on generation
+#!    *   Changes to #CALL(%GiveMeSomeStuffLISTBOX, %FALSE) to exclude MEMO, BLOBS.
+#! 2022.05.19.THU:  Roberto Artigas y Soler
+#!    *   #CALL(%GiveMeSomeStuffLISTBOX, %FALSE) in another template to generate list box definitions.
+#! 2021.11.26.FRI:  Roberto Artigas y Soler
+#!    *   Changed 'group_' to 'grpfld_' for default prefix.
+#! 2021.11.21.SUN:  Roberto Artigas y Soler
+#!    *   Added field position and field description as comments.
+#!        Added documentation to https://github.com/RobertArtigas/RYB/wiki/Generate-Groups-and-Fields
+#! 2021.11.20.SAT:  Roberto Artigas y Soler
+#!    *   Lots of changes to get field extended name attributes added.
+#!        Copied #GROUPS from DCT2SQL and modified this template to get field position in the extended property.
+#!        Tied in the extended properties and added COLUMN('...') so editing labels are available. 
+#! 2021.03.19:      Roberto Artigas y Soler
+#!    *   Changed the ITEMIZE to simple numerical equates. Number showing on line.  
+#!-----------------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!
+#SHEET,AT(,,464),HSCROLL
+#TAB('Hidden'),WHERE(0=1)
+#INSERT(%PrepareFilesGRPQUE)
+#ENDTAB
+#INSERT(%MITLicenseGRPQUE)
+#INSERT(%ExplainGRPQUE)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #BOXED('Table GROUPS and QUEUES extended FIELDS Generator'),AT(,,456),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY(%ExplainGRPQUE02),AT(,,436,10),PROP(PROP:FontStyle,700) 
+    #BOXED(''),AT(,,446)
+      #PROMPT('Directory: ',@S120)  ,%IncludeDirectoryGRPQUE  , REQ, DEFAULT('.\Include\')        ,AT(70,,376)
+      #PROMPT('Prefix: ',@S120)     ,%SourcePrefixGRPQUE      , REQ, DEFAULT('grpque_')           ,AT(70,,376)
+      #!PROMPT('Include: '  ,@S120),%IncludeFilename , REQ, DEFAULT('_' & %ProgramExtension & '_' & UPPER(SLICE(%Program, 1, INSTRING('.', %Program, 1, 1)-1)) & '.GRP') ,AT(70,,376)
+      #PREPARE
+      #SET(%IncludeLocationGRPQUE,%IncludeDirectoryGRPQUE & '') #!%IncludeFilename )
+      #ENDPREPARE
+      #PROMPT('Location: ' ,@S120),%IncludeLocationGRPQUE , REQ, DEFAULT(%IncludeLocationGRPQUE),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,376)
+    #ENDBOXED
+    #BOXED('')
+      #PROMPT('Comments start at column: ',@N3),%CommentStart , REQ, DEFAULT(180)                ,AT(200,,40)
+    #ENDBOXED
+    #DISPLAY(''),AT(,,,1)
+    #DISPLAY(%ExplainGRPQUE01),AT(,,436,124)
+  #ENDBOXED
+#ENDTAB
+#INSERT(%TabSelectionGRPQUE)
+#INSERT(%TabOptionsGRPQUE)
+#INSERT(%TabAttributesGRPQUE)
+#INSERT(%TabProceduresGRPQUE)
+#ENDSHEET
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#ATSTART
+#!
+#DECLARE(%BegDate)
+#DECLARE(%BegTime)
+#SET(%BegDate, TODAY())                   #! Begin date
+#SET(%BegTime, CLOCK())                   #! Begin time
+#!
+#DECLARE(%zNames)
+#DECLARE(%zGroup)
+#DECLARE(%zItems)
+#SET(%zNames, 40)
+#SET(%zGroup, %zNames + 0)
+#SET(%zItems, %zGroup + 2)
+#!
+#IF(NOT VAREXISTS(%LineWork))
+  #DECLARE(%LineWork)
+#ENDIF
+#IF(NOT VAREXISTS(%LineNext))
+  #DECLARE(%LineNext)
+#ENDIF
+#IF(NOT VAREXISTS(%LineText))
+  #DECLARE(%LineText)
+#ENDIF
+#IF(NOT VAREXISTS(%CountEquate))
+  #DECLARE(%CountEquate)
+#ENDIF
+#!DECLARE(%LineWork)
+#!DECLARE(%LineNext)
+#!DECLARE(%LineText)
+#!DECLARE(%CountEquate)
+#!
+#DECLARE (%ReportedFilesGRPQUE),MULTI,UNIQUE
+#DECLARE (%Groups),MULTI
+#DECLARE (%ValueConstruct)
+#DECLARE (%TheKeyId)
+#DECLARE (%TheKeyNo,LONG)
+#!                                        #! RA.2021.11.20.SAT: Added
+#DECLARE(%zTheName)
+#DECLARE(%zFldType)
+#DECLARE(%zFldRange)
+#DECLARE(%zFldSize)
+#DECLARE(%zFldFrom)
+#DECLARE(%zFldTo)
+#SET(%zFldFrom, 0)
+#SET(%zFldTo  , 0)
+#!                                        #! RA.2022.04.30.SAT: Added
+#DECLARE(%zA,LONG)
+#DECLARE(%zB,LONG)
+#DECLARE(%zFldStmt)
+#DECLARE(%zGroups)
+#!                                        #! RA.2022.05.01.SUN: Added
+#IF(NOT VAREXISTS(%nLoc1))
+  #DECLARE(%nLoc1)
+#ENDIF
+#IF(NOT VAREXISTS(%nLoc2))
+  #DECLARE(%nLoc2)
+#ENDIF
+#IF(NOT VAREXISTS(%NFieldUser))           #! Field user options [REFVAR(,,,)]
+  #DECLARE(%NFieldUser)`
+#ENDIF
+#IF(NOT VAREXISTS(%NFieldOpt1))           #! Field option 1 [NO]                  #! Ignore this field
+  #DECLARE(%NFieldOpt1)
+#ENDIF
+#IF(NOT VAREXISTS(%NFieldOpt2))           #! Field option 2 [<FieldType>]         #! Dictionary type override 
+  #DECLARE(%NFieldOpt2)
+#ENDIF
+#IF(NOT VAREXISTS(%NFieldOpt3))           #! Field option 3 [<Default>]           #! Dictionary default override
+  #DECLARE(%NFieldOpt3)
+#ENDIF
+#IF(NOT VAREXISTS(%NFieldOpt4))           #! Field option 4 [Not used yet]        #! Not used yet
+  #DECLARE(%NFieldOpt4)
+#ENDIF
+#!
+#IF (%ReportUseAllFilesGRPQUE)
+  #FOR (%SelectFromFilesGRPQUE),WHERE(%SelectFromFilesGRPQUE<>'')
+    #ADD (%ReportedFilesGRPQUE, %SelectFromFilesGRPQUE)
+  #ENDFOR
+#ELSE
+  #FOR (%ReportFileSelectionGRPQUE),WHERE(%ReportFileSelectionGRPQUE<>'')
+    #ADD (%ReportedFilesGRPQUE, %ReportFileSelectionGRPQUE)
+  #ENDFOR
+#ENDIF
+#!
+#COMMENT(%CommentStart)
+#!
+#IF(NOT VAREXISTS(%OutputFile))
+  #DECLARE(%OutputFile)
+#ENDIF
+#!
+#FOR (%ReportedFilesGRPQUE),WHERE(%ReportedFilesGRPQUE<>'')
+  #FIX (%File, %ReportedFilesGRPQUE)
+  #!SET (%OutputFile, %IncludeDirectoryGRPQUE & %FILE & '.inc')
+  #SET (%OutputFile, %IncludeDirectoryGRPQUE & %SourcePrefixGRPQUE & %FILE & '.inc')
+  #MESSAGE('INC: File Group Definition: ' & %OutputFile, 2)
+  #!ERROR('INC: File Group Definition: ' & %OutputFile)
+  #CREATE (%OutputFile)
+#INSERT(%GiveMeSomeStuffGRPQUE)
+  #CLOSE (%OutputFile)
+#ENDFOR
+#!
+#CALL(%GenerateAllProceduresGRPQUE)     #! RA.2023.03.30: Added
+#!
+#ENDAT
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#! RA.2019.11.21: This has to be inside a field loop for all fields to get something.
+#! This will give you an alternative if there is nothing added to the external name attributes.
+#! Results can be also used to replace the name external attributes in the dictionary.
+#! Used as comments in a few places where I generate structures from the dictionary. 
+#GROUP(%BuildFieldTypeGRPQUE,*%pTheField)                                             #! RA.2019.11.29: Added
+#IF(NOT VAREXISTS(%TheFieldType))
+  #DECLARE(%TheFieldType)
+#ENDIF
+#!
+#CASE(UPPER(%FieldType))
+#OF  ('DECIMAL')
+#OROF('PDECIMAL')
+  #SET(%pTheField , %FieldType & '(' & %FieldMemoSize & ',' & %FieldPlaces & ')')
+#OF  ('STRING')
+#OROF('MEMO')
+#OROF('BLOB')
+#OROF('CSTRING')
+#OROF('PSTRING')
+#OROF('USTRING')
+  #SET(%pTheField , UPPER(%FieldType) & '(' & %FieldMemoSize & ')')
+#ELSE
+  #SET(%pTheField , UPPER(%FieldType))
+#ENDCASE
+#! RA.2022.05.01: Let's see about reference type field override
+#INSERT(%GetFieldOptionsGRPQUE)                                                       #! REFVAR(,,,) for Fields
+#IF((SUB(%NFieldOpt1,1,1) <> 'N') AND (%NFieldOpt2 <> ''))
+  #! RA.2023.03.26.SUN: REFVAR(1,2,3,4)
+  #IF   (UPPER(%NFieldOpt3)='QUEUE')                                                  #! REFVAR(,,QUEUE,) for Fields
+    #SET(%pTheField,%NFieldOpt2 & %QueueSuffixGRPQUE)
+  #ELSIF(UPPER(%NFieldOpt3)='REFERENCE')                                              #! REFVAR(,,REFERENCE,) for Fields
+    #SET(%pTheField,%NFieldOpt2)
+  #ELSE
+    #ERROR('Error: ' & %File & '.' & %FieldID & ': REFVAR(,' & %NFieldOpt2 & ',' & %NFieldOpt3 & ',' & %NFieldOpt4 & ')')
+  #ENDIF
+#ENDIF
+#!
+#SET(%pTheField, %pTheField)                                                          #! RA.2023.03.26:SUN: No UPPER references 
+#!SET(%pTheField, UPPER(%pTheField))
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%BuildAttributesFieldNameGRPQUE,*%pTheName)                                    #! RA.2019.11.21: Added
+#IF(NOT VAREXISTS(%TheName))
+  #DECLARE(%TheName)
+#ENDIF
+#IF(NOT VAREXISTS(%TheFieldType))
+  #DECLARE(%TheFieldType)
+#ENDIF
+#IF(NOT VAREXISTS(%TheFieldName))
+  #DECLARE(%TheFieldName)
+#ENDIF
+#! RA.2022.04.10: Remove sorounding spaces on both sides of the vertical bar 
+  #SET(%TheName     , '')
+  #SET(%TheName     , %TheName & ',NAME(<39>')
+  #CASE(UPPER(%FieldID))
+  #OF  ('TIMESTAMP')
+    #SET(%TheName   , %TheName & 'ts')
+  #OF  ('SERVERTIMESTAMP')
+    #SET(%TheName   , %TheName & 'sts')
+  #OF  ('DELETETIMESTAMP')
+  #OROF('DELETEDTIMESTAMP')
+    #SET(%TheName   , %TheName & 'dts')
+  #ELSE
+    #! RA.2023.03.25: Can make the defined name and the xml name different
+    #IF(%FieldHeader <> %FieldID)
+      #SET(%TheName   , %TheName & %FieldHeader)
+    #ELSE
+      #SET(%TheName   , %TheName & %FieldID)
+    #ENDIF
+  #ENDCASE
+#!
+  #CALL(%BuildFieldTypeGRPQUE,%TheFieldType)
+  #SET(%TheName     , %TheName & '|' & %TheFieldType)
+#!
+  #SET(%TheName     , %TheName & '|' & UPPER(%FieldDisplayPicture))
+#!
+#! RA.2022.04.27.WED: ',OVER(' might need a rethink or not [???]
+#! RA.2021.11.20.SAT: Calculate the field length range
+  #IF (NOT INSTRING(',OVER(',%FieldStatement,1,1))
+    #CALL(%CalculatePositionGRPQUE,%zFldFrom,%zFldTo,%zFldSize,%FieldType,%FieldMemoSize)
+  #ELSE
+    #SET(%zFldFrom, %zFldTo)
+  #ENDIF
+  #SET(%zFldRange   , '[' & FORMAT(%zFldFrom,@N04) & '-' & FORMAT((%zFldTo),@N04) & ']')
+  #SET(%zFldFrom    , %zFldTo + 1)
+#!---------------------------------------------------------------------!
+#! RA.2022.11.05: Created option to generate range in NAME attributes. !
+#!---------------------------------------------------------------------!
+  #IF(%OptionUseRangeGRPQUE)
+    #SET(%TheName   , %TheName & '|' & %zFldRange)
+  #ENDIF
+#!
+#!  #SET(%TheName   , %TheName & '|' & EXTRACT(%FieldQuickOptions,'TAB'))
+#!
+#! RA.2021.04.10: Remove the ALT-& marker from text. Add back if needed.
+#! RA.2020.05.06: Checkboxes do not have a PROMPT. So fake a prompt to allow for editing.
+#! RA.2020.02.05: Add the field display prompt that way we can set the field edit prompt.
+  #FOR(%FieldScreenControl)
+    #IF(INSTRING('CHECK(',%FieldScreenControl,1,1) > 0)                 #! RA.2020.05.06: Added for checkboxes
+      #SET(%TheFieldName, EXTRACT(%FieldScreenControl,'CHECK',1))
+      #CALL(%ReplaceSubString,%TheFieldName,'&','')                     #! RA.2021.04.10: Remove the ALT-& from text.
+      #!SET(%TheFieldName, 'PROMPT(' & %TheFieldName & ')')
+      #SET(%TheFieldName, 'PR(' & %TheFieldName & ')')                  #! RA.2022.04.10: PROMPT -> PR
+    #ENDIF
+    #IF(INSTRING('PROMPT(',%FieldScreenControl,1,1) > 0)
+      #SET(%TheFieldName, EXTRACT(%FieldScreenControl,'PROMPT',1))
+      #CALL(%ReplaceSubString,%TheFieldName,'&','')                     #! RA.2021.04.10: Remove the ALT-& from text.
+      #SET(%TheFieldName, 'PR(' & %TheFieldName & ')')                  #! RA.2022.04.10: PROMPT -> PR
+    #ENDIF
+  #ENDFOR
+  #CALL(%ReplaceSubString,%TheFieldName,'&','')                         #! RA.2021.04.10: Remove the ALT-& from text.
+  #CALL(%ReplaceSubString,%TheFieldName,'''','''''')
+  #IF(%FieldType='END')
+    #SET(%TheFieldName, '')
+  #ENDIF
+#!----------------------------------------------------------------------!
+#! RA.2022.11.05: Created option to generate prompt in NAME attributes. !
+#!----------------------------------------------------------------------!
+  #IF(%OptionUsePromptGRPQUE)
+    #SET(%TheName , %TheName & '|' & %TheFieldName)
+  #ENDIF
+#! RA.2021.11.20.SAT: Add column header to the extended name attribute
+  #!SET(%TheFieldName, 'COLUMN(''''' & %FieldHeader &  ''''')')
+  #SET(%TheFieldName, 'CO(''''' & %FieldHeader &  ''''')')              #! RA.2022.04.10: COLUMN -> CO
+  #IF(%FieldType='END')
+    #SET(%TheFieldName, '')
+  #ENDIF
+#!----------------------------------------------------------------------!
+#! RA.2022.11.05: Created option to generate header in NAME attributes. !
+#!----------------------------------------------------------------------!
+  #IF(%OptionUseColumnGRPQUE)
+    #SET(%TheName , %TheName & '|' & %TheFieldName)
+  #ENDIF
+#!
+#!--------------------------------------------------------!
+#! RA.2023.03.26: Handle REFERENCE, QUEUE for REFVAR      !
+#! RA.2022.11.05: Handle the Capesoft xFiles XML options. !
+#!--------------------------------------------------------!
+  #IF(%OptionUseXMLGRPQUE)
+    #IF(SUB(%NFieldOpt1,1,1)='' AND SUB(%TheFieldType,1,1)='&')
+      #CASE(UPPER(%NFieldOpt3))
+      #OF('REFERENCE')
+          #SET(%TheName , %TheName & '|REFERENCE')
+      #OF('QUEUE')
+          #SET(%TheName , %TheName & '|QUEUE')
+        #IF(%NFieldOpt4)
+          #SET(%TheName , %TheName & '|ROWNAME(' & %NFieldOpt4 & ')')
+        #ELSE
+          #SET(%TheName , %TheName & '|ROWNAME()')
+        #ENDIF
+      #ENDCASE
+    #ELSIF((SUB(%NFieldOpt1,1,1)='' AND SUB(%TheFieldType,1,1)<>'&') OR SUB(%NFieldOpt1,1,1)='N')
+      #IF(%OptionUseBooleanGRPQUE AND %FieldValidation = 'BOOLEAN')
+          #SET(%TheName , %TheName & '|BOOLEAN')
+      #ENDIF
+      #IF(%OptionUseAttributeGRPQUE)
+          #SET(%TheName , %TheName & '|ATTRIBUTE')
+      #ENDIF
+    #ENDIF
+  #ENDIF
+#!  
+#! #CASE(UPPER(%FieldID))
+#! #OF  ('GUID')
+#! #OROF('ID')
+#!   #SET(%TheName   , %TheName & '|Salt')
+#! #ENDCASE
+#!
+#! RA.2022.06.29.WED: Added IDENTITY definition for the extended name attributes
+#INSERT(%GetIdentityOptionsGRPQUE)                                                          #! IDENTITY(,,,) for Fields
+#IF((SUB(%NFieldOpt1,1,1) <> 'N') AND (%NFieldOpt2 <> ''))
+  #SET(%TheName     , %TheName & '|Salt')
+#ENDIF
+#! RA.2022.06.17.FRI: Added HASH definition for the extended name attributes
+#INSERT(%GetHashOptionsGRPQUE)                                                              #! HASH(,,,) for Fields
+#IF((SUB(%NFieldOpt1,1,1) <> 'N') AND (%NFieldOpt2 <> ''))
+  #SET(%TheName     , %TheName & '|Hash(' & %NFieldOpt2 & ')')
+#ENDIF
+#! RA.2022.06.17.FRI: Added ENCRYPTED definition for the extended name attributes
+#INSERT(%GetEncryptedOptionsGRPQUE)                                                         #! ENCRYPTED(,,,) for Fields
+#IF((SUB(%NFieldOpt1,1,1) <> 'N') AND (%NFieldOpt2 <> ''))
+  #SET(%TheName     , %TheName & '|Encrypted(' & %NFieldOpt2 & ')')
+#ENDIF
+#!
+#! RA.2022.04.10: TESTING: Let me know the length and what it is being generated
+#!#SET(%NextLine, '!-- LEN(%TheName) =[ ' & FORMAT(LEN(%TheName),@N04) & ' ], %TheName=[ "' & %TheName & '" ]')
+#!%NextLine
+#!
+#! RA.2019.11.21: This contains the original name external attributes in the dictionary.
+#! There might be a need to parse what currently exists there in the old external name attributes  
+#! and add what does not exist into the new. Not needed at this time. But food for future thought.
+#! 
+  #SET(%TheFieldName, %FieldName)
+#!
+  #! RA.2020.02.05: Leave case intact here.
+  #!SET(%TheName    , LOWER(%TheName) & '<39>)')
+  #SET(%TheName     , %TheName & '<39>)')
+#! [???] Add name string display for debugging
+#! ---- %TheFieldName
+#! ---- %TheName
+#SET(%pTheName      , %TheName)
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%CalculatePositionGRPQUE,*%FldFrom,*%FldTo,*%FldSize,%pFieldType,%pFieldMemoSize)
+#! %%FldFrom=%FldFrom, %%FldTo=%FldTo, %%FldSize=%FldSize, %%pFieldType=%pFieldType, %%pFieldMemoSize=%pFieldMemoSize 
+  #SET(%FldSize, %pFieldMemoSize)
+#! RA.2022.04.03: Calculations are for physical size
+#! #CASE(%pFieldType)
+#! #OF  ('CSTRING')
+#!   #SET(%FldSize, %pFieldMemoSize - 1)
+#! #ENDCASE
+#IF((SUB(%pFieldType,1,1) = '&') OR (%pFieldType = 'ANY'))
+  #SET(%FldSize, 4)                           #! RA.2022.05.01.SUN: It's a REFERENCE of 4 bytes
+#ENDIF
+#CASE(%pFieldType)
+#OF  ('GROUP')
+#OROF('END')
+  #SET(%FldSize, 0)
+  #SET(%FldFrom, %FldTo)
+#ELSE
+  #IF(%FldFrom = 0)
+    #SET(%FldFrom, %FldFrom + 1)
+    #SET(%FldTo  ,        0 + %FldSize - 0)
+  #ELSE
+    #SET(%FldFrom, %FldFrom + 0)
+    #SET(%FldTo  , %FldFrom + %FldSize - 1)
+  #ENDIF
+#ENDCASE
+#!-- %%FldSize = %FldSize , %%FldFrom = %FldFrom , %%FldTo = %FldTo
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%BuildFldStmtGRPQUE,*%zFldStmt)
+#SET(%zA,INSTRING(',NAME(',%FieldStatement,1,1))
+#IF (%zA)
+  #SET(%zB,INSTRING(')',%FieldStatement,1,%zA))
+  #SET(%zFldStmt,SUB(%FieldStatement,1,%zA-1))
+  #SET(%zFldStmt,%zFldStmt & SUB(%FieldStatement,%zB+1,LEN(%FieldStatement)-%zA+1))
+#!---- %%zFldStmt = %zFldStmt
+#ELSE
+  #SET(%zFldStmt,%FieldStatement)
+#END
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%GetFieldOptionsGRPQUE)                                                        #! REFVAR(,,,) for Fields
+#!SET(%nLoc1,INSTRING('REFVAR(',UPPER(%FieldUserOptions),1,1))                        #! &%NFieldOpt2
+#SET(%nLoc1,INSTRING('REFVAR(',%FieldUserOptions,1,1))                                #! &%NFieldOpt2
+#SET(%nLoc2,INSTRING(')',%FieldUserOptions,1,%nLoc1))
+#SET(%NFieldUser,SUB(%FieldUserOptions,%nLoc1,%nLoc2))
+#!SET(%NFieldUser,UPPER(SUB(%FieldUserOptions,%nLoc1,%nLoc2)))
+#!SET(%NFieldUser,UPPER(EXTRACT(%FieldUserOptions,'REFVAR')))
+#SET(%NFieldOpt1,EXTRACT(%NFieldUser,'REFVAR',1))               #! Field option 1 [NO]                  #! Ignore this field
+#SET(%NFieldOpt2,EXTRACT(%NFieldUser,'REFVAR',2))               #! Field option 2 [<FieldType>]         #! Dictionary type override
+#SET(%NFieldOpt3,EXTRACT(%NFieldUser,'REFVAR',3))               #! Field option 3 [<Default>]           #! Dictionary default override
+#SET(%NFieldOpt4,EXTRACT(%NFieldUser,'REFVAR',4))               #! Field option 4 [Not used yet]        #! Not used yet
+#IF(%FALSE)
+  #IF(%NFieldUser)
+---- %%GetFieldOptionsGRPQUE: [%FieldID] 0"%NFieldUser", 1"%NFieldOpt1", 2"%NFieldOpt2", 3"%NFieldOpt3", 4"%NFieldOpt4"
+  #ENDIF
+#ENDIF
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#! RA.2022.06.17.FRI: Added HASH definition for the extended name attributes
+#GROUP(%GetHashOptionsGRPQUE)                                                         #! HASH(,,,) for Fields
+#!SET(%nLoc1,INSTRING('HASH(',UPPER(%FieldUserOptions),1,1))                          #! Hash(%NFieldOpt2)
+#SET(%nLoc1,INSTRING('HASH(',%FieldUserOptions,1,1))                                  #! Hash(%NFieldOpt2)
+#SET(%nLoc2,INSTRING(')',%FieldUserOptions,1,%nLoc1))
+#SET(%NFieldUser,SUB(%FieldUserOptions,%nLoc1,%nLoc2))
+#!SET(%NFieldUser,UPPER(SUB(%FieldUserOptions,%nLoc1,%nLoc2)))
+#!SET(%NFieldUser,UPPER(EXTRACT(%FieldUserOptions,'HASH')))
+#SET(%NFieldOpt1,EXTRACT(%NFieldUser,'HASH',1))                 #! Field option 1 [NO]                  #! Ignore this field
+#SET(%NFieldOpt2,EXTRACT(%NFieldUser,'HASH',2))                 #! Field option 2 [<FieldType>]         #! Dictionary type override
+#SET(%NFieldOpt3,EXTRACT(%NFieldUser,'HASH',3))                 #! Field option 3 [Not used yet]        #! Not used yet
+#SET(%NFieldOpt4,EXTRACT(%NFieldUser,'HASH',4))                 #! Field option 4 [Not used yet]        #! Not used yet
+#IF(%FALSE)
+  #IF(%NFieldUser)
+---- %%GetHashOptionsGRPQUE: [%FieldID] 0"%NFieldUser", 1"%NFieldOpt1", 2"%NFieldOpt2", 3"%NFieldOpt3", 4"%NFieldOpt4"
+  #ENDIF
+#ENDIF
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#! RA.2022.06.17.FRI: Added ENCRYPTED definition for the extended name attributes
+#GROUP(%GetEncryptedOptionsGRPQUE)                                                    #! ENCRYPTED(,,,) for Fields
+#!SET(%nLoc1,INSTRING('ENCRYPTED(',UPPER(%FieldUserOptions),1,1))                     #! |Encrypted(%NFieldOpt2)
+#SET(%nLoc1,INSTRING('ENCRYPTED(',%FieldUserOptions,1,1))                             #! |Encrypted(%NFieldOpt2)
+#SET(%nLoc2,INSTRING(')',%FieldUserOptions,1,%nLoc1))
+#SET(%NFieldUser,SUB(%FieldUserOptions,%nLoc1,%nLoc2))
+#!SET(%NFieldUser,UPPER(SUB(%FieldUserOptions,%nLoc1,%nLoc2)))
+#!SET(%NFieldUser,UPPER(EXTRACT(%FieldUserOptions,'ENCRYPTED')))
+#SET(%NFieldOpt1,EXTRACT(%NFieldUser,'ENCRYPTED',1))            #! Field option 1 [NO]                  #! Ignore this field
+#SET(%NFieldOpt2,EXTRACT(%NFieldUser,'ENCRYPTED',2))            #! Field option 2 [<FieldType>]         #! Dictionary type override
+#SET(%NFieldOpt3,EXTRACT(%NFieldUser,'ENCRYPTED',3))            #! Field option 3 [Not used yet]        #! Not used yet
+#SET(%NFieldOpt4,EXTRACT(%NFieldUser,'ENCRYPTED',4))            #! Field option 4 [Not used yet]        #! Not used yet
+#IF(%FALSE)
+  #IF(%NFieldUser)
+---- %%GetEncryptedOptionsGRPQUE: [%FieldID] 0"%NFieldUser", 1"%NFieldOpt1", 2"%NFieldOpt2", 3"%NFieldOpt3", 4"%NFieldOpt4"
+  #ENDIF
+#ENDIF
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#! RA.2022.06.29.WED: Added IDENTITY definition for the extended name attributes
+#GROUP(%GetIdentityOptionsGRPQUE)                                                    #! IDENTITY(,,,) for Fields
+#!SET(%nLoc1,INSTRING('IDENTITY(',UPPER(%FieldUserOptions),1,1))                     #! |Salt
+#SET(%nLoc1,INSTRING('IDENTITY(',%FieldUserOptions,1,1))                             #! |Salt
+#SET(%nLoc2,INSTRING(')',%FieldUserOptions,1,%nLoc1))
+#SET(%NFieldUser,SUB(%FieldUserOptions,%nLoc1,%nLoc2))
+#!SET(%NFieldUser,UPPER(SUB(%FieldUserOptions,%nLoc1,%nLoc2)))
+#!SET(%NFieldUser,UPPER(EXTRACT(%FieldUserOptions,'IDENTITY')))
+#SET(%NFieldOpt1,EXTRACT(%NFieldUser,'IDENTITY',1))             #! Field option 1 [NO]                  #! Ignore this field
+#SET(%NFieldOpt2,EXTRACT(%NFieldUser,'IDENTITY',2))             #! Field option 2 [Salt]                #! Dictionary type override
+#SET(%NFieldOpt3,EXTRACT(%NFieldUser,'IDENTITY',3))             #! Field option 3 [Not used yet]        #! Not used yet
+#SET(%NFieldOpt4,EXTRACT(%NFieldUser,'IDENTITY',4))             #! Field option 4 [Not used yet]        #! Not used yet
+#IF(%FALSE)
+  #IF(%NFieldUser)
+---- %%GetIdentityOptionsGRPQUE: [%FieldID] 0"%NFieldUser", 1"%NFieldOpt1", 2"%NFieldOpt2", 3"%NFieldOpt3", 4"%NFieldOpt4"
+  #ENDIF
+#ENDIF
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#GROUP(%TabProceduresGRPQUE)
+#TAB('Procedures')  #!,PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)
+  #BOXED(''),AT(,,454),PROP(PROP:FontStyle,700)
+    #DISPLAY(''),AT(,,,1)
+    #PROMPT ('Generate procedures for tables', CHECK), %ProcedureGenerateGRPQUE, DEFAULT(%FALSE), AT(10)
+    #ENABLE(%ProcedureGenerateGRPQUE)
+      #DISPLAY(%ExplainGRPQUE02),AT(,,436,10),PROP(PROP:FontStyle,700) 
+      #BOXED('Generate Procedures Location'),AT(,,446)
+        #DISPLAY(''),AT(,,,1)
+        #PROMPT('Directory: ',@S120)  ,%GenerateDirectoryGRPQUE  , REQ, DEFAULT('.\Apps\')        ,AT(70,,376)
+      #ENDBOXED
+      #BOXED('Adjust Procedures Generation')
+        #DISPLAY(''),AT(,,,1)
+        #PROMPT('Developer''s initials: ',@S40)         , %DevInitialsGRPQUE  , REQ, DEFAULT('RA')            ,AT(200,,40)
+        #DISPLAY(''),AT(,,,1)
+        #PROMPT('Group type''s suffix: ',@S120)         , %GroupSuffixGRPQUE  , REQ, DEFAULT('GT')            ,AT(200,,80)
+        #PROMPT('Queue type''s suffix: ',@S120)         , %QueueSuffixGRPQUE  , REQ, DEFAULT('QT')            ,AT(200,,80)
+        #DISPLAY(''),AT(,,,1)
+        #PROMPT('Hold procedure''s suffix: ',@S120)     , %HoldSuffixGRPQUE   , REQ, DEFAULT('_Procedures')   ,AT(200,,80)  
+        #PROMPT('Procedure''s prefix: ',@S120)          , %ProcPrefixGRPQUE   , REQ, DEFAULT('Init_')         ,AT(200,,80)
+        #PROMPT('Procedure''s suffix: ',@S120)          , %ProcSuffixGRPQUE   , REQ, DEFAULT('_Stub')         ,AT(200,,80)
+        #PROMPT('Lowercase procedure''s name',CHECK)    , %ProcLowerGRPQUE         , DEFAULT(%TRUE)           ,AT(10)
+      #ENDBOXED
+    #ENDENABLE
+  #ENDBOXED
+#ENDTAB
+#!
+#GROUP(%GenerateAllProceduresGRPQUE)
+#!
+#!#IF(NOT VAREXISTS(%LineWork))
+#!  #DECLARE(%LineWork)
+#!#ENDIF
+#IF(NOT VAREXISTS(%TheQueue))
+  #DECLARE(%TheQueue)
+#ENDIF
+#IF(NOT VAREXISTS(%LowPrefix))
+  #DECLARE(%LowPrefix)
+#ENDIF
+#IF(NOT VAREXISTS(%ProcName))
+  #DECLARE(%ProcName)
+#ENDIF
+#IF(NOT VAREXISTS(%CallName))
+  #DECLARE(%CallName)
+#ENDIF
+#!
+#IF(%ProcedureGenerateGRPQUE)
+  #FOR (%ReportedFilesGRPQUE),WHERE(%ReportedFilesGRPQUE<>'')
+    #FIX (%File, %ReportedFilesGRPQUE)  
+    #SET (%TheQueue  , %FilePrefix & %QueueSuffixGRPQUE)
+    #SET (%LowPrefix , %FilePrefix & '')
+    #SET (%ProcName  , %FilePrefix & %HoldSuffixGRPQUE)
+    #SET (%CallName  , %ProcPrefixGRPQUE & %FilePrefix & %ProcSuffixGRPQUE)
+    #!SET (%OutputFile, %IncludeDirectoryGRPQUE & '_' & %ProcPrefixGRPQUE & %ProcName & '.TXA')
+    #SET (%OutputFile, %GenerateDirectoryGRPQUE & '_' & %ProcPrefixGRPQUE & %ProcName & '.TXA')
+    #IF(%ProcLowerGRPQUE)
+      #SET (%LowPrefix , LOWER(%LowPrefix))
+      #SET (%ProcName  , LOWER(%ProcName))
+      #SET (%CallName  , LOWER(%CallName))
+      #SET (%OutputFile, LOWER(%OutputFile))
+    #ENDIF
+    #MESSAGE('TXA: File Group Definition: ' & %OutputFile, 2)
+    #!ERROR('TXA: File Group Definition: ' & %OutputFile)
+    #CREATE (%OutputFile)
+#INSERT(%GenerateOneProcedureGRPQUE)
+    #CLOSE (%OutputFile)
+  #ENDFOR
+#ENDIF
+#!
+#GROUP(%GenerateOneProcedureGRPQUE)
+#INSERT(%ProcedureTextHolderGRPQUE)
+#!--------------------------------------------------
+#GROUP(%ProcedureTextHolderGRPQUE)
+[PROCEDURE]
+NAME %ProcName
+NOEXPORT
+[COMMON]
+DESCRIPTION 'SOURCE: %ProcName'
+FROM ABC Source
+CATEGORY '%LowPrefix'
+#SET(%LineWork, 'MODIFIED ''' & FORMAT(TODAY(),@D10) & ''' ''' & FORMAT(CLOCK(),@T04) & '''')
+%LineWork
+[PROMPTS]
+%%GenerateOpenClose LONG  (0)
+%%GenerateSaveRestore LONG  (0)
+[EMBED]
+EMBED %%DataSection
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4
+PROPERTY:END
+#SET(%LineWork, '! ' & %DevInitialsGRPQUE & '.' & FORMAT(TODAY(),@D10.) & ': "' & %ProcName & '" created.')
+%LineWork
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8
+PROPERTY:END
+  MAP
+  END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 10
+PROPERTY:END
+!
+[END]
+EMBED %%ProcessedCode
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 9998
+PROPERTY:END
+  RETURN
+[END]
+[END]
+[CALLS]
+%CallName
+[PROCEDURE]
+NAME %CallName
+PROTOTYPE '(%TheQueue xQueue, STRING xData, STRING xParent),LONG,PROC'
+PARAMETERS '(%TheQueue xQueue, STRING xData, STRING xParent)!,LONG,PROC'
+GLOBAL
+NOEXPORT
+[COMMON]
+DESCRIPTION 'SOURCE: %CallName'
+FROM ABC Source
+CATEGORY '%LowPrefix'
+#SET(%LineWork, 'MODIFIED ''' & FORMAT(TODAY(),@D10) & ''' ''' & FORMAT(CLOCK(),@T04) & '''')
+%LineWork
+[PROMPTS]
+%%GenerateOpenClose LONG  (0)
+%%GenerateSaveRestore LONG  (0)
+[EMBED]
+EMBED %%DataSection
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4
+PROPERTY:END
+#SET(%LineWork, '! ' & %DevInitialsGRPQUE & '.' & FORMAT(TODAY(),@D10.) & ': "' & %CallName & '" created.')
+%LineWork
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8
+PROPERTY:END
+  MAP
+  END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 10
+PROPERTY:END
+!
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 20
+PROPERTY:END
+#SET(%LineWork, 'ST')
+#SET(%LineNext, 'StringTheory')
+%[%zNames]LineWork %LineNext
+#SET(%LineWork, 'ReturnValue')
+#SET(%LineNext, 'LONG(TRUE)')
+%[%zNames]LineWork %LineNext
+#SET(%LineWork, 'CalledValue')
+#SET(%LineNext, 'LONG(TRUE)')
+%[%zNames]LineWork %LineNext
+#!ST                  StringTheory
+#!ReturnValue         LONG(TRUE)
+#!CalledValue         LONG(TRUE)
+[END]
+EMBED %%ProcessedCode
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 1000
+PROPERTY:END
+  CLEAR(xQueue)
+  !
+  ! Begin assignments
+#!SUSPEND
+#!
+  #FOR(%Field),WHERE(UPPER(%FieldType) <> 'MEMO' AND UPPER(%FieldType) <> 'BLOB')
+    #INSERT(%BuildFieldTypeGRPQUE,%LineNext)
+    #SET(%LineWork, 'xQueue.' & %FieldID)
+    #SET(%LineNext, CLIP(%LineNext))
+    #IF(SUB(%LineNext,1,1)='&')
+      #SET(%LineText, 'NEW ' & SUB(%LineNext,2,LEN(%LineNext)-1))
+      #SET(%LineNext, '&=')
+    #ELSE 
+      #SET(%LineText, %FieldInitial)
+      #SET(%LineNext, ' =')
+    #ENDIF
+#!   %[%zNames]LineWork %[%zItems-%zNames]NULL %zFldType%zTheName #!<! %FieldDescription
+  %[%zNames-2]LineWork %LineNext %LineText #!<! %FieldDescription
+  #ENDFOR
+#!
+#!RESUME
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 2000
+PROPERTY:END
+  ! Begin calls
+  #FOR(%Field),WHERE(UPPER(%FieldType) <> 'MEMO' AND UPPER(%FieldType) <> 'BLOB')
+    #INSERT(%GetFieldOptionsGRPQUE)                                                       #! REFVAR(,,,) for Fields
+    #IF(SUB(%NFieldOpt1,1,1) = 'N')                                                       #! RA.2023.04.07: Added
+      #CYCLE
+    #ENDIF
+    #INSERT(%BuildFieldTypeGRPQUE,%NFieldOpt2)
+    #IF(SUB(%NFieldOpt2,1,1)='&')
+      #SET(%LineWork    , 'CalledValue')
+      #SET(%LineNext    , ' =')
+      #CALL(%ReplaceSubString,%NFieldOpt2,'&','',0)
+      #SET(%LowPrefix   , %NFieldOpt2)
+      #CALL(%ReplaceSubString,%LowPrefix,%QueueSuffixGRPQUE,'',1)
+      #SET(%LineText    , %ProcPrefixGRPQUE & %LowPrefix & %ProcSuffixGRPQUE)
+      #IF(%ProcLowerGRPQUE)
+        #SET (%LineText , LOWER(%LineText))
+      #ENDIF
+      #SET(%LineText, %LineText & '(xQueue.' & %FieldID & ', '''', '''')')
+  %[%zNames-2]LineWork %LineNext %LineText #!<! %FieldDescription
+    #ENDIF
+  #ENDFOR
+  !
+  ADD(xQueue)
+#!
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 9998
+PROPERTY:END
+  RETURN ReturnValue
+[END]
+[END]
+#GROUP(%GenerateOneProcedureGRPQUEdone)
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+#!-----------------------------------------------------------------------------
+
