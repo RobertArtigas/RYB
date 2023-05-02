@@ -677,12 +677,18 @@
 #INSERT(%GetFieldOptionsGRPQUE)                                                       #! REFVAR(,,,) for Fields
 #IF((SUB(%NFieldOpt1,1,1) <> 'N') AND (%NFieldOpt2 <> ''))
   #! RA.2023.03.26.SUN: REFVAR(1,2,3,4)
-  #IF   (UPPER(%NFieldOpt3)='QUEUE')                                                  #! REFVAR(,,QUEUE,) for Fields
-    #SET(%pTheField,%NFieldOpt2 & %QueueSuffixGRPQUE)
-  #ELSIF(UPPER(%NFieldOpt3)='REFERENCE')                                              #! REFVAR(,,REFERENCE,) for Fields
-    #SET(%pTheField,%NFieldOpt2)
-  #ELSE                                                                               #! REFVAR(,,???,) for Fields
-    #ERROR('Error: ' & %File & '.' & %FieldID & ': REFVAR(,' & %NFieldOpt2 & ',' & %NFieldOpt3 & ',' & %NFieldOpt4 & ')')
+  #!IF   (UPPER(%NFieldOpt2) = 'ULONG')                                               #! REFVAR(,ULONG,?,?) for Recursion
+  #IF   (SUB(%NFieldOpt2,1,1) <> '&')                                                 #! REFVAR(,ULONG,?,?) for Recursion
+    #! RA.2023.04.25: If you do not have a reference variable let the item thru to handle programming recursion.
+    #! You will be assigning the recursion at the defintion level when you add tables beyond secondary level.
+  #ELSE
+    #IF   (UPPER(%NFieldOpt3)='QUEUE')                                                #! REFVAR(,,QUEUE,) for Fields
+      #SET(%pTheField,%NFieldOpt2 & %QueueSuffixGRPQUE)
+    #ELSIF(UPPER(%NFieldOpt3)='REFERENCE')                                            #! REFVAR(,,REFERENCE,) for Fields
+      #SET(%pTheField,%NFieldOpt2)
+    #ELSE                                                                             #! REFVAR(,,???,) for Fields
+      #ERROR('Error: ' & %File & '.' & %FieldID & ': REFVAR(,' & %NFieldOpt2 & ',' & %NFieldOpt3 & ',' & %NFieldOpt4 & ')')
+    #ENDIF
   #ENDIF
 #ENDIF
 #!
@@ -784,11 +790,15 @@
   #ENDIF
 #!
 #!--------------------------------------------------------!
-#! RA.2023.03.26: Handle REFERENCE, QUEUE for REFVAR      !
+#! RA.2024.04.25: Handle case of recursion setup.         !
+#! RA.2023.03.26: Handle REFERENCE, QUEUE for REFVAR.     !
 #! RA.2022.11.05: Handle the Capesoft xFiles XML options. !
 #!--------------------------------------------------------!
   #IF(%OptionUseXMLGRPQUE)
-    #IF(SUB(%NFieldOpt1,1,1)='' AND SUB(%TheFieldType,1,1)='&')
+    #!IF(SUB(%NFieldOpt1,1,1)='' AND SUB(%TheFieldType,1,1)='&')
+    #! RA.2023.04.25: It is NOT a reference variable, but at run time it will be used as a QUEUE reference.
+    #! Will default handle nested table defintions past the secondary reference.
+    #IF(SUB(%NFieldOpt1,1,1)='')
       #CASE(UPPER(%NFieldOpt3))
       #OF('REFERENCE')
           #SET(%TheName , %TheName & '|REFERENCE')
@@ -800,7 +810,9 @@
           #SET(%TheName , %TheName & '|ROWNAME()')
         #ENDIF
       #ENDCASE
-    #ELSIF((SUB(%NFieldOpt1,1,1)='' AND SUB(%TheFieldType,1,1)<>'&') OR SUB(%NFieldOpt1,1,1)='N')
+    #ENDIF
+    #! RA.2023.04.25: This cannot be a reference
+    #IF((SUB(%NFieldOpt1,1,1)='' AND SUB(%TheFieldType,1,1)<>'&') OR SUB(%NFieldOpt1,1,1)='N')
       #IF(%OptionUseBooleanGRPQUE AND %FieldValidation = 'BOOLEAN')
           #SET(%TheName , %TheName & '|BOOLEAN')
       #ENDIF
@@ -1147,11 +1159,22 @@ PROPERTY:END
   ! Begin assignments
 #!SUSPEND
 #!
+#COMMENT(90)
+  #IF(NOT VAREXISTS(%IsRecursive))
+    #DECLARE(%IsRecursive)
+  #ENDIF
   #FOR(%Field),WHERE(UPPER(%FieldType) <> 'MEMO' AND UPPER(%FieldType) <> 'BLOB')
+    #SET(%IsRecursive, FALSE)
     #INSERT(%BuildFieldTypeGRPQUE,%LineNext)
     #SET(%LineWork, 'xQueue.' & %FieldID)
     #SET(%LineNext, CLIP(%LineNext))
-    #IF(SUB(%LineNext,1,1)='&')
+    #IF(SUB(%LineNext,1,5)='ULONG')             #! RA.2023.04.25: Recursion
+      #SET(%IsRecursive, TRUE)
+      #!SET(%LineText, 'NULL')
+      #!SET(%LineNext, '&=')
+      #SET(%LineText, '0')
+      #SET(%LineNext, ' =')
+    #ELSIF(SUB(%LineNext,1,1)='&')
       #SET(%LineText, 'NEW ' & SUB(%LineNext,2,LEN(%LineNext)-1))
       #SET(%LineNext, '&=')
     #ELSE 
@@ -1159,8 +1182,13 @@ PROPERTY:END
       #SET(%LineNext, ' =')
     #ENDIF
 #!   %[%zNames]LineWork %[%zItems-%zNames]NULL %zFldType%zTheName #!<! %FieldDescription
+    #IF(%IsRecursive)
+  %[%zNames-2]LineWork %LineNext %LineText #!<! [RECURSION!...]
+    #ELSE
   %[%zNames-2]LineWork %LineNext %LineText #!<! %FieldDescription
+    #ENDIF
   #ENDFOR
+#COMMENT(%CommentStart)
 #!
 #!RESUME
 [SOURCE]
