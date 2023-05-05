@@ -4,10 +4,10 @@
 !
 ! Dictionary:   C:\_GIT_\RobertArtigas\RYB\examples\GroupsAndQueus\rybGTQT.dct
 ! File:         .\grpque_gtTbl.inc
-! Date-Time:    2023-04-11 - 02:04:48PM
+! Date-Time:    2023-05-04 - 09:14:38PM
 ! Purpose:      Generated File Records as Groups
 ! Created:      Generate GROUP and QUEUE Template
-! Author:       Copyright © 1999-2999 by Roberto Artigas y Soler
+! Author:       Copyright Â© 1999-2999 by Roberto Artigas y Soler
 !               All rights reserved world wide.
 ! Narative:     This template is used to pass records structures
 !               back and forth between DLL's when the tables
