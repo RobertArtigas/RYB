@@ -62,7 +62,14 @@ rybNameAttributeClass.WhatAmI           PROCEDURE() !,String
     SELF.Debug(SELF.WhatAmI)
   END
   RETURN SELF.WhatAmI
-  
+
+!-------------------------------------------------------------------
+rybNameAttributeClass.Init              PROCEDURE(*GROUP xGroup,*GROUP xOptions) !,BYTE,PROC
+!-------------------------------------------------------------------
+  CODE
+  SELF.naOptions :=: xOptions
+  RETURN SELF.Init(xGroup)
+
 !-------------------------------------------------------------------
 rybNameAttributeClass.Init              PROCEDURE(*GROUP xGroup) !,BYTE,PROC
 !-------------------------------------------------------------------
@@ -89,23 +96,32 @@ X           SHORT
 	  SELF.naG.FieldWhom          = UPPER(ST.GetLine(1))
 	  SELF.naG.FieldType          = ST.GetLine(2)
 	  SELF.naG.FieldFormat        = ST.GetLine(3)
-	  SELF.naG.FieldRange         = ST.GetLine(4)
-	  SELF.naG.FieldPrompt        = ST.GetLine(5)
-	  SELF.naG.FieldColumn        = ST.GetLine(6)
+	  IF ~SELF.naOptions.NoRange
+	    SELF.naG.FieldRange       = ST.GetLine(4)
+	    ST.Setvalue(SELF.naG.FieldRange)
+	    SELF.naG.FieldFrom        = ST.Between('[','-')
+	    IF SELF.naG.FieldFrom     = '0' THEN
+	      SELF.naG.FieldFrom      = ''
+	    END
+	    SELF.naG.FieldTo          = ST.Between('-',']')
+	    IF SELF.naG.FieldTo       = '0' THEN
+	      SELF.naG.FieldTo        = ''
+	    END
+	  END
+	  IF ~SELF.naOptions.NoPrompt
+	    SELF.naG.FieldPrompt      = ST.GetLine(5)
+	    ST.Setvalue(SELF.naG.FieldPrompt)
+	    SELF.naG.FieldPrompt      = ST.Between('(''',''')')
+	  END
+	  IF ~SELF.naOptions.NoColumn
+	    SELF.naG.FieldColumn      = ST.GetLine(6)
+	    ST.Setvalue(SELF.naG.FieldColumn)
+	    SELF.naG.FieldColumn      = ST.Between('(''',''')')
+	  END
 	  SELF.naG.FieldTypeSQL       = ''
 	  SELF.naG.FieldFormatSQL     = ''
-	  ST.Setvalue(SELF.naG.FieldPrompt)
-	  SELF.naG.FieldPrompt        = ST.Between('(''',''')')
-	  ST.Setvalue(SELF.naG.FieldColumn)
-	  SELF.naG.FieldColumn        = ST.Between('(''',''')')
-	  ST.Setvalue(SELF.naG.FieldRange)
-	  SELF.naG.FieldFrom          = ST.Between('[','-')
-	  IF SELF.naG.FieldFrom       = '0' THEN
-	    SELF.naG.FieldFrom        = ''
-	  END
-	  SELF.naG.FieldTo            = ST.Between('-',']')
-	  IF SELF.naG.FieldTo         = '0' THEN
-	    SELF.naG.FieldTo          = ''
+	  IF SELF.naG.FieldRange[1] <> '[' THEN
+	    SELF.naG.FieldRange       = ''
 	  END
       SELF.naG.FieldTemp          = UPPER(SELF.naG.FieldTemp)
       SELF.naG.FieldLength        = LEN(CLIP(SELF.naG.FieldTemp))	  

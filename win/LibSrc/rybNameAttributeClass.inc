@@ -9,6 +9,12 @@ _rybNameAttributeClass_ EQUATE(1)
   INCLUDE('EQUATES.CLW'),ONCE
   INCLUDE('ERRORS.CLW'),ONCE
   INCLUDE('StringTheory.Inc'),ONCE
+  
+GTNAOPTIONS                 GROUP,TYPE
+NoRange                       BYTE(FALSE)
+NoPrompt                      BYTE(FALSE)
+NoColumn                      BYTE(FALSE)
+                            END
 
 GTNAMEATTR                  GROUP,TYPE
 FieldNumber                   SHORT,NAME('FieldNumber|SHORT|@N4B|[0001-0002]|PR(''Field Number:'')|CO(''Number'')')                                                  ! [0001-0002] Field number.
@@ -59,6 +65,7 @@ WhatAmI                       STRING('rybNameAttributeClass')
 ShowDebug                     BYTE
 CntFields                     SHORT
 ItemNumber                    LONG
+naOptions                     GROUP(GTNAOPTIONS) END
 naG                           GROUP(GTNAMEATTR) END                           
 naQ                           &QTNAMEATTR
 !-- Methods
@@ -68,6 +75,7 @@ SetDebug                      PROCEDURE(BYTE xShowDebug)
 Debug                         PROCEDURE(STRING xMsg)
 WhatAmI                       PROCEDURE(),STRING
 Init                          PROCEDURE(*GROUP xGroup),BYTE,PROC
+Init                          PROCEDURE(*GROUP xGroup,*GROUP xOptions),BYTE,PROC
 ValueDebug                    PROCEDURE()
 ValueSetItem                  PROCEDURE(BYTE xAttribute,STRING xData)
 ValueGetItem                  PROCEDURE(BYTE xAttribute),STRING
