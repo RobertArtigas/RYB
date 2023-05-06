@@ -30,6 +30,9 @@ Clarioneros : 161 : 2020-08-22 : https://clarionlive.com/clarioneros.htm (**OneD
 
 Clarioneros : 163 : 2020-09-05 : https://clarionlive.com/clarioneros.htm (**OneDrive** link)
 
+ClarionLive : 707 : May 5, 2023 : https://www.youtube.com/watch?v=mwXsowDRixo [ Fun with XML and JSON! ]
+
+Clarioneros : 243 : 2023-05-06 : https://clarionlive.com/clarioneros.htm (**OneDrive** link) [ Fun with XML and JSON! ]
 
 ##
 
