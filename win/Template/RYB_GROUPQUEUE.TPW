@@ -79,7 +79,7 @@
     #DECLARE(%CopyrightGRPQUE01)
   #ENDIF
   #SET(%CopyrightGRPQUE01, 'Generate GROUPS and QUEUES with extended FIELD names for this dictionary.')
-  #SET(%CopyrightGRPQUE01, %CopyrightGRPQUE01 & '<13,10>Copyright Â© 1999-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightGRPQUE01, %CopyrightGRPQUE01 & '<13,10>Copyright © 1999-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
   #SET(%CopyrightGRPQUE01, %CopyrightGRPQUE01 & '<13,10>All copyrights reserved world wide.')
   #SET(%CopyrightGRPQUE01, %CopyrightGRPQUE01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
 #ENDPREPARE
@@ -206,7 +206,7 @@
     #DECLARE(%RefvarGRPQUE01)
   #ENDIF
   #SET(%RefvarGRPQUE01, '')
-  #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'Option 1:<9,9><<NO|><9,9,9>Use this field<13,10>')
+  #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'Option 1:<9,9><<|NO><9,9,9>Use this field<13,10>')
   #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'Option 2:<9,9>&&Font' & %QueueSuffixGRPQUE & '<9,9,9>Type override (%NFieldOpt2)<13,10>')
   #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'Option 3:<9,9><<REFERENCE|QUEUE|><9>Initialization override<13,10>')
   #SET(%RefvarGRPQUE01, %RefvarGRPQUE01 & 'Option 4:<9,9>Font<9,9,9>ROWNAME(%NFieldOpt4)<13,10>')
@@ -223,7 +223,7 @@
     #DECLARE(%HashGRPQUE01)
   #ENDIF
   #SET(%HashGRPQUE01, '')
-  #SET(%HashGRPQUE01, %HashGRPQUE01 & 'Option 1:<9,9><<NO|><9,9,9>Use this field<13,10>')
+  #SET(%HashGRPQUE01, %HashGRPQUE01 & 'Option 1:<9,9><<|NO><9,9,9>Use this field<13,10>')
   #SET(%HashGRPQUE01, %HashGRPQUE01 & 'Option 2:<9,9><<HashField><9,9>Type override |HASH(%NFieldOpt2)<13,10>')
   #SET(%HashGRPQUE01, %HashGRPQUE01 & 'Option 3:<9,9>[Not used]<9,9>Not used yet<13,10>')
   #SET(%HashGRPQUE01, %HashGRPQUE01 & 'Option 4:<9,9>[Not used]<9,9>Not used yet<13,10>')
@@ -238,7 +238,7 @@
     #DECLARE(%EncryptedGRPQUE01)
   #ENDIF
   #SET(%EncryptedGRPQUE01, '')
-  #SET(%EncryptedGRPQUE01, %EncryptedGRPQUE01 & 'Option 1:<9,9><<NO|><9,9,9>Use this field<13,10>')
+  #SET(%EncryptedGRPQUE01, %EncryptedGRPQUE01 & 'Option 1:<9,9><<|NO><9,9,9>Use this field<13,10>')
   #SET(%EncryptedGRPQUE01, %EncryptedGRPQUE01 & 'Option 2:<9,9>MyTable<9,9,9>Type override |ENCRYPTED(%NFieldOpt2)<13,10>')
   #SET(%EncryptedGRPQUE01, %EncryptedGRPQUE01 & 'Option 3:<9,9>[Not used]<9,9>Not used yet<13,10>')
   #SET(%EncryptedGRPQUE01, %EncryptedGRPQUE01 & 'Option 4:<9,9>[Not used]<9,9>Not used yet<13,10>')
@@ -253,7 +253,7 @@
     #DECLARE(%IdentityGRPQUE01)
   #ENDIF
   #SET(%IdentityGRPQUE01, '')
-  #SET(%IdentityGRPQUE01, %IdentityGRPQUE01 & 'Option 1:<9,9><<NO|><9,9,9>Use this field<13,10>')
+  #SET(%IdentityGRPQUE01, %IdentityGRPQUE01 & 'Option 1:<9,9><<|NO><9,9,9>Use this field<13,10>')
   #SET(%IdentityGRPQUE01, %IdentityGRPQUE01 & 'Option 2:<9,9>Salt<9,9,9>|%NFieldOpt2<13,10>')
   #SET(%IdentityGRPQUE01, %IdentityGRPQUE01 & 'Option 3:<9,9>[Not used]<9,9>Not used yet<13,10>')
   #SET(%IdentityGRPQUE01, %IdentityGRPQUE01 & 'Option 4:<9,9>[Not used]<9,9>Not used yet<13,10>')
@@ -274,7 +274,7 @@
 ! Date-Time:    %@D010-@(%BegDate) - %@T06@(%BegTime)
 ! Purpose:      Generated File Records as Groups
 ! Created:      Generate GROUP and QUEUE Template
-! Author:       Copyright Â© 1999-2999 by Roberto Artigas y Soler
+! Author:       Copyright © 1999-2999 by Roberto Artigas y Soler
 !               All rights reserved world wide.
 ! Narative:     This template is used to pass records structures
 !               back and forth between DLL's when the tables
@@ -531,7 +531,10 @@
       #PROMPT('Location: ' ,@S120),%IncludeLocationGRPQUE , REQ, DEFAULT(%IncludeLocationGRPQUE),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,376)
     #ENDBOXED
     #BOXED('')
-      #PROMPT('Comments start at column: ',@N3),%CommentStart , REQ, DEFAULT(180)                ,AT(200,,40)
+      #PROMPT('Comments start at column: ',@N3),%CommentStart        , REQ, DEFAULT(180)         ,AT(200,,40)
+      #DISPLAY(''),AT(,,,1)
+      #PROMPT('GROUP type''s suffix: ',@S120)  , %GroupSuffixGRPQUE  , REQ, DEFAULT('GT')        ,AT(200,,80)
+      #PROMPT('QUEUE type''s suffix: ',@S120)  , %QueueSuffixGRPQUE  , REQ, DEFAULT('QT')        ,AT(200,,80)
     #ENDBOXED
     #DISPLAY(''),AT(,,,1)
     #DISPLAY(%ExplainGRPQUE01),AT(,,436,124)
@@ -645,7 +648,8 @@
   #CLOSE (%OutputFile)
 #ENDFOR
 #!
-#CALL(%GenerateAllProceduresGRPQUE)     #! RA.2023.03.30: Added
+#!CALL(%GenerateAllProceduresGRPQUE)     #! RA.2023.03.30: Added
+#INSERT(%GenerateAllProceduresGRPQUE)    #! RA.2023.06.13: Changed
 #!
 #ENDAT
 #!-----------------------------------------------------------------------------
@@ -654,7 +658,7 @@
 #! This will give you an alternative if there is nothing added to the external name attributes.
 #! Results can be also used to replace the name external attributes in the dictionary.
 #! Used as comments in a few places where I generate structures from the dictionary. 
-#GROUP(%BuildFieldTypeGRPQUE,*%pTheField)                                             #! RA.2019.11.29: Added
+#GROUP(%BuildFieldTypeGRPQUE,*%pTheField)                             #! RA.2019.11.29: Added
 #IF(NOT VAREXISTS(%TheFieldType))
   #DECLARE(%TheFieldType)
 #ENDIF
@@ -662,38 +666,46 @@
 #CASE(UPPER(%FieldType))
 #OF  ('DECIMAL')
 #OROF('PDECIMAL')
-  #SET(%pTheField , %FieldType & '(' & %FieldMemoSize & ',' & %FieldPlaces & ')')
+  #SET(%TheFieldType , %FieldType & '(' & %FieldMemoSize & ',' & %FieldPlaces & ')')
 #OF  ('STRING')
 #OROF('MEMO')
 #OROF('BLOB')
 #OROF('CSTRING')
 #OROF('PSTRING')
 #OROF('USTRING')
-  #SET(%pTheField , UPPER(%FieldType) & '(' & %FieldMemoSize & ')')
+  #SET(%TheFieldType , UPPER(%FieldType) & '(' & %FieldMemoSize & ')')
 #ELSE
-  #SET(%pTheField , UPPER(%FieldType))
+  #SET(%TheFieldType , UPPER(%FieldType))
 #ENDCASE
 #! RA.2022.05.01: Let's see about reference type field override
-#INSERT(%GetFieldOptionsGRPQUE)                                                       #! REFVAR(,,,) for Fields
+#INSERT(%GetFieldOptionsGRPQUE)                                       #! REFVAR(,,,) for Fields
 #IF((SUB(%NFieldOpt1,1,1) <> 'N') AND (%NFieldOpt2 <> ''))
   #! RA.2023.03.26.SUN: REFVAR(1,2,3,4)
-  #!IF   (UPPER(%NFieldOpt2) = 'ULONG')                                               #! REFVAR(,ULONG,?,?) for Recursion
-  #IF   (SUB(%NFieldOpt2,1,1) <> '&')                                                 #! REFVAR(,ULONG,?,?) for Recursion
+  #!IF   (UPPER(%NFieldOpt2) = 'ULONG')                                 #! REFVAR(,ULONG,?,?) for Recursion
+  #IF   (SUB(%NFieldOpt2,1,1) <> '&')                                  #! REFVAR(,ULONG,?,?) for Recursion
+    #! RA.2023.06.13: RECURSION will have to be handled differently. Rethink or recode this area.
+    #! If you have defined a reference, you better know what you are doing here. 
     #! RA.2023.04.25: If you do not have a reference variable let the item thru to handle programming recursion.
     #! You will be assigning the recursion at the defintion level when you add tables beyond secondary level.
   #ELSE
-    #IF   (UPPER(%NFieldOpt3)='QUEUE')                                                #! REFVAR(,,QUEUE,) for Fields
-      #SET(%pTheField,%NFieldOpt2 & %QueueSuffixGRPQUE)
-    #ELSIF(UPPER(%NFieldOpt3)='REFERENCE')                                            #! REFVAR(,,REFERENCE,) for Fields
-      #SET(%pTheField,%NFieldOpt2)
-    #ELSE                                                                             #! REFVAR(,,???,) for Fields
+    #CASE(UPPER(%NFieldOpt3))
+    #OF  ('QUEUE')                                                    #! REFVAR(,,QUEUE,) for Fields
+      #SET(%TheFieldType, %NFieldOpt2 & %QueueSuffixGRPQUE)
+    #OF  ('REFERENCE')                                                #! REFVAR(,,REFERENCE,) for Fields
+      #SET(%TheFieldType, %NFieldOpt2)
+    #ELSE                                                             #! REFVAR(,,???,) for Fields
       #ERROR('Error: ' & %File & '.' & %FieldID & ': REFVAR(,' & %NFieldOpt2 & ',' & %NFieldOpt3 & ',' & %NFieldOpt4 & ')')
-    #ENDIF
+    #ENDCASE
   #ENDIF
 #ENDIF
 #!
-#SET(%pTheField, %pTheField)                                                          #! RA.2023.03.26:SUN: No UPPER references 
-#!SET(%pTheField, UPPER(%pTheField))
+#SET(%pTheField, %TheFieldType)                                       #! RA.2023.03.26:SUN: No UPPER references 
+#!SET(%pTheField, UPPER(%TheFieldType))
+#IF(%FALSE)                                                           #! TESTING
+  #IF(%NFieldUser <> '')
+----99 %%BuildFieldTypeGRPQUE: [%FieldType,%TheFieldType] 0"%NFieldUser", 1"%NFieldOpt1", 2"%NFieldOpt2", 3"%NFieldOpt3", 4"%NFieldOpt4"
+  #ENDIF
+#ENDIF
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
 #GROUP(%BuildAttributesFieldNameGRPQUE,*%pTheName)                                    #! RA.2019.11.21: Added
@@ -790,14 +802,14 @@
   #ENDIF
 #!
 #!--------------------------------------------------------!
-#! RA.2024.04.25: Handle case of recursion setup.         !
+#! RA.2023.04.25: Handle case of recursion setup. [???]   !
 #! RA.2023.03.26: Handle REFERENCE, QUEUE for REFVAR.     !
 #! RA.2022.11.05: Handle the Capesoft xFiles XML options. !
 #!--------------------------------------------------------!
   #IF(%OptionUseXMLGRPQUE)
     #!IF(SUB(%NFieldOpt1,1,1)='' AND SUB(%TheFieldType,1,1)='&')
     #! RA.2023.04.25: It is NOT a reference variable, but at run time it will be used as a QUEUE reference.
-    #! Will default handle nested table defintions past the secondary reference.
+    #! Will default handle nested table definitions past the secondary reference.
     #IF(SUB(%NFieldOpt1,1,1)='')
       #CASE(UPPER(%NFieldOpt3))
       #OF('REFERENCE')
@@ -811,8 +823,10 @@
         #ENDIF
       #ENDCASE
     #ENDIF
+    #! RA.2023.06.13: Improve the logic checking for options
     #! RA.2023.04.25: This cannot be a reference
-    #IF((SUB(%NFieldOpt1,1,1)='' AND SUB(%TheFieldType,1,1)<>'&') OR SUB(%NFieldOpt1,1,1)='N')
+    #!IF((SUB(%NFieldOpt1,1,1)='' AND SUB(%TheFieldType,1,1)<>'&') OR SUB(%NFieldOpt1,1,1)='N')
+    #IF((SUB(%NFieldOpt1,1,1)='' AND SUB(%NFieldOpt3,1,1)='') OR SUB(%NFieldOpt1,1,1)='N')
       #IF(%OptionUseBooleanGRPQUE AND %FieldValidation = 'BOOLEAN')
           #SET(%TheName , %TheName & '|BOOLEAN')
       #ENDIF
@@ -904,17 +918,17 @@
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
 #GROUP(%GetFieldOptionsGRPQUE)                                                        #! REFVAR(,,,) for Fields
-#!SET(%nLoc1,INSTRING('REFVAR(',UPPER(%FieldUserOptions),1,1))                        #! &%NFieldOpt2
-#SET(%nLoc1,INSTRING('REFVAR(',%FieldUserOptions,1,1))                                #! &%NFieldOpt2
+#!SET(%nLoc1,INSTRING('REFVAR(',UPPER(%FieldUserOptions),1,1))                        #! %NFieldUser
+#SET(%nLoc1,INSTRING('REFVAR(',%FieldUserOptions,1,1))                                #! %NFieldUser
 #SET(%nLoc2,INSTRING(')',%FieldUserOptions,1,%nLoc1))
 #SET(%NFieldUser,SUB(%FieldUserOptions,%nLoc1,%nLoc2))
 #!SET(%NFieldUser,UPPER(SUB(%FieldUserOptions,%nLoc1,%nLoc2)))
 #!SET(%NFieldUser,UPPER(EXTRACT(%FieldUserOptions,'REFVAR')))
-#SET(%NFieldOpt1,EXTRACT(%NFieldUser,'REFVAR',1))               #! Field option 1 [NO]                  #! Ignore this field
-#SET(%NFieldOpt2,EXTRACT(%NFieldUser,'REFVAR',2))               #! Field option 2 [<FieldType>]         #! Dictionary type override
-#SET(%NFieldOpt3,EXTRACT(%NFieldUser,'REFVAR',3))               #! Field option 3 [<Default>]           #! Dictionary default override
-#SET(%NFieldOpt4,EXTRACT(%NFieldUser,'REFVAR',4))               #! Field option 4 [Not used yet]        #! Not used yet
-#IF(%FALSE)
+#SET(%NFieldOpt1,EXTRACT(%NFieldUser,'REFVAR',1))               #! Field option 1 [|NO]
+#SET(%NFieldOpt2,EXTRACT(%NFieldUser,'REFVAR',2))               #! Field option 2 [<&QueueTypePrefix>|<&ReferenceName>]
+#SET(%NFieldOpt3,EXTRACT(%NFieldUser,'REFVAR',3))               #! Field option 3 [QUEUE|REFERENCE]
+#SET(%NFieldOpt4,EXTRACT(%NFieldUser,'REFVAR',4))               #! Field option 4 [ROWNAME(<RowName>)]
+#IF(%FALSE)                                                     #! TESTING
   #IF(%NFieldUser)
 ---- %%GetFieldOptionsGRPQUE: [%FieldID] 0"%NFieldUser", 1"%NFieldOpt1", 2"%NFieldOpt2", 3"%NFieldOpt3", 4"%NFieldOpt4"
   #ENDIF
@@ -990,13 +1004,12 @@
       #BOXED('Generate Procedures Location'),AT(,,446)
         #DISPLAY(''),AT(,,,1)
         #PROMPT('Directory: ',@S120)  ,%GenerateDirectoryGRPQUE  , REQ, DEFAULT('.\Apps\')        ,AT(70,,376)
+        #!DISPLAY(''),AT(,,,1)
+        #DISPLAY('NOTE: Please use full directory paths for this location.'), AT(70) ,PROP(PROP:FontStyle,700)
       #ENDBOXED
       #BOXED('Adjust Procedures Generation')
         #DISPLAY(''),AT(,,,1)
         #PROMPT('Developer''s initials: ',@S40)         , %DevInitialsGRPQUE  , REQ, DEFAULT('RA')            ,AT(200,,40)
-        #DISPLAY(''),AT(,,,1)
-        #PROMPT('Group type''s suffix: ',@S120)         , %GroupSuffixGRPQUE  , REQ, DEFAULT('GT')            ,AT(200,,80)
-        #PROMPT('Queue type''s suffix: ',@S120)         , %QueueSuffixGRPQUE  , REQ, DEFAULT('QT')            ,AT(200,,80)
         #DISPLAY(''),AT(,,,1)
         #PROMPT('Hold procedure''s suffix: ',@S120)     , %HoldSuffixGRPQUE   , REQ, DEFAULT('_Procedures')   ,AT(200,,80)  
         #PROMPT('Procedure''s prefix: ',@S120)          , %ProcPrefixGRPQUE   , REQ, DEFAULT('Init_')         ,AT(200,,80)
