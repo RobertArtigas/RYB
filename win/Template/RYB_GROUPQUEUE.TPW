@@ -816,7 +816,9 @@
           #! RA.2023.08.05: Improve the logic. REFERENCE can be an attribute here. Not below.
           #! The comparison gets messy if you do it below, and the REFERENCE is implied with the & in the type.
           #!SET(%TheName , %TheName & '|REFERENCE')
+        #IF(%OptionUseAttributeGRPQUE)
           #SET(%TheName , %TheName & '|ATTRIBUTE')
+        #ENDIF
       #OF('QUEUE')
           #SET(%TheName , %TheName & '|QUEUE')
         #IF(%NFieldOpt4)
