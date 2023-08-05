@@ -813,7 +813,10 @@
     #IF(SUB(%NFieldOpt1,1,1)='')
       #CASE(UPPER(%NFieldOpt3))
       #OF('REFERENCE')
-          #SET(%TheName , %TheName & '|REFERENCE')
+          #! RA.2023.08.05: Improve the logic. REFERENCE can be an attribute here. Not below.
+          #! The comparison gets messy if you do it below, and the REFERENCE is implied with the & in the type.
+          #!SET(%TheName , %TheName & '|REFERENCE')
+          #SET(%TheName , %TheName & '|ATTRIBUTE')
       #OF('QUEUE')
           #SET(%TheName , %TheName & '|QUEUE')
         #IF(%NFieldOpt4)
@@ -824,7 +827,7 @@
       #ENDCASE
     #ENDIF
     #! RA.2023.06.13: Improve the logic checking for options
-    #! RA.2023.04.25: This cannot be a reference
+    #! RA.2023.04.25: This cannot be a reference (It can be. Deal with it above)
     #!IF((SUB(%NFieldOpt1,1,1)='' AND SUB(%TheFieldType,1,1)<>'&') OR SUB(%NFieldOpt1,1,1)='N')
     #IF((SUB(%NFieldOpt1,1,1)='' AND SUB(%NFieldOpt3,1,1)='') OR SUB(%NFieldOpt1,1,1)='N')
       #IF(%OptionUseBooleanGRPQUE AND %FieldValidation = 'BOOLEAN')
