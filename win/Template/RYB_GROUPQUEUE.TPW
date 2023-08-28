@@ -467,7 +467,9 @@
       #SET(%CountEquate, %CountEquate + 1)
 #SET(%LineWork, 'C_' & UPPER(%FilePrefix) & '_' & UPPER(%FieldID))
 #SET(%LineNext, 'EQUATE(' & %CountEquate & ')')
-%[%zNames]LineWork %[%zItems-%zNames]NULL %LineNext
+#! RA.2023.08.27  Make the constants a bit more noticible (spaces)
+#!%[%zNames]LineWork %[%zItems-%zNames]NULL %LineNext
+%[%IdentifySize]LineWork %[%zItems-%IdentifySize]NULL %LineNext
     #ENDFOR
 #!!! %[%zNames]NULL %[%zGroup-%zNames]NULL END
   #RESUME
@@ -531,10 +533,12 @@
       #PROMPT('Location: ' ,@S120),%IncludeLocationGRPQUE , REQ, DEFAULT(%IncludeLocationGRPQUE),PROP(PROP:READONLY,1),PROP(PROP:FontStyle,700),PROP(PROP:FontColor,0C79A3H)        ,AT(70,,376)
     #ENDBOXED
     #BOXED('')
-      #PROMPT('Comments start at column: ',@N3),%CommentStart        , REQ, DEFAULT(180)         ,AT(200,,40)
+      #PROMPT('Comments start at column: ',@N3), %CommentStart       , REQ, DEFAULT(180)         ,AT(200,,40)
       #DISPLAY(''),AT(,,,1)
       #PROMPT('GROUP type''s suffix: ',@S120)  , %GroupSuffixGRPQUE  , REQ, DEFAULT('GT')        ,AT(200,,80)
       #PROMPT('QUEUE type''s suffix: ',@S120)  , %QueueSuffixGRPQUE  , REQ, DEFAULT('QT')        ,AT(200,,80)
+      #DISPLAY(''),AT(,,,1)
+      #PROMPT('Constant identifier size: ',@N3), %IdentifySize       , REQ, DEFAULT(60)          ,AT(200,,40)
     #ENDBOXED
     #DISPLAY(''),AT(,,,1)
     #DISPLAY(%ExplainGRPQUE01),AT(,,436,124)
