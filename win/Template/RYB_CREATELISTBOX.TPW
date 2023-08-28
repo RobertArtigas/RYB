@@ -715,7 +715,7 @@
 #ENDIF
 #!
 #IF(%zLength=0 AND %zDigits=0)
-! -03- %%pFieldType=%@S10@(%pFieldType) %%pFieldPicture=%@S20@(%pFieldPicture) %%zLenDec=%@S20@(%zLenDec), %%zLength=%@N04@(%zLength), %%zDigits=%@N02@(%zDigits) %%pFieldType=%@S10@(%pFieldType)
+#! -03- %%pFieldType=%@S10@(%pFieldType) %%pFieldPicture=%@S20@(%pFieldPicture) %%zLenDec=%@S20@(%zLenDec), %%zLength=%@N04@(%zLength), %%zDigits=%@N02@(%zDigits) %%pFieldType=%@S10@(%pFieldType)
 #ENDIF
 #!
 #SET(%pLength, %zLength)
