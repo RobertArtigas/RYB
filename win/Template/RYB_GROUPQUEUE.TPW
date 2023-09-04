@@ -755,7 +755,7 @@
     #SET(%zFldFrom, %zFldTo)
   #ENDIF
   #! RA.2023.08.29: Changed to five characters. Larger records.
-  #!SET(%zFldRange   , '[' & FORMAT(%zFldFrom,@N04) & '-' & FORMAT((%zFldTo),@N04) & ']')
+  #!SET(%zFldRange  , '[' & FORMAT(%zFldFrom,@N04) & '-' & FORMAT((%zFldTo),@N04) & ']')
   #SET(%zFldRange   , '[' & FORMAT(%zFldFrom,@N05) & '-' & FORMAT((%zFldTo),@N05) & ']')
   #SET(%zFldFrom    , %zFldTo + 1)
 #!---------------------------------------------------------------------!
