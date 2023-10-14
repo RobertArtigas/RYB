@@ -3,12 +3,14 @@
     <ProjectGuid>{CB6064F4-8B07-4C7C-8706-3AFA40ADD6D2}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Win32</Platform>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>rybGTQT</RootNamespace>
     <AssemblyName>rybGTQT</AssemblyName>
     <OutputName>rybGTQT</OutputName>
     <CWOutputType>Exe</CWOutputType>
     <DefineConstants>StringTheoryLinkMode=&gt;0%3bStringTheoryDllMode=&gt;1%3bxFilesLinkMode=&gt;0%3bxFilesDllMode=&gt;1%3b_XFILES_=&gt;1%3b_XFILES4_=&gt;1%3bReflectionLM=&gt;0%3bReflectionDM=&gt;1%3bjFilesLinkMode=&gt;0%3bjFilesDllMode=&gt;1%3b_JFILES_=&gt;1%3b_ABCDllMode_=&gt;1%3b_ABCLinkMode_=&gt;0</DefineConstants>
+    <Model>Dll</Model>
+    <ApplicationIcon>ryb.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
