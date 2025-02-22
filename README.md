@@ -54,6 +54,5 @@ _Robert A. Heinlein_
 We don't rise to the standards we have when others are watching. <br/>
 We fall to the standards we have when no one is watching. <br/>
 The only work that really matters is the work that no one sees. <br/>
-It shows you who you really are <br/>
-Rather than who you say you are. <br/>
+It shows you who you really are. Rather than who you say you are. <br/>
 _Alex Hormozi_
