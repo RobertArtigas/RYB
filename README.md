@@ -46,3 +46,13 @@ Clarioneros : 243 : 2023-05-06 : https://clarionlive.com/clarioneros.htm (**OneD
 
 Criminals are never materially handicapped by such rules; the only effect is to disarm the peaceful citizen and put him fully at the mercy of the lawless. Such rules look very pretty on paper; in practice they are as foolish and footless as the attempt of the mice to bell the cat.<BR/>
 _Robert A. Heinlein_
+
+##
+###
+
+We don't rise to the standards we have when others are watching. <br/>
+We fall to the standards we have when no one is watching. <br/>
+The only work that really matters is the work that no one sees. <br/>
+It shows you who you really are <br/>
+Rather than who you say you are. <br/>
+_Alex Hormozi_
