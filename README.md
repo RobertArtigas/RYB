@@ -44,6 +44,7 @@ Clarioneros : 243 : 2023-05-06 : https://clarionlive.com/clarioneros.htm (**OneD
 ##
 ###
 
+**Weapon Control Laws** <br/>
 Criminals are never materially handicapped by such rules; the only effect is to disarm the peaceful citizen and put him fully at the mercy of the lawless. Such rules look very pretty on paper; in practice they are as foolish and footless as the attempt of the mice to bell the cat.<BR/>
 _Robert A. Heinlein_
 
