@@ -4,10 +4,10 @@
 !
 ! Dictionary:   C:\_GIT_\RobertArtigas\RYB\examples\GroupsAndQueus\rybGTQT.dct
 ! File:         .\grpque_gtFld.inc
-! Date-Time:    2023-05-05 - 12:16:28PM
+! Date-Time:    2025-06-19 - 08:46:19AM
 ! Purpose:      Generated File Records as Groups
 ! Created:      Generate GROUP and QUEUE Template
-! Author:       Copyright Â© 1999-2999 by Roberto Artigas y Soler
+! Author:       Copyright © 1999-2999 by Roberto Artigas y Soler
 !               All rights reserved world wide.
 ! Narative:     This template is used to pass records structures
 !               back and forth between DLL's when the tables
@@ -32,7 +32,7 @@
 !-Keys-
 !
 Field_fld_key0_pkey                       GROUP,TYPE,NAME('Field_fld_key0_pkey')
-Name                                        STRING(128),NAME('Name|STRING(128)|@S128|ATTRIBUTE')                                                                                   ! [0001-0128] Field name.
+Name                                        STRING(128),NAME('Name|STRING(128)|@S128|ATTRIBUTE')                                                                                   ! [00001-00128] Field name.
                                           END 
 !EndRegion
 !Region GroupDefinition
@@ -40,7 +40,7 @@ Name                                        STRING(128),NAME('Name|STRING(128)|@
 !-Group-
 !
 FieldGT                                   GROUP,TYPE,NAME('FieldGT')
-Name                                        STRING(128),NAME('Name|STRING(128)|@S128|ATTRIBUTE')                                                                                   ! [0001-0128] Field name.
+Name                                        STRING(128),NAME('Name|STRING(128)|@S128|ATTRIBUTE')                                                                                   ! [00001-00128] Field name.
                                           END
 !EndRegion
 !Region QueueDefinition
@@ -54,7 +54,7 @@ FieldQT                                   QUEUE(FieldGT),TYPE,NAME('FieldQT')
 !
 !-Equates-
 !
-C_FIELD_NAME                                EQUATE(1)
+C_FIELD_NAME                                                  EQUATE(1)
 !
 !EndRegion
 !Region Class_YES

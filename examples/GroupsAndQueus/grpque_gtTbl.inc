@@ -4,10 +4,10 @@
 !
 ! Dictionary:   C:\_GIT_\RobertArtigas\RYB\examples\GroupsAndQueus\rybGTQT.dct
 ! File:         .\grpque_gtTbl.inc
-! Date-Time:    2023-05-05 - 12:16:28PM
+! Date-Time:    2025-06-19 - 08:46:19AM
 ! Purpose:      Generated File Records as Groups
 ! Created:      Generate GROUP and QUEUE Template
-! Author:       Copyright Â© 1999-2999 by Roberto Artigas y Soler
+! Author:       Copyright © 1999-2999 by Roberto Artigas y Soler
 !               All rights reserved world wide.
 ! Narative:     This template is used to pass records structures
 !               back and forth between DLL's when the tables
@@ -32,7 +32,7 @@
 !-Keys-
 !
 Table_tbl_key0_pkey                       GROUP,TYPE,NAME('Table_tbl_key0_pkey')
-Name                                        STRING(128),NAME('Name|STRING(128)|@S128|ATTRIBUTE')                                                                                   ! [0001-0128] Dictionary name.
+Name                                        STRING(128),NAME('Name|STRING(128)|@S128|ATTRIBUTE')                                                                                   ! [00001-00128] Dictionary name.
                                           END 
 !EndRegion
 !Region GroupDefinition
@@ -40,8 +40,8 @@ Name                                        STRING(128),NAME('Name|STRING(128)|@
 !-Group-
 !
 TableGT                                   GROUP,TYPE,NAME('TableGT')
-Name                                        STRING(128),NAME('Name|STRING(128)|@S128|ATTRIBUTE')                                                                                   ! [0001-0128] Dictionary name.
-FldQ                                        &FieldQT,NAME('FieldList|&FieldQT|@N13|QUEUE|ROWNAME(Field)')                                                                          ! [0129-0132] Field list
+Name                                        STRING(128),NAME('Name|STRING(128)|@S128|ATTRIBUTE')                                                                                   ! [00001-00128] Dictionary name.
+FldQ                                        &FieldQT,NAME('FieldList|&FieldQT|@N13|QUEUE|ROWNAME(Field)')                                                                          ! [00129-00132] Field list
                                           END
 !EndRegion
 !Region QueueDefinition
@@ -55,8 +55,8 @@ TableQT                                   QUEUE(TableGT),TYPE,NAME('TableQT')
 !
 !-Equates-
 !
-C_TABLE_NAME                                EQUATE(1)
-C_TABLE_FLDQ                                EQUATE(2)
+C_TABLE_NAME                                                  EQUATE(1)
+C_TABLE_FLDQ                                                  EQUATE(2)
 !
 !EndRegion
 !Region Class_YES

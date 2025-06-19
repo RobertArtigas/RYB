@@ -87,10 +87,13 @@
 #ENDAT
 #!-----------------------------------------------------------------------------
 #!----------------------------------------------------------------------------- RA.2019.08.02: Added
+#! 2025.03.15 RA: (NA) Added Width and height
 #AT(%WindowManagerMethodDataSection,'Init','(),BYTE'),PRIORITY(8005)
 ThisFeq           LONG(0)  #<! Used for window cosmetic adjustments
 WindowXpos        LONG(0)  #<! Check for X position off the screen
 WindowYpos        LONG(0)  #<! Check for Y position off the screen
+#!WindowWidth       LONG(0)  #<! Get current width of the screen
+#!WindowHeight      LONG(0)  #<! Get current height of the screen
 #ENDAT
 #!-----------------------------------------------------------------------------
 #AT (%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(8005)
@@ -103,7 +106,7 @@ WindowYpos        LONG(0)  #<! Check for Y position off the screen
 #ENDAT
 #!-----------------------------------------------------------------------------
 #! RA.2021.02.14: Noticed EZHelp code WAS generating when this was 'Leave Alone', and NOT generating when 'None'
-#! There is a conflict somewhere whit EzHelp. Need to fix the problem.
+#! There is a conflict somewhere with EzHelp. Need to fix the problem.
 #!AT (%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(8025)          #! RA.2021.03.14: Changed
 #AT (%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(8010)
   #IF (%raWallpaperType <> 'Leave Alone')
@@ -208,9 +211,12 @@ END #<! LOOP
 #AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),PRIORITY(8900)
 ! Code to prevent windows from going off the screen with negative coordinates.
 GetPosition(0,WindowXpos,WindowYpos)
+#!GetPosition(0,WindowXpos,WindowYpos,WindowWidth,WindowHeight)
 IF (WindowXpos < 0 OR WindowYpos < 0)       THEN
   0{PROP:CENTER}        = TRUE
 END
+#! 2025.03.15 RA: (NA) Getting an idea of what the dimmensions of the screen are.
+#!STOP('xPos=' & 0{PROP:xPos} & ', yPos=' & 0{PROP:yPos} & ', xWidth=' & 0{PROP:Width} & ', yHeight=' & 0{PROP:Height} & '')
 #!EMBED(%EOGRYB_CenterTheScreen,'After: EOG-RYB: Center the screen')
 #ENDAT
 #!-----------------------------------------------------------------------------

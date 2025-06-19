@@ -285,6 +285,11 @@
 #ENDPREPARE
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
+#!INCLUDE('RYB_SQLDISCONNECT.TPW')           #! RA.2019.03.01: [CODE DRIVERS] SQL Handling Disconnect
+#!INCLUDE('RYB_SQLRECONNECT.TPW')            #! RA.2020.06.26: [CODE DRIVERS] SQL Handling Reconnect
+#INCLUDE('RYB_SQLPIECES.TPW')               #! RA.2018.02.22: [CODE DRIVERS] SQL template pieces
+#INCLUDE('RYB_TRACERUNPROCEDURE.TPW')       #! RA.2019.12.31: Trace RUN procedure (UD Version)
+#INCLUDE('RYB_TRYOUTANDEXPIRE.TPW')         #! RA.2000.08.02: Expire application on a date
 #INCLUDE('RYB_DLLS.TPW')                    #! RA.2001.02.12: DLLs templates prototypes
 #INCLUDE('RYB_ICONS.TPW')                   #! RA.2010.11.09: Set some icons up
 #INCLUDE('RYB_WINPIECES.TPW')               #! RA.2018.03.11: Assorted window cosmetics
@@ -292,15 +297,10 @@
 #INCLUDE('RYB_WHOAMI.TPW')                  #! RA.2018.12.02: Application, Module, Procedure
 #INCLUDE('RYB_GLOBALINC.TPW')               #! RA.2018.12.31: Global Includes and Equates
 #INCLUDE('RYB_CLASSOBJ.TPW')                #! RA.2018.12.31: Procedure class object definitions
-#INCLUDE('RYB_SQLPIECES.TPW')               #! RA.2018.02.22: SQL template pieces
-#INCLUDE('RYB_SQLDISCONNECT.TPW')           #! RA.2019.03.01: SQL Handling Disconnect
 #INCLUDE('RYB_EXCLUDEGLOBALCLASS.TPW')      #! RA.2019.12.13: Exclude GLOBAL classes
 #INCLUDE('RYB_THREADME.TPW')                #! RA.2019.12.31: Thread number on title bar
-#INCLUDE('RYB_SQLRECONNECT.TPW')            #! RA.2020.06.26: SQL Handling Reconnect
 #INCLUDE('RYB_GENERATEGROUPS.TPW')          #! RA.1999.01.31: Generate Record Groups
-#INCLUDE('RYB_TRACERUNPROCEDURE.TPW')       #! RA.2019.12.31: Trace RUN procedure (UD Version)
 #INCLUDE('RYB_NOGLOBALDATA.TPW')            #! RA.2000.01.29: Suppress Global Data Exports
-#INCLUDE('RYB_TRYOUTANDEXPIRE.TPW')         #! RA.2000.08.02: Expire application on a date
 #INCLUDE('RYB_CTABLES.TPW')                 #! RA.2021.03.14: Equates for system wide tables
 #INCLUDE('RYB_TEMPLATEINSTANCES.TPW')       #! EL.2021.05.06: Show template instances
 #INCLUDE('RYB_GROUPSFIELDS.TPW')            #! RA.2021.11.20: Groups with name attributes
