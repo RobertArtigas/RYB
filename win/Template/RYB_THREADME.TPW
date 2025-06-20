@@ -71,20 +71,20 @@
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
 #! SELF.Open(QuickWindow)
-#! 2025.06.19 RA: (NA) %ProcedureCatergory coming through changed
+#! 2025.06.19 RA: (NA) %ProcedureCategory coming through changed
 #!AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),WHERE(UPPER(%ProcedureCategory)<>'FORM' AND %DontThreadOnMe=0),PRIORITY(8001)
 #AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),WHERE(UPPER(SUB(%ProcedureCategory,1,4))<>'FORM' AND %DontThreadOnMe=0),PRIORITY(8001)
 ! %%ProcedureCategory = %ProcedureCategory
-#EMBED(%RYB_SetThreadNotForm,'RYB: SetThread NOT Form')
+#EMBED(%RYB_SetThreadNotForm,'RYB: Set Thread on Window that IS NOT a Form')
 0{PROP:Text} = '[ ' & THREAD() & ' ]: ' & 0{PROP:Text}
 #ENDAT
 #!-----------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------
 #! QuickWindow{PROP:Text} = ActionMessage
-#! 2025.06.19 RA: (NA) %ProcedureCatergory coming through changed
+#! 2025.06.19 RA: (NA) %ProcedureCategory coming through changed
 #!AT(%WindowManagerMethodCodeSection,'Ask','()'),WHERE(UPPER(%ProcedureCategory)='FORM' AND %DontThreadOnMe=0),PRIORITY(3801)
 #AT(%WindowManagerMethodCodeSection,'Ask','()'),WHERE(UPPER(SUB(%ProcedureCategory,1,4))='FORM' AND %DontThreadOnMe=0),PRIORITY(3801)
-#EMBED(%RYB_SetThreadIsForm,'RYB: SetThread IS Form')
+#EMBED(%RYB_SetThreadIsForm,'RYB: Set Thread on Window that IS a Form')
 0{PROP:Text} = '[ ' & THREAD() & ' ]: ' & 0{PROP:Text}
 #ENDAT
 #!-----------------------------------------------------------------------------
