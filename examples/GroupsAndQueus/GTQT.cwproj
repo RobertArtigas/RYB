@@ -1,15 +1,14 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{F2FEF5A7-8C0F-449E-BE02-497DB3EEDE2F}</ProjectGuid>
+    <ProjectGuid>{7068332A-7E3F-4869-BEA3-E3D8FC003663}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Win32</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>rybGTQTDefine</RootNamespace>
-    <AssemblyName>rybGTQTDefine</AssemblyName>
-    <OutputName>rybGTQTDefine</OutputName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>GTQT</RootNamespace>
+    <AssemblyName>GTQT</AssemblyName>
+    <OutputName>GTQT</OutputName>
     <CWOutputType>Exe</CWOutputType>
-    <Model>Dll</Model>
-    <DefineConstants>StringTheoryLinkMode=&gt;1%3bStringTheoryDllMode=&gt;0%3bMD5=&gt;0%3bReflectionLM=&gt;1%3bReflectionDM=&gt;0%3bxFilesLinkMode=&gt;1%3bxFilesDllMode=&gt;0%3b_XFILES_=&gt;1%3b_XFILES4_=&gt;1%3bjFilesLinkMode=&gt;1%3bjFilesDllMode=&gt;0%3b_JFILES_=&gt;1%3b_ABCDllMode_=&gt;0%3b_ABCLinkMode_=&gt;1</DefineConstants>
+    <DefineConstants>_ABCDllMode_=&gt;0%3b_ABCLinkMode_=&gt;1</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
@@ -26,28 +25,37 @@
     <check_index>False</check_index>
   </PropertyGroup>
   <ItemGroup>
-    <FileDriver Include="ASCII" />
     <FileDriver Include="TOPSPEED" />
-    <Compile Include="CWUtil.CLW">
+    <Compile Include="GTQT.clw">
       <Generated>true</Generated>
     </Compile>
-    <Compile Include="rybGTQTDefine.clw">
+    <Compile Include="GTQT001.clw">
       <Generated>true</Generated>
     </Compile>
-    <Compile Include="rybGTQTDefine001.clw">
+    <Compile Include="GTQT002.clw">
       <Generated>true</Generated>
     </Compile>
-    <Compile Include="RYBGTQTDEFINE_BC.CLW">
+    <Compile Include="GTQT003.clw">
       <Generated>true</Generated>
     </Compile>
-    <Compile Include="rybGTQTDefine_BC0.CLW">
+    <Compile Include="GTQT004.clw">
       <Generated>true</Generated>
     </Compile>
-    <None Include="zlibwapi.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Generated>True</Generated>
-      <ProjectGenerated>True</ProjectGenerated>
-    </None>
+    <Compile Include="GTQT005.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="GTQT006.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="GTQT007.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="GTQT_BC.CLW">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="GTQT_BC0.CLW">
+      <Generated>true</Generated>
+    </Compile>
   </ItemGroup>
   <Import Project="$(ClarionBinPath)\SoftVelocity.Build.Clarion.targets" />
 </Project>

@@ -2,11 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 # Clarion 2.1.0.2447
-Project("{12B76EC0-1D7B-4FA7-A7D0-C524288B48A1}") = "rybGTQTDefine", "rybGTQTDefine.cwproj", "{F2FEF5A7-8C0F-449E-BE02-497DB3EEDE2F}"
+Project("{12B76EC0-1D7B-4FA7-A7D0-C524288B48A1}") = "rybGTQTdata", "rybGTQTdata.cwproj", "{7D906FFC-B10A-44D7-A87D-B36295ACEE3D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2150E333-8FDC-42A3-9474-1A3956D46DE8}"
 	ProjectSection(SolutionItems) = postProject
-		rybGTQTDefine.app = rybGTQTDefine.app
+		rybGTQTdata.app = rybGTQTdata.app
 	EndProjectSection
 EndProject
 Global
@@ -15,9 +15,9 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F2FEF5A7-8C0F-449E-BE02-497DB3EEDE2F}.Debug|Win32.Build.0 = Debug|Win32
-		{F2FEF5A7-8C0F-449E-BE02-497DB3EEDE2F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F2FEF5A7-8C0F-449E-BE02-497DB3EEDE2F}.Release|Win32.Build.0 = Release|Win32
-		{F2FEF5A7-8C0F-449E-BE02-497DB3EEDE2F}.Release|Win32.ActiveCfg = Release|Win32
+		{7D906FFC-B10A-44D7-A87D-B36295ACEE3D}.Debug|Win32.Build.0 = Debug|Win32
+		{7D906FFC-B10A-44D7-A87D-B36295ACEE3D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7D906FFC-B10A-44D7-A87D-B36295ACEE3D}.Release|Win32.Build.0 = Release|Win32
+		{7D906FFC-B10A-44D7-A87D-B36295ACEE3D}.Release|Win32.ActiveCfg = Release|Win32
 	EndGlobalSection
 EndGlobal
