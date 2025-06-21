@@ -4,7 +4,7 @@
 !
 ! Dictionary:   C:\_GIT_\RobertArtigas\RYB\examples\NameAttributes\rybNameAttributes.dct
 ! File:         .\grpque_gtNameAttr.inc
-! Date-Time:    2025-06-19 - 10:23:19AM
+! Date-Time:    2025-06-20 - 06:04:01PM
 ! Purpose:      Generated File Records as Groups
 ! Created:      Generate GROUP and QUEUE Template
 ! Author:       Copyright © 1999-2999 by Roberto Artigas y Soler

@@ -4,7 +4,7 @@
 !
 ! Dictionary:   C:\_GIT_\RobertArtigas\RYB\examples\GroupsAndQueus\rybGTQT.dct
 ! File:         .\grpque_gtDct.inc
-! Date-Time:    2025-06-19 - 05:38:18PM
+! Date-Time:    2025-06-21 - 03:51:13PM
 ! Purpose:      Generated File Records as Groups
 ! Created:      Generate GROUP and QUEUE Template
 ! Author:       Copyright © 1999-2999 by Roberto Artigas y Soler

@@ -45,7 +45,7 @@
 #EXTENSION(RYB_ThreadMeOnTitle, '2025.06.19: Thread number on title bar.'),DESCRIPTION('RYB | Thread Number on Title Bar. Version: ' & %tplVersionTHREADME & ', Release: ' & %tplReleaseTHREADME),APPLICATION(HotKeyCtrlAltF9(RYB_RAYS))
 #INSERT(%PreambleRYB)
 #!-----------------------------------------------------------------------------
-#! 2025.06.19.THU   RAYS:   (NA) %ProcedureCatergory coming through changed
+#! 2025.06.19.THU   RAYS:   (NA) %ProcedureCategory coming through changed
 #! 2019.12.31.SUN   RAYS:   (NA) Created this template (original was destroyed)
 #!-----------------------------------------------------------------------------
 #PREPARE
@@ -74,6 +74,7 @@
 #! 2025.06.19 RA: (NA) %ProcedureCategory coming through changed
 #!AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),WHERE(UPPER(%ProcedureCategory)<>'FORM' AND %DontThreadOnMe=0),PRIORITY(8001)
 #AT(%WindowManagerMethodCodeSection,'Init','(),BYTE'),WHERE(UPPER(SUB(%ProcedureCategory,1,4))<>'FORM' AND %DontThreadOnMe=0),PRIORITY(8001)
+! %%ProcedureTemplate = %ProcedureTemplate
 ! %%ProcedureCategory = %ProcedureCategory
 #EMBED(%RYB_SetThreadNotForm,'RYB: Set Thread on Window that IS NOT a Form')
 0{PROP:Text} = '[ ' & THREAD() & ' ]: ' & 0{PROP:Text}
@@ -84,6 +85,8 @@
 #! 2025.06.19 RA: (NA) %ProcedureCategory coming through changed
 #!AT(%WindowManagerMethodCodeSection,'Ask','()'),WHERE(UPPER(%ProcedureCategory)='FORM' AND %DontThreadOnMe=0),PRIORITY(3801)
 #AT(%WindowManagerMethodCodeSection,'Ask','()'),WHERE(UPPER(SUB(%ProcedureCategory,1,4))='FORM' AND %DontThreadOnMe=0),PRIORITY(3801)
+! %%ProcedureTemplate = %ProcedureTemplate
+! %%ProcedureCategory = %ProcedureCategory
 #EMBED(%RYB_SetThreadIsForm,'RYB: Set Thread on Window that IS a Form')
 0{PROP:Text} = '[ ' & THREAD() & ' ]: ' & 0{PROP:Text}
 #ENDAT

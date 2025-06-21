@@ -3,12 +3,17 @@
     <ProjectGuid>{7D906FFC-B10A-44D7-A87D-B36295ACEE3D}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Win32</Platform>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>rybGTQTdata</RootNamespace>
     <AssemblyName>rybGTQTdata</AssemblyName>
     <OutputName>rybGTQTdata</OutputName>
     <CWOutputType>Exe</CWOutputType>
     <DefineConstants>_ABCDllMode_=&gt;0%3b_ABCLinkMode_=&gt;1</DefineConstants>
+    <Model>Dll</Model>
+    <StartWorkingDirectory>.\Working\</StartWorkingDirectory>
+    <stack_size>16384</stack_size>
+    <CopyCore>True</CopyCore>
+    <ApplicationIcon>ryb.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
@@ -16,6 +21,11 @@
     <vid>full</vid>
     <check_stack>True</check_stack>
     <check_index>True</check_index>
+    <OutputPath>.\Working\</OutputPath>
+    <StartAction>Project</StartAction>
+    <warnings>on</warnings>
+    <GenerateMap>True</GenerateMap>
+    <line_numbers>True</line_numbers>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>False</DebugSymbols>
@@ -23,6 +33,7 @@
     <vid>off</vid>
     <check_stack>False</check_stack>
     <check_index>False</check_index>
+    <OutputPath>.\Working\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="rybGTQTdata.clw">

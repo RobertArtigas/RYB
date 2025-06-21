@@ -3,12 +3,17 @@
     <ProjectGuid>{7068332A-7E3F-4869-BEA3-E3D8FC003663}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Win32</Platform>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>GTQT</RootNamespace>
     <AssemblyName>GTQT</AssemblyName>
     <OutputName>GTQT</OutputName>
     <CWOutputType>Exe</CWOutputType>
     <DefineConstants>_ABCDllMode_=&gt;0%3b_ABCLinkMode_=&gt;1</DefineConstants>
+    <Model>Dll</Model>
+    <stack_size>16384</stack_size>
+    <CopyCore>True</CopyCore>
+    <StartWorkingDirectory>.\Working\</StartWorkingDirectory>
+    <ApplicationIcon>ryb.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
@@ -16,6 +21,11 @@
     <vid>full</vid>
     <check_stack>True</check_stack>
     <check_index>True</check_index>
+    <OutputPath>.\Working\</OutputPath>
+    <warnings>on</warnings>
+    <GenerateMap>True</GenerateMap>
+    <line_numbers>True</line_numbers>
+    <StartAction>Project</StartAction>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>False</DebugSymbols>
@@ -23,6 +33,7 @@
     <vid>off</vid>
     <check_stack>False</check_stack>
     <check_index>False</check_index>
+    <OutputPath>.\Working\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <FileDriver Include="TOPSPEED" />

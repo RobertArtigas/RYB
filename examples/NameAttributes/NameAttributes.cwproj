@@ -8,8 +8,11 @@
     <AssemblyName>NameAttributes</AssemblyName>
     <OutputName>NameAttributes</OutputName>
     <CWOutputType>Exe</CWOutputType>
-    <DefineConstants>StringTheoryLinkMode=&gt;1%3bStringTheoryDllMode=&gt;0%3bMD5=&gt;0%3b_ABCDllMode_=&gt;0%3b_ABCLinkMode_=&gt;1</DefineConstants>
+    <DefineConstants>StringTheoryLinkMode=&gt;1%3bStringTheoryDllMode=&gt;0%3b_ABCDllMode_=&gt;0%3b_ABCLinkMode_=&gt;1</DefineConstants>
     <Model>Dll</Model>
+    <stack_size>16384</stack_size>
+    <CopyCore>True</CopyCore>
+    <StartWorkingDirectory>.\Working\</StartWorkingDirectory>
     <ApplicationIcon>ryb.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -18,6 +21,11 @@
     <vid>full</vid>
     <check_stack>True</check_stack>
     <check_index>True</check_index>
+    <OutputPath>.\Working\</OutputPath>
+    <warnings>on</warnings>
+    <GenerateMap>True</GenerateMap>
+    <line_numbers>True</line_numbers>
+    <StartAction>Project</StartAction>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>False</DebugSymbols>
@@ -40,6 +48,9 @@
       <Generated>true</Generated>
     </Compile>
     <Compile Include="NameAttributes_BC0.CLW">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="ojmd5.c">
       <Generated>true</Generated>
     </Compile>
     <None Include="zlibwapi.dll">
