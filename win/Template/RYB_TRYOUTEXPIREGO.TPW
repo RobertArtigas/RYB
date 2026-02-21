@@ -1,0 +1,182 @@
+#!#TEMPLATE(zzTRYEXPIREGO,'Templates Description'),FAMILY('ABC')
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#GROUP(%CopyrightTRYEXPIREGO)
+#PREPARE
+  #IF(NOT VAREXISTS(%CopyrightTRYEXPIREGO01))
+    #DECLARE(%CopyrightTRYEXPIREGO01)
+  #ENDIF
+  #SET(%CopyrightTRYEXPIREGO01,                            'Try Out, Expire, and GO Application.')
+  #SET(%CopyrightTRYEXPIREGO01, %CopyrightTRYEXPIREGO01 & '<13,10>Copyright © 2000-' & YEAR(TODAY()) & ' by Roberto Artigas y Soler.')
+  #SET(%CopyrightTRYEXPIREGO01, %CopyrightTRYEXPIREGO01 & '<13,10>All copyrights reserved world wide.')
+  #SET(%CopyrightTRYEXPIREGO01, %CopyrightTRYEXPIREGO01 & '<13,10>E-MAIL: roberto.artigas.dev@gmail.com')
+#ENDPREPARE
+#!BOXED('Version 1.0 [ 2018.09.11 ]'),AT(,,278),PROP(PROP:FontStyle,700)
+#! Version: ' & %tplVersionTRYEXPIREGO & ', Release: ' & %tplReleaseTRYEXPIREGO
+#BOXED('Version ' & %tplVersionTRYEXPIREGO & ' [ ' & %tplReleaseTRYEXPIREGO & ' ]'),AT(,,454),PROP(PROP:FontStyle,700)
+  #DISPLAY(''),AT(,,,1)
+  #!DISPLAY(%CopyrightTRYEXPIREGO01),AT(,,260,34)
+  #DISPLAY(%CopyrightTRYEXPIREGO01),AT(,,436,34)
+#ENDBOXED
+#!
+#GROUP(%MITLicenseTRYEXPIREGO)
+#TAB('TRYEXPIREGO'),PROP(PROP:FontStyle,700)
+  #INSERT(%CopyrightTRYEXPIREGO) 
+  #INSERT(%MITLicense)
+  #INSERT(%ClarionFamily)
+#ENDTAB
+#!
+#GROUP(%ExplainTRYEXPIREGO)
+#PREPARE
+  #IF(NOT VAREXISTS(%ExplainTRYEXPIREGO01))
+    #DECLARE(%ExplainTRYEXPIREGO01)
+  #ENDIF
+  #SET(%ExplainTRYEXPIREGO01, '')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & 'This template is used when you want prevent an application being used by others')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & ' after a suitable trial application examination period.')
+  #!SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & '<13,10><13,10>')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & ' There are a number of circumstances where uprotected application solutions have been used')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & ' without payment or permission. That seems to be a less than desirable outcome for')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & ' everyone that took the time, effort, and resources to build the original solution.')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & '<13,10><13,10>')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & 'This template while simple, attempts to help by adding a check for the expiration')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & ' date entered above in the template at the beginning of every procedure.')
+  !#SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & ' This makes it a bit more difficult to patch just one place and get past')
+  !#SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & ' the expiration security.')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & '<13,10><13,10>')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & 'This just gets you started. It allows delivery of executable samples to posible customers and')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & ' investors for examination. Please choose to add additional methods of security depending on')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & ' your level of need.')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & '<13,10><13,10>')
+  #!SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & 'You place this template at the top level support DLL that you are linking to')
+  #!SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & ' where your support procedure API calls are located. These procedures are what you')
+  #!SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & ' call from your main application DLL''s and executables.')
+  #!SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & '<13,10><13,10>')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & 'This template has been tested with the ABC and Clarion template chain.')
+  #SET(%ExplainTRYEXPIREGO01, %ExplainTRYEXPIREGO01 & '')
+  #!
+  #IF(NOT VAREXISTS(%ExplainTRYEXPIREGO02))
+    #DECLARE(%ExplainTRYEXPIREGO02)
+  #ENDIF
+  #!
+  #SET(%ExplainTRYEXPIREGO02, '')
+  #SET(%ExplainTRYEXPIREGO02, %ExplainTRYEXPIREGO02 & 'NOTE: Not tested in context: Do NOT use at this time!')
+#ENDPREPARE
+#!---------------------------------------------------------------------
+#EXTENSION(RYB_TryExpireGo,'RA.2026.02.16: Try, Expire, and Go (CLARION,ABC)'),DESCRIPTION('RYB | Try, Expire, and Go Application. Version: ' & %tplVersionTRYEXPIREGO & ', Release: ' & %tplReleaseTRYEXPIREGO),APPLICATION
+#!-----------------------------------------------------------------------------
+#INSERT(%PreambleRYB)
+#!--------------------------------------------------------------------
+#!  Changes:
+#!  2026.02.16:       Roberto Artigas y Soler
+#!    *   Requested on Feb 11, 2026, 11:42AM by David Wilkin <dave.wilkin@gmx.co.uk>
+#!  2019.08.17:       Roberto Artigas
+#!    *   Do a new implementation for better functionality.
+#!  2000.08.02:       Roberto Artigas
+#!    *   Create template with EXPIRE date on every procedure.
+#!--------------------------------------------------------------------
+#! IF TODAY() >= DATE(%ExpMonth, %ExpDay, %ExpYear) THEN HALT(0, '%ExpMsg') END 
+#!--------------------------------------------------------------------
+#PREPARE
+#ENDPREPARE
+#!
+#DISPLAY('')
+#SHEET,AT(,,464),HSCROLL
+#INSERT(%MITLicenseTRYEXPIREGO)
+#INSERT(%ExplainTRYEXPIREGO)
+#TAB(UPPER(%Application) & '.' & UPPER(%ProgramExtension))
+  #BOXED('Try Out and Expire Application'),AT(,,456),PROP(PROP:FontStyle,700)    
+    #DISPLAY(''),AT(,,,1)
+    #PROMPT('Expire the application on the date below',CHECK)   ,%DoExpire  ,DEFAULT(1),AT(10)
+    #PREPARE
+      #IF(%DoExpire=0)
+        #SET(%DoGo,0)
+      #ENDIF
+    #ENDPREPARE
+    #ENABLE(%DoExpire=1)
+      #PROMPT('Expire Year: '       ,@N04)  ,%ExpYear           ,DEFAULT(YEAR (TODAY()) + 0)
+      #PROMPT('Expire Month: '      ,@N02)  ,%ExpMonth          ,DEFAULT(MONTH(TODAY()) + 1)
+      #PROMPT('Expire Day: '        ,@N02)  ,%ExpDay            ,DEFAULT(DAY  (TODAY()) + 4)
+      #DISPLAY('Expire Message: ')
+      #PROMPT('',@S120),%ExpMsg,DEFAULT('Trial period HAS expired!'),AT(10,,444)
+      #DISPLAY('')
+      #PROMPT('Programatically disable expiration',CHECK)       ,%DoGo      ,DEFAULT(0),AT(10)
+      #ENABLE(%DoGo=1)
+        #PROMPT('GLobal variable: ' ,@S100) ,%TryExpireGoVar    ,DEFAULT('GlobalDoGo')
+      #ENDENABLE
+    #ENDENABLE
+    #DISPLAY('')
+    #DISPLAY(%ExplainTRYEXPIREGO01),AT(,,436,104)
+  #ENDBOXED
+#ENDTAB
+#!INSERT(%TabClarionVersion)
+#ENDSHEET
+#!--------------------------------------------------------------------
+#! #GLOBALDATA
+#! %TryExpireGoVar BYTE(FALSE)
+#! #ENDGLOBALDATA
+#!--------------------------------------------------------------------
+#AT(%GlobalData)
+#IF(%DoExpire=1)
+  #IF(%DoGo=1)
+%TryExpireGoVar BYTE(FALSE)
+  #ENDIF
+#ENDIF
+#ENDAT
+#!--------------------------------------------------------------------
+#! %ProcedureTemplate = 'Source'
+#! %ProcedureTemplate = 'Window'
+#! %ProcedureTemplate = 'Frame'
+#! %ProcedureTemplate = 'Process'
+#! %ProcedureTemplate = 'Report'
+#! %ProcedureTemplate = 'Todo'
+#AT(%DataSection)
+ #IF(%DoExpire)
+ #ENDIF
+#ENDAT
+#! %ProcedureTemplate = 'Source'
+#AT(%ProcessedCode),FIRST
+ #IF(%DoExpire)
+  ! RYB-BEG-EXPIRE: Try, Expire, and Go Application
+  #IF(%DoGo)
+  IF NOT %TryExpireGoVar
+    IF TODAY() >= DATE(%ExpMonth, %ExpDay, %ExpYear) THEN
+      HALT (0, '%ExpMsg')
+    END
+  END
+  #ELSE
+  IF TODAY() >= DATE(%ExpMonth, %ExpDay, %ExpYear) THEN
+    HALT (0, '%ExpMsg')
+  END
+  #ENDIF
+  ! RYB-END-EXPIRE: Try, Expire, and Go Application
+ #ENDIF
+#ENDAT
+#! %ProcedureTemplate = 'Window'
+#! %ProcedureTemplate = 'Frame'
+#! %ProcedureTemplate = 'Process'
+#! %ProcedureTemplate = 'Report'
+#! %ProcedureTemplate = 'Todo'
+#AT(%ProcedureInitialize),FIRST
+ #IF(%DoExpire)
+! RYB-BEG-EXPIRE: Try, Expire, and Go Application
+  #IF(%DoGo)
+IF NOT %TryExpireGoVar
+  IF TODAY() >= DATE(%ExpMonth, %ExpDay, %ExpYear) THEN
+    HALT (0, '%ExpMsg')
+  END
+END
+  #ELSE
+IF TODAY() >= DATE(%ExpMonth, %ExpDay, %ExpYear) THEN
+  HALT (0, '%ExpMsg')
+END
+  #ENDIF
+! RYB-END-EXPIRE: Try, Expire, and Go Application
+ #ENDIF
+#ENDAT
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------
+#!---------------------------------------------------------------------

@@ -7,6 +7,8 @@
 #! Collector:   Roberto Artigas y Soler
 #! Author:      Roberto Artigas y Soler
 #! Changes:
+#! 2026.02.16.MON     Roberto Artigas y Soler
+#!  *   Create TRYEXPIRERUN template. 
 #! 2019.01.27.SUN     Roberto Artigas y Soler
 #!  *   Mark Riffey now gets a copy of these templates (Skype 11:11AM). Need some feedback.
 #!      Keep those cards and letters comming. DCT to CLASS template with GUID based keys.
@@ -81,6 +83,8 @@
 #EQUATE(%tplRelease002APP                   , '2023.02.03' )
 #EQUATE(%tplVersionGRPQUE                   , '3.02' )
 #EQUATE(%tplReleaseGRPQUE                   , '2023.08.27' )
+#EQUATE(%tplVersionTRYEXPIREGO              , '1.00' )
+#EQUATE(%tplReleaseTRYEXPIREGO              , '2026.02.16' )
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
 #!-----------------------------------------------------------------------------------------------------
@@ -309,6 +313,7 @@
 #INCLUDE('RYB_AUDIT001DCT.TPW')             #! RA.2023.01.31: Audit 001 DCT (NetTalk-Crossover)
 #INCLUDE('RYB_AUDIT002APP.TPW')             #! RA.2023.02.02: Audit 002 APP (NetTalk-Crossover)
 #INCLUDE('RYB_GROUPQUEUE.TPW')              #! RA.2023.03.25: Generate Groups and Queues (DCT Editor 3)
+#INCLUDE('RYB_TRYOUTEXPIREGO.TPW')          #! RA.2026.02.16: Expire on a date, programmatically go
 #!
 #!INCLUDE('RYB_TESTING.TPW')                #! RA.2019.04.21: TESTING STRAP - TEMPORARY
 #!INCLUDE('RYB_GLOBAL_TEST.TPW')            #! RA.2022.05.01: TESTING STRAP - TEMPORARY

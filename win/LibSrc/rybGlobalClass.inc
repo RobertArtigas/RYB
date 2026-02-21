@@ -1,9 +1,8 @@
-!Category(_RYB_)
 !ABCIncludeFile(_RYB_)
+!Category(_RYB_)
 !ClassIncludeFile(_RYB_)
 
 OMIT('_EndOfInclude_',_rybGlobalClass_)
-
 _rybGlobalClass_ EQUATE(1)
 
   INCLUDE('EQUATES.CLW'),ONCE
